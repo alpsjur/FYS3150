@@ -39,7 +39,7 @@
 \usepackage{physics}
 \usepackage[separate-uncertainty=true, multi-part-units=single, range-units=single, exponent-product=\cdot]{siunitx}
 
-\graphicspath{{images/}}			% hier liegen die Grafiken für das Dokument
+\graphicspath{{../figures}}			% hier liegen die Grafiken für das Dokument
 \DeclareGraphicsExtensions{.pdf, .png, .JPG}	% Prioritätsfolge der Dateiformate
 
 \clubpenalties 	3 10000 150 0 	% unterbindet Schusterjungen
@@ -49,10 +49,10 @@
 
 \fancypagestyle{style1}{
 \fancyfoot{}
-\fancyfoot[CO, CE]{\sc{\tiny The University Centre in Svalbard}}
+\fancyfoot[CO, CE]{\sc{\tiny The University of Oslo}}
 \fancyhead{}
-\fancyhead[RO]{\sc{\small Jan-Adrian Henriksen Kallmyr, David Hokken and Markus Ritschel} $|$ \thepage}
-\fancyhead[LE]{\thepage{} $|$ {\sc{\small Surface Energy Balance on Tellbreen and Blekumbreen}}}
+\fancyhead[RO]{\sc{\small Anna Lina p. Sjur and Jan-Adrian H. Kallmyr} $|$ \thepage}
+\fancyhead[LE]{\thepage{} $|$ {\sc{\small Linear algebra in computational physics}}}
 }
 
 \fancypagestyle{style2}{
@@ -62,7 +62,7 @@
 
 \usepackage{setspace}
 
-\usepackage{showlabels}
+%\usepackage{showlabels}
 
 %----------------------------------------------------------------------------------------
 \renewcommand{\UrlFont}{\footnotesize\sf}
@@ -83,16 +83,6 @@
 {\usebibmacro{postnote}}
 %----------------------------------------------------------------------------------------
 \addbibresource{mybib.bib}
-% \begin{filecontents}{mybibliography.bib}
-
-% @article{cuffey_2015,
-% 	authors = {Cuffey, K. M. and Paterson, W. S. B.},
-%     title = {The physics of glaciers},
-%     year = {2010},
-%     journal = {Academic Press}
-% }
-
-% \end{filecontents}
 
 \AtBeginDocument{\renewcommand{\abstractname}{Abstract}}
 \setlength{\parindent}{0pt}
@@ -126,7 +116,7 @@
 \begin{document}
 \maketitle
 \begin{center}
-\includegraphics[scale=0.4]{unislogo.jpg}
+\includegraphics[scale=0.4]{uiologo.jpg}
 \end{center}
 \thispagestyle{empty}
 \vspace{\fill}
@@ -134,7 +124,7 @@
 \thispagestyle{empty}
 \vspace*{-4\baselineskip}
 %--------------------------------------------------------------
-\listoftodos\newpage
+%\listoftodos\newpage
 %--------------------------------------------------------------
 \input{abstract}
 \enlargethispage{2\baselineskip}
@@ -143,10 +133,9 @@
 \newpage
 \pagestyle{style1}
 
-% https://glaciers.gi.alaska.edu/sites/default/files/mccarthy/Notes_Energybal_Hock.pdf
 %--------------------------------------------------------------
 %--------------------------------------------------------------
-\include{1_introduction}
+\include{introduction}
 
 %--------------------------------------------------------------
 %--------------------------------------------------------------
@@ -163,12 +152,5 @@
 
 \listoffigures
 \listoftables
-% \begin{thebibliography}{10000}
-% \addtolength{\leftmargin}{0.2in} % sets up alignment with the following line.
 
-
-% \bibitem[CP10]{CufPat}
-% Cuffey, K. M., \& Paterson, W. S. B. (2010). \emph{The physics of glaciers}. Academic Press.
-
-% \end{thebibliography}
 \end{document}
