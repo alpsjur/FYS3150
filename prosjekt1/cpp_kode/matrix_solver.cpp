@@ -67,7 +67,7 @@ void write_data(int n, double*& v) {
   ofstream datafile;
   datafile.open("../data/matrix" + to_string(n) + ".dat");
   for(int i = 0; i < n; ++i) {
-    datafile << v[i] << " ";
+    datafile << v[i] << endl;
   }
   datafile.close();
 }
