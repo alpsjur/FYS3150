@@ -19,30 +19,34 @@ int main(int argc, char * argv[]) {  // kommandolinje argumenter må være char
   const double h = 1.0/(n + 1.0);
 
   // bruker pekere for dynamisk minne allokering, som slettes etter bruk
-  double * v = new double [n];
-  double * a = new double [n];
-  double * b = new double [n];
-  double * c = new double [n];
-  double * d = new double [n];
+  try {
+    double *v = new double [n];
+    double *a = new double [n];
+    double *b = new double [n];
+    double *c = new double [n];
+    double *d = new double [n];
 
-  init(n, a, b, c, d, h);
-  perform_gauss(n, a, b, c, d);
-  delete[] a;
-  v[n] = d[n]/b[n];
-  solve_vector(n, v, b, c, d);
-  delete[] b;
-  delete[] c;
-  delete[] d;
-  write_data(n, v);
-  delete[] v;
-
+    init(n, a, b, c, d, h);
+    perform_gauss(n, a, b, c, d);
+    delete[] a;
+    v[n-1] = d[n-1]/b[n-1];
+    solve_vector(n, v, b, c, d);
+    delete[] b;
+    delete[] c;
+    delete[] d;
+    write_data(n, v);
+    delete[] v;
+  }
+  catch(bad_alloc) {
+    cout << "failed to allocate memory!" << '\n';
+  }
   return 0;
 }
 
 
 // initialiserer matriseelementene og funksjonsverdiene
 void init(int n, double *a, double *b, double *c, double *d, double h) {
-  for(int i = 0; i < n + 1; ++i) {
+  for(int i = 1; i < n; ++i) {
     a[i] = -1.0;
     b[i] = 2.0;
     c[i] = -1.0;
@@ -63,7 +67,7 @@ void perform_gauss(int n, double *a, double *b, double *c, double *d) {
 
 // løser likningssettet for v-vektoren
 void solve_vector(int n, double *v, double *b, double *c, double *d) {
-  for(int i = n-1; i > 0; --i) {
+  for(int i = n-2; i > 0; --i) {
     v[i] = (d[i] - c[i]*v[i+1])/b[i];
   }
 }
@@ -73,8 +77,8 @@ void solve_vector(int n, double *v, double *b, double *c, double *d) {
 // bruker pakken <fstream>
 void write_data(int n, double *v) {
   ofstream datafile;
-  datafile.open("../data/matrix" + to_string(n) + ".dat");
-  for(int i = 0; i < n; ++i) {
+  datafile.open("../data/matrix" + to_string(n) + ".dat");  // std::to_string
+  for(int i = 0; i < n+1; ++i) {
     datafile << v[i] << endl;
   }
   datafile.close();
