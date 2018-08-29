@@ -38,7 +38,7 @@ int main(int argc, char * argv[]) {  // kommandolinje argumenter må være char
     delete[] v;
   }
   catch(bad_alloc) {
-    cout << "failed to allocate memory!" << '\n';
+    cout << "!FAILED TO ALLOCATE MEMORY FOR ARRAYS!" << '\n';
   }
   return 0;
 }
@@ -77,7 +77,7 @@ void solve_vector(int n, double *v, double *b, double *c, double *d) {
 // bruker pakken <fstream>
 void write_data(int n, double *v) {
   ofstream datafile;
-  datafile.open("../data/matrix" + to_string(n) + ".dat");  // std::to_string
+  datafile.open("../data/general_matrix" + to_string(n) + ".dat");  // std::to_string
   for(int i = 0; i < n+1; ++i) {
     datafile << v[i] << endl;
   }
