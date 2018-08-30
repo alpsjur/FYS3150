@@ -9,7 +9,7 @@ løser likingssett på formen
   [......... b c]   [..]   [..]
   [0 ....... a b]   [vn]   [dn]
 
-der a = c = -1, b = 2 og di = h^2*100*e^(-10i*h) der h = 1/n
+der a = c = -1, b = 2 og di = h^2*100*e^(-10xi)
 
 */
 
