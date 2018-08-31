@@ -2,14 +2,15 @@
 #include <fstream>
 #include <cstdlib>
 #include <cmath>
+#include <ctime>
 
 using namespace std;
 
 
 // deklarerer protofunksjoner som defineres senere
 void init(int n, double*x, double *a, double *b, double *c, double *d);
-void perform_gauss(int n, double *a, double *b, double *c, double *d);
-void solve_vector(int n, double *v, double *b, double *c, double *d);
+void forward_sub(int n, double *a, double *b, double *c, double *d);
+void backward_sub(int n, double *v, double *b, double *c, double *d);
 void calculate_error(int n, double *v, double *x, double *eps);
 void write_data(int n, double *v, double *x, double *eps);
 
@@ -22,7 +23,7 @@ inline double exact(double xi) {return 1.0 - (1.0 - exp(-10))*xi - exp(-10*xi);
 
 
 int main(int argc, char * argv[]) {  // kommandolinje argumenter må være char
-  const int n = atoi(argv[1]);     // std::atof : char -> int <cstdlib>
+  const int n = pow(10, atoi(argv[1]));     // std::atof : char -> int <cstdlib>
 
   // bruker pekere for dynamisk minne allokering, som slettes etter bruk
   try {
@@ -38,10 +39,16 @@ int main(int argc, char * argv[]) {  // kommandolinje argumenter må være char
     double *d = new double [n];
 
     init(n, x, a, b, c, d);
-    perform_gauss(n, a, b, c, d);
+
+    clock_t c_start = clock();
+    forward_sub(n, a, b, c, d);
     delete[] a;
     v[n-1] = d[n-1]/b[n-1];
-    solve_vector(n, v, b, c, d);
+    backward_sub(n, v, b, c, d);
+    clock_t c_end = clock();
+
+    cout << 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC << endl;
+
     delete[] b;
     delete[] c;
     delete[] d;
@@ -72,7 +79,7 @@ void init(int n, double *x, double *a, double *b, double *c, double *d) {
 
 
 // utfører gaussisk eliminasjon for å redusere likningssettet
-void perform_gauss(int n, double *a, double *b, double *c, double *d) {
+void forward_sub(int n, double *a, double *b, double *c, double *d) {
   for(int i = 1; i < n; ++i) {
     const double k = a[i-1]/b[i-1];
     b[i] -= k*c[i-1];
@@ -82,7 +89,7 @@ void perform_gauss(int n, double *a, double *b, double *c, double *d) {
 
 
 // løser likningssettet for v-vektoren
-void solve_vector(int n, double *v, double *b, double *c, double *d) {
+void backward_sub(int n, double *v, double *b, double *c, double *d) {
   for(int i = n-2; i >= 0; --i) {
     v[i] = (d[i] - c[i]*v[i+1])/b[i];
   }
