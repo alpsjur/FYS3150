@@ -20,7 +20,7 @@ der a = c = -1, b = 2 og di = h^2*100*e^(-10xi)
 
 using namespace std;
 
-double error(double x, double sol);
+double error(double x, double approx);
 
 int main(int argc, char *arg[])
 {
@@ -60,11 +60,11 @@ int main(int argc, char *arg[])
     for (int i = n-2; i >= 0; --i)
     {
       v[i] = (d[i] + v[i+1])/b[i];
-      epsilon[i] = error(x[i],sol[i]);
+      epsilon[i] = error(x[i],v[i]);
     }
 
     ofstream datafile;
-    datafile.open("../data/special_matrix" + to_string(n) + ".dat"); 
+    datafile.open("../data/special_matrix" + to_string(n) + ".dat");
     for(int i = 0; i < n; ++i)
     {
       datafile << x[i] << ' ' <<v[i] << ' ' << epsilon[i] << endl;
@@ -83,9 +83,9 @@ int main(int argc, char *arg[])
   return 0;
 }
 
-double error(double x, double sol)
+double error(double x, double approx)
 {
-  double exact = 1 - (1 - exp(-10)*x - exp(-10*x));
-  double epsilon = log10(fabs(exact-sol)/exact);
+  double exact = 1.0 - (1.0 - exp(-10.0)*x - exp(-10.0*x));
+  double epsilon = log10(fabs((exact-approx)/exact));
   return epsilon;
 }
