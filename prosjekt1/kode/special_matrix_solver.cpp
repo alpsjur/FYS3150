@@ -26,7 +26,7 @@ double error(double x, double approx);
 int main(int argc, char *arg[])
 {
   // trekker ut antall mesh points
-  int n = atoi(arg[1]);
+  int n = pow(10,atoi(arg[1]));
 
   // beregner step size
   double h = 1.0/(n+1);
@@ -51,7 +51,7 @@ int main(int argc, char *arg[])
     double *v = new double[n];
 
     clock_t c_start = clock();
-    // beregner d
+    // forward substitution
     d[0] =  hh*100*exp(-10.0*x[0]);
 
     for (int i = 1; i < n; ++i)
@@ -59,7 +59,7 @@ int main(int argc, char *arg[])
       d[i] = hh*100.0*exp(-10.0*x[i]) + d[i-1]/b[i-1];
     }
 
-    // beregner v
+    // backward substitution
     v[n-1] = d[n-1]/b[n-1];
 
     for (int i = n-2; i >= 0; --i)
@@ -68,15 +68,17 @@ int main(int argc, char *arg[])
     }
     clock_t c_end = clock();
 
-    cout << c_end-c_start << endl;
+    cout << 1000.0 * (c_end-c_start) / CLOCKS_PER_SEC << endl;
 
+    /*
     ofstream datafile;
     datafile.open("../data/special_matrix" + to_string(n) + ".dat");
     for(int i = 0; i < n; ++i)
     {
       datafile << x[i] << ' ' <<v[i] << ' ' << error(x[i], v[i]) << endl;
     }
-    datafile.close();
+    datafile.close()
+    */
 
     delete[] b;
     delete[] d;
