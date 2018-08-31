@@ -28,6 +28,7 @@ void backward_sub(int n, double *v, double *b, double *d);
 double calculate_error(int n, double *v, double *x, double *eps);
 void write_data(int n, double *v, double *x, double *eps);
 void write_error(int n, double max_error);
+void write_CPU(int n, double CPU_time);
 
 // definerer inline-funksjoner
 inline double f(double xi) {return 100.0*exp(-10*xi);
@@ -59,7 +60,9 @@ int main(int argc, char * argv[]) {  // kommandolinje argumenter må være char
     backward_sub(n, v, b, d);
     clock_t c_end = clock();
 
-    cout << "CPU-tid [ms]:     " << 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC << endl;
+    // Beregner CPU-tid i milisekunder
+    double CPU_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
+    write_CPU(n, CPU_time);
 
     delete[] b;
     delete[] d;
@@ -70,7 +73,7 @@ int main(int argc, char * argv[]) {  // kommandolinje argumenter må være char
     }
 
     delete[] v;
-    
+
     write_error( n, max_error);
 
   }
@@ -138,6 +141,13 @@ void write_data(int n, double *v, double *x, double *eps) {
 void write_error(int n, double max_error) {
   ofstream logg;
   logg.open("../data/max_error_log.dat", fstream::app);
-  logg << n << ' ' << max_error << endl;
+  logg << log10(n) << ' ' << max_error << endl;
+  logg.close();
+}
+
+void write_CPU(int n, double CPU_time) {
+  ofstream logg;
+  logg.open("../data/special_matrix_time_log.dat", fstream::app);
+  logg << log10(n) << ' ' << CPU_time << endl;
   logg.close();
 }

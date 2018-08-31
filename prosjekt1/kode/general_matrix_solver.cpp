@@ -13,6 +13,7 @@ void forward_sub(int n, double *a, double *b, double *c, double *d);
 void backward_sub(int n, double *v, double *b, double *c, double *d);
 void calculate_error(int n, double *v, double *x, double *eps);
 void write_data(int n, double *v, double *x, double *eps);
+void write_CPU(int n, double CPU_time);
 
 // definerer inline-funksjoner
 inline double f(double xi) {return 100.0*exp(-10*xi);
@@ -47,13 +48,19 @@ int main(int argc, char * argv[]) {  // kommandolinje argumenter må være char
     backward_sub(n, v, b, c, d);
     clock_t c_end = clock();
 
-    cout << 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC << endl;
+    // Beregner CPU-tid i milisekunder
+    double CPU_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
+    write_CPU(n, CPU_time);
 
     delete[] b;
     delete[] c;
     delete[] d;
+
     calculate_error(n, v, x, eps);
-    write_data(n, v, x, eps);
+    //skriver data til fil for n = 10, 100 og 1000
+    if ( n < pow(10,4) ) {
+      write_data(n, v, x, eps);
+    }
     delete[] v;
   }
   catch(bad_alloc) {
@@ -111,4 +118,11 @@ void write_data(int n, double *v, double *x, double *eps) {
     datafile << x[i] << ' ' <<v[i] << ' ' << eps[i] << endl;
   }
   datafile.close();
+}
+
+void write_CPU(int n, double CPU_time) {
+  ofstream logg;
+  logg.open("../data/general_matrix_time_log.dat", fstream::app);
+  logg << log10(n) << ' ' << CPU_time << endl;
+  logg.close();
 }
