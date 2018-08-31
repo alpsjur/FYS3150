@@ -19,11 +19,10 @@ ax = fig.add_subplot(1, 1, 1)
 legends = []
 for i in datalist:
     data = np.loadtxt("../data/special_matrix{}.dat".format(i))
-    x = np.linspace(0, 1, i+2)
-    ax.plot(x[1:-1], data)
+    ax.plot(data[:,0], data[:,1])
     legends.append('n = {}'.format(i))
 
-ax.plot(x, u(x))
+ax.plot(data[:,0], u(data[:,0]))
 
 legends.append('analytic')
 
