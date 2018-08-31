@@ -17,6 +17,7 @@ der a = c = -1, b = 2 og di = h^2*100*e^(-10xi)
 #include <fstream>
 #include <cstdlib>
 #include <cmath>
+#include <ctime>
 
 using namespace std;
 
@@ -49,6 +50,7 @@ int main(int argc, char *arg[])
     double *d = new double[n];
     double *v = new double[n];
 
+    clock_t c_start = clock();
     // beregner d
     d[0] =  hh*100*exp(-10.0*x[0]);
 
@@ -64,6 +66,9 @@ int main(int argc, char *arg[])
     {
       v[i] = (d[i] + v[i+1])/b[i];
     }
+    clock_t c_end = clock();
+
+    cout << c_end-c_start << endl;
 
     ofstream datafile;
     datafile.open("../data/special_matrix" + to_string(n) + ".dat");
