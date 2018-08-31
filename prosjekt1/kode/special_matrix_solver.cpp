@@ -12,7 +12,6 @@ løser likingssett på formen
 der a = c = -1, b = 2 og di = h^2*100*e^(-10xi)
 
 */
-
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
@@ -21,78 +20,103 @@ der a = c = -1, b = 2 og di = h^2*100*e^(-10xi)
 
 using namespace std;
 
-double error(double x, double approx);
 
-int main(int argc, char *arg[])
-{
-  // trekker ut antall mesh points
-  int n = pow(10,atoi(arg[1]));
+// deklarerer protofunksjoner som defineres senere
+void init(int n, double*x, double *b, double *d);
+void forward_sub(int n,  double *b, double *d);
+void backward_sub(int n, double *v, double *b, double *d);
+void calculate_error(int n, double *v, double *x, double *eps);
+void write_data(int n, double *v, double *x, double *eps);
 
-  // beregner step size
-  double h = 1.0/(n+1);
-  double hh = h*h;
+// definerer inline-funksjoner
+inline double f(double xi) {return 100.0*exp(-10*xi);
+}
+inline double exact(double xi) {return 1.0 - (1.0 - exp(-10))*xi - exp(-10*xi);
+}
 
-  try
-  {
-    // initsialiserer d, b og x med dynamisk minnealokering
-    double *b = new double[n];
-    double *d = new double[n];
-    double *x = new double[n];
 
-    b[0] = 2;
-    x[0] = h;
-    d[0] =  hh*100*exp(-10.0*x[0]);
-    for (int i = 1; i<n; ++i)
-    {
-      x[i] = (i+1)*h;
-      b[i] = (double)(i+2)/(double)(i+1);
-      d[i] = hh*100.0*exp(-10.0*x[i]);
-    }
 
-    // initsialiserer v og d med dynamisk minnealkoasjon
-    double *v = new double[n];
+int main(int argc, char * argv[]) {  // kommandolinje argumenter må være char
+  const int n = pow(10, atoi(argv[1]));     // std::atof : char -> int <cstdlib>
+
+  // bruker pekere for dynamisk minne allokering, som slettes etter bruk
+  try {
+    // pekere for f, x, og feilen
+    double *v = new double [n];
+    double *x = new double [n];
+    double *eps = new double [n];
+
+    // pekere for matriseelementer
+    double *b = new double [n];
+    double *d = new double [n];
+
+    init(n, x, b, d);
 
     clock_t c_start = clock();
-    // forward substitution
-    for (int i = 1; i < n; ++i)
-    {
-      d[i] =  d[i] + d[i-1]/b[i-1];
-    }
-
-    // backward substitution
+    forward_sub(n, b, d);
     v[n-1] = d[n-1]/b[n-1];
-    for (int i = n-2; i >= 0; --i)
-    {
-      v[i] = (d[i] + v[i+1])/b[i];
-    }
+    backward_sub(n, v, b, d);
     clock_t c_end = clock();
 
-    cout << 1000.0 * (c_end-c_start) / CLOCKS_PER_SEC << endl;
+    cout << 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC << endl;
 
     delete[] b;
     delete[] d;
-
-    /*
-    ofstream datafile;
-    datafile.open("../data/special_matrix" + to_string(n) + ".dat");
-    for(int i = 0; i < n; ++i)
-    {
-      datafile << x[i] << ' ' <<v[i] << ' ' << error(x[i], v[i]) << endl;
-    }
-    datafile.close()
-    */
-    delete[] x;
+    calculate_error(n, v, x, eps);
+    write_data(n, v, x, eps);
     delete[] v;
   }
-    catch(bad_alloc) {
+  catch(bad_alloc) {
     cout << "!FAILED TO ALLOCATE MEMORY FOR ARRAYS!" << '\n';
   }
   return 0;
 }
 
-double error(double x, double approx)
-{
-  double exact = 1.0 - (1.0 - exp(-10.0))*x - exp(-10.0*x);
-  double epsilon = log10(fabs((exact-approx)/exact));
-  return epsilon;
+
+// initialiserer matriseelementene og funksjonsverdiene
+void init(int n, double *x, double *b, double *d) {
+  const double h = 1.0/(n + 1.0);
+  const double hh = h*h;
+
+  b[0] = 2;
+  x[0] = h;
+  d[0] =  hh*f(x[0]);
+  for (int i = 1; i<n; ++i){
+    x[i] = (i+1)*h;
+    b[i] = (double)(i+2)/(double)(i+1);
+    d[i] = hh*f(x[i]);  // eksponensialfunksjonen std::exp <cmath>
+  }
+}
+
+
+// utfører gaussisk eliminasjon for å redusere likningssettet
+void forward_sub(int n,  double *b, double *d) {
+  for(int i = 1; i < n; ++i) {
+    d[i] += d[i-1]/b[i-1];
+  }
+}
+
+
+// løser likningssettet for v-vektoren
+void backward_sub(int n, double *v, double *b, double *d) {
+  for(int i = n-2; i >= 0; --i) {
+    v[i] = (d[i] + v[i+1])/b[i];
+  }
+}
+
+void calculate_error(int n, double *v, double *x, double *eps) {
+  for(int i = 0; i < n; ++i) {
+    eps[i] = log10(fabs((exact(x[i]) - v[i])/exact(x[i])));
+  }
+}
+
+// skriver v-vektoren til .dat fil
+// bruker pakken <fstream>
+void write_data(int n, double *v, double *x, double *eps) {
+  ofstream datafile;                // std::ofstream
+  datafile.open("../data/special_matrix" + to_string(n) + ".dat");  // std::to_string
+  for(int i = 0; i < n; ++i) {
+    datafile << x[i] << ' ' <<v[i] << ' ' << eps[i] << endl;
+  }
+  datafile.close();
 }
