@@ -62,7 +62,7 @@ int main(int argc, char * argv[]) {  // kommandolinje argumenter må være char
 
     // Beregner CPU-tid i milisekunder
     double CPU_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
-    write_CPU(n, CPU_time);
+    write_CPU( n, CPU_time);
 
     delete[] b;
     delete[] d;
