@@ -56,7 +56,7 @@ int main(int argc, char *arg[])
     // forward substitution
     for (int i = 1; i < n; ++i)
     {
-      d[i] =  d[i-1]/b[i-1];
+      d[i] =  d[i] + d[i-1]/b[i-1];
     }
 
     // backward substitution
