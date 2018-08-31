@@ -25,8 +25,9 @@ using namespace std;
 void init(int n, double*x, double *b, double *d);
 void forward_sub(int n,  double *b, double *d);
 void backward_sub(int n, double *v, double *b, double *d);
-void calculate_error(int n, double *v, double *x, double *eps);
+double calculate_error(int n, double *v, double *x, double *eps);
 void write_data(int n, double *v, double *x, double *eps);
+void write_error(int n, double max_error);
 
 // definerer inline-funksjoner
 inline double f(double xi) {return 100.0*exp(-10*xi);
@@ -58,13 +59,20 @@ int main(int argc, char * argv[]) {  // kommandolinje argumenter må være char
     backward_sub(n, v, b, d);
     clock_t c_end = clock();
 
-    cout << 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC << endl;
+    cout << "CPU-tid [ms]:     " << 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC << endl;
 
     delete[] b;
     delete[] d;
-    calculate_error(n, v, x, eps);
-    write_data(n, v, x, eps);
+    double max_error = calculate_error(n, v, x, eps);
+
+    if ( n < pow(10,4) ) {
+      write_data(n, v, x, eps);
+    }
+
     delete[] v;
+    
+    write_error( n, max_error);
+
   }
   catch(bad_alloc) {
     cout << "!FAILED TO ALLOCATE MEMORY FOR ARRAYS!" << '\n';
@@ -104,10 +112,15 @@ void backward_sub(int n, double *v, double *b, double *d) {
   }
 }
 
-void calculate_error(int n, double *v, double *x, double *eps) {
+double calculate_error(int n, double *v, double *x, double *eps) {
+  double max_error = -10000.0;
   for(int i = 0; i < n; ++i) {
     eps[i] = log10(fabs((exact(x[i]) - v[i])/exact(x[i])));
+    if (eps[i] > max_error){
+      max_error = eps[i];
+    }
   }
+  return max_error;
 }
 
 // skriver v-vektoren til .dat fil
@@ -119,4 +132,12 @@ void write_data(int n, double *v, double *x, double *eps) {
     datafile << x[i] << ' ' <<v[i] << ' ' << eps[i] << endl;
   }
   datafile.close();
+}
+
+// legger til n og max feil til .dat fil
+void write_error(int n, double max_error) {
+  ofstream logg;
+  logg.open("../data/max_error_log.dat", fstream::app);
+  logg << n << ' ' << max_error << endl;
+  logg.close();
 }
