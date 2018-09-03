@@ -113,7 +113,7 @@ void write_data(int n, double *v, double *x, double *eps, double CPU_time) {
     ofstream datafile;                // std::ofstream
     datafile.open("../data/general_matrix" + to_string(n) + ".dat");  // std::to_string
     for(int i = 0; i < n; ++i) {
-      datafile << x[i] << ' ' <<v[i] << ' ' << eps[i] << endl;
+      datafile << x[i] << ' ' << v[i] << ' ' << eps[i] << endl;
     }
     datafile.close();
   }
