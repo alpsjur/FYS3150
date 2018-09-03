@@ -19,11 +19,10 @@ ax = fig.add_subplot(1, 1, 1)
 legends = []
 for i in datalist:
     data = np.loadtxt("../data/general_matrix{}.dat".format(i))
-    x = np.linspace(0, 1, len(data))
-    ax.plot(x, data)
+    ax.plot(data[:,0], data[:,1])
     legends.append('n = {}'.format(i))
 
-ax.plot(x, u(x))
+ax.plot(data[:,0], u(data[:,0]))
 
 legends.append('analytic')
 
@@ -31,6 +30,6 @@ ax.set_ylabel('u(x)', fontsize=14)
 ax.set_xlabel("x", fontsize=14)
 ax.legend(legends, loc="best", fontsize=14)
 
-plt.savefig("../figurer/matrix_compare.pdf")
+plt.savefig("../figurer/general_matrix_compare.pdf")
 
 plt.show()
