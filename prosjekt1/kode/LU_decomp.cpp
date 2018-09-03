@@ -54,6 +54,9 @@ void initialise(int n, mat A, colvec f) {
 void test_lu(int n, mat L, mat U, mat P, mat A) {
   mat B = P.t()*L*U;
   mat diff = A - B;
-  rowsum = sum(diff);
-  // kode for å sjekke om rowsum og colsum blir i rundt 0
+  rowsum = sum(diff, 1);
+  colsum = sum(diff);
+  if(fabs(rowsum) > 1e-6 and fabs(colsum) > 1e-6) {
+    cout << "!A - LU != 0!" << endl;
+  }
 }
