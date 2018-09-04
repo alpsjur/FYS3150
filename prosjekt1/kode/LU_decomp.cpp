@@ -8,11 +8,11 @@ using namespace std;
 using namespace arma;
 
 
-void initialise(int n, mat A, colvec f);
-void test_lu(int n, mat L, mat U, mat P, mat A);
-void write_data(int n, colvec x);
+void initialise(int n, mat &A, vec &f);
+void write_data(int n, vec x);
 
-inline double init_f(double xi) {return 100.0*exp(-10*xi);
+inline double init_f(double xi) {
+  return 100.0*exp(-10*xi);
 }
 
 
@@ -21,28 +21,32 @@ int main(int argc, char *argv[]) {
 
   // declaring matrices
   mat A(n, n, fill::zeros); // laplacian matrix for Dirichlet bc
-  mat L(n, n, fill::zeros);         // lower triangular matrix
-  mat U(n, n, fill::zeros);         // upper triangular matrix
-  mat P(n, n, fill::zeros);         // permutation matrix
+  mat L;         // lower triangular matrix
+  mat U;         // upper triangular matrix
 
   // declaring vectors
-  colvec f(n);      // column vector containing function values
-  colvec x;                    // column vector in eq Ux = y
-  colvec y;                    // column vector in eq Ly = f
+  vec f(n);      // column vector containing function values
+  vec y(n);         // solution of Ly = f
+  vec x(n);         // solution of Ux = y
 
   initialise(n, A, f);         // initialising A with tridiagonal values
-  lu(L, U, P, A);              // performing LU-decomposition on A
-  test_lu(n , L, U, P, A);     // checking to see that matrix mult returns A
-  solve(y, trimatu(L), f);     // solving for y indicating that L is triangular
+  clock_t c_start = clock();
+  lu(L, U, A);              // performing LU-decomposition on A
+  solve(y, trimatl(L), f);     // solving for y indicating that L is triangular
   solve(x, trimatu(U), y);     // solving for x, our solution
+  clock_t c_end = clock();
+
+  // Beregner CPU-tid i milisekunder
+  double CPU_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
+
   write_data(n, x);
 
   return 0;
 }
 
 
-void initialise(int n, mat A, colvec f) {
-  const double h = 1.0/(n + 1);
+void initialise(int n, mat &A, vec &f) {
+  const double h = 1.0/(n + 1.0);
   const double hh = h*h;
   f[0] = hh*init_f(0);
   A(0,0) = 2.0;
@@ -55,17 +59,7 @@ void initialise(int n, mat A, colvec f) {
 }
 
 
-void test_lu(int n, mat L, mat U, mat P, mat A) {
-  mat B = P.t()*L*U;
-  mat diff = A - B;
-  double rowsum = sum(sum(diff, 1));
-  double colsum = sum(sum(diff));
-  if(fabs(rowsum) > 1e-6 and fabs(colsum) > 1e-6) {
-    cout << "!A - LU != 0!" << endl;
-  }
-}
-
-void write_data(int n, colvec x) {
+void write_data(int n, vec x) {
   ofstream datafile;                // std::ofstream
   datafile.open("../data/LU_decomp" + to_string(n) + ".dat");  // std::to_string
   for(int i = 0; i < n; ++i) {

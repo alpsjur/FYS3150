@@ -13,7 +13,7 @@ for i in range(N):
     os.system("./general_matrix_solver.exe {} >> time.log".format(n))
 '''
 
-N = 2
+N = 10
 n_max = 7
 n = np.arange(1,n_max+1)
 
