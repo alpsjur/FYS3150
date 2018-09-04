@@ -73,4 +73,3 @@ void write_data(int n, colvec x) {
   }
   datafile.close();
 }
-}
