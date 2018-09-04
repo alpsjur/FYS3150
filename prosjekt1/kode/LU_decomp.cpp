@@ -20,10 +20,10 @@ int main(int argc, char *argv[]) {
   const int n = pow(10, atoi(argv[1]));
 
   // declaring matrices
-  mat A(n, n); // laplacian matrix for Dirichlet bc
-  mat L(n, n);         // lower triangular matrix
-  mat U(n, n);         // upper triangular matrix
-  mat P(n, n);         // permutation matrix
+  mat A(n, n, fill::zeros); // laplacian matrix for Dirichlet bc
+  mat L(n, n, fill::zeros);         // lower triangular matrix
+  mat U(n, n, fill::zeros);         // upper triangular matrix
+  mat P(n, n, fill::zeros);         // permutation matrix
 
   // declaring vectors
   colvec f(n);      // column vector containing function values
@@ -45,7 +45,6 @@ void initialise(int n, mat A, colvec f) {
   const double h = 1.0/(n + 1);
   const double hh = h*h;
   f[0] = hh*init_f(0);
-  A.zeros();
   A(0,0) = 2.0;
   for (int i=1; i < n; ++i) {
     f[i] = hh*init_f(i*h);
