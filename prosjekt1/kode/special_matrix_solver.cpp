@@ -116,7 +116,7 @@ void backward_sub(int n, double *v, double *b, double *d) {
 }
 
 double calculate_error(int n, double *v, double *x, double *eps) {
-  double max_error = -10000.0;
+  double max_error = -1000.0;
   for(int i = 0; i < n; ++i) {
     eps[i] = log10(fabs((exact(x[i]) - v[i])/exact(x[i])));
     if (eps[i] > max_error){

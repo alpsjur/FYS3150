@@ -36,7 +36,6 @@ max_error = np.loadtxt("../data/max_error_log.dat")
 #plt.show()
 
 #Regner ut forholdet mellom CPU-tid for general og special
-
 time_diff = np.zeros((n_max,2))
 for i in n:
     temp = general_matrix_time[(i-1)*N:i*N,1]/special_matrix_time[(i-1)*N:i*N,1]

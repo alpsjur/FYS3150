@@ -44,16 +44,13 @@ int main(argc, char *argv[]) {
 void initialise(int n, mat A, colvec f) {
   const double h = 1.0/(n + 1);
   const double hh = h*h;
-  for(int i = 0; i < n; ++i) {
-    f[i] = hh*init_f(i*h);
-
-  }
-
+  f[0] = hh*init_f(0);
   A(0,0) = 2.0;
   for (int i=1; i < n; ++i) {
+    f[i] = hh*init_f(i*h);
     A(i,i) = 2.0;
     A(i-1,i) = -1.0;
-    A(i, i-1) = -1.0; 
+    A(i, i-1) = -1.0;
   }
 }
 
