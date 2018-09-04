@@ -17,7 +17,7 @@ inline double init_f(double xi) {return 100.0*exp(-10*xi);
 
 
 int main(argc, char *argv[]) {
-  const int n = atoi(argv[1]);
+  const int n = pow(10, atoi(argv[1]));
 
   // declaring matrices
   mat A = <mat>(n, n).zeros(); // laplacian matrix for Dirichlet bc
@@ -63,4 +63,14 @@ void test_lu(int n, mat L, mat U, mat P, mat A) {
   if(fabs(rowsum) > 1e-6 and fabs(colsum) > 1e-6) {
     cout << "!A - LU != 0!" << endl;
   }
+}
+
+void write_data(int n, colvec x) {
+  ofstream datafile;                // std::ofstream
+  datafile.open("../data/LU_decomp" + to_string(n) + ".dat");  // std::to_string
+  for(int i = 0; i < n; ++i) {
+    datafile << x[i] << endl;
+  }
+  datafile.close();
+}
 }
