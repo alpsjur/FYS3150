@@ -46,7 +46,14 @@ void initialise(int n, mat A, colvec f) {
   const double hh = h*h;
   for(int i = 0; i < n; ++i) {
     f[i] = hh*init_f(i*h);
-    // KODE FOR Å INITIALISERE A
+
+  }
+
+  A(0,0) = 2.0;
+  for (int i=1; i < n; ++i) {
+    A(i,i) = 2.0;
+    A(i-1,i) = -1.0;
+    A(i, i-1) = -1.0; 
   }
 }
 
