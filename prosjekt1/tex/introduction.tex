@@ -1,5 +1,28 @@
 \section{Introduction}
 \label{sec:introduction}
 
-Discuss background, physical importance and possibly some history of
-the problem that is being studied in this paper.
+Physics is a field concerned with the behaviour of nature, and nature is
+everchanging. It is therefore no surprise that differential equations appear
+everywhere in physics. From global climate dynamics to statistical mechanics,
+what we find is that differential equations, often many and coupled, are
+required to explain or model the phenomena. For such large models, efficiency
+is important, as we would, for example, like to have timely weather forecasts.
+One way to make a model more efficient is by using an efficient algorithm for
+solving differential equations.
+
+In this report, we compare two different numerical methods of solving linear
+second-order differential equations with the Dirichlet boundary conditions.
+To do this, we will solve the one-dimensional Poisson's equation:
+  \begin{equation}
+  \label{eq:poisson}
+    \dv[2]{\phi}{r} = -4\pi \rho\qty(r).
+  \end{equation}
+In the methods section, we develop an approximation for the
+2nd derivative to the 2nd order. We will then solve eq. \ref{eq:poisson}
+numerically, using gaussian elimination and lower-upper decomposition. As for
+the former, we will further specialise it to solve eq. \ref{eq:poisson} more
+efficiently. Next, in the results section we present the comparison
+between our numerical solutions and the analytical solution, as well as the error.
+We then compare the efficiency of all three algorithms, and finally, in the
+discussion section we will consider the advantages and disadvantages
+of each algorithm, and discuss their uses.

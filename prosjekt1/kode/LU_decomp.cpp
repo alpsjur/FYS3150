@@ -12,7 +12,7 @@ void initialise(int n, mat &A, vec &f);
 void write_data(int n, vec x);
 
 inline double init_f(double xi) {
-  return 100.0*exp(-10*xi);
+  return 100.0*exp(-10.0*xi);
 }
 
 
@@ -21,17 +21,17 @@ int main(int argc, char *argv[]) {
 
   // declaring matrices
   mat A(n, n, fill::zeros); // laplacian matrix for Dirichlet bc
-  mat L;         // lower triangular matrix
-  mat U;         // upper triangular matrix
+  mat L;                       // lower triangular matrix
+  mat U;                       // upper triangular matrix
 
   // declaring vectors
-  vec f(n);      // column vector containing function values
-  vec y(n);         // solution of Ly = f
-  vec x(n);         // solution of Ux = y
+  vec f(n);                    // column vector containing function values
+  vec y(n);                    // solution of Ly = f
+  vec x(n);                    // solution of Ux = y
 
   initialise(n, A, f);         // initialising A with tridiagonal values
   clock_t c_start = clock();
-  lu(L, U, A);              // performing LU-decomposition on A
+  lu(L, U, A);                 // performing LU-decomposition on A
   solve(y, trimatl(L), f);     // solving for y indicating that L is triangular
   solve(x, trimatu(U), y);     // solving for x, our solution
   clock_t c_end = clock();
