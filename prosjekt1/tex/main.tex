@@ -1,155 +1,39 @@
-\documentclass[11pt,letterpaper,twoside]{article}
+\documentclass[a4paper, 11pt, twocolumn]{article}
 \usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{amsthm}
-\usepackage{amssymb}
-\usepackage{makeidx}
 \usepackage{graphicx}
-\usepackage{scrextend}
-\usepackage{lmodern}
-\usepackage[english]{babel}
-\usepackage[top=4cm, bottom=4cm, inner=3.5cm, outer=3.5cm]{geometry}
-\usepackage{adjustbox}
-\usepackage[graphicx]{realboxes}
-\usepackage{verbatim}
-\usepackage{framed}
-\usepackage{lscape}
-\usepackage{chngcntr}
-%\usepackage{landscape}
-\usepackage[nottoc]{tocbibind} %\usepackage[nottoc,numbib]{tocbibind} voor genummerde referenties
-\usepackage{fancyhdr}
-\usepackage{mathtools}
-\usepackage{gensymb}
 \usepackage{float}
-\usepackage{csquotes}
-\usepackage[dvipsnames]{xcolor}
-
-\usepackage[backref=true, backend=biber, style=authoryear, style=authoryear-comp, natbib=false, url=true, urldate=comp, giveninits=true, maxcitenames=2, maxbibnames=4]{biblatex}
-
-\usepackage[colorlinks=true, urlcolor=RoyalBlue, citecolor=Green, linkcolor=purple]{hyperref}
-\usepackage{url}
-\usepackage[nameinlink, english]{cleveref}
-\usepackage{nameref}
-\usepackage{booktabs} % Horizontal rules in tables
-\usepackage[footnotesize, labelfont=bf,up, textfont=up, format=plain]{caption} % Custom captions
-\usepackage[]{todonotes}
-%\usepackage{backref}
+\usepackage{amsmath}
+\usepackage{epsfig,floatflt}
 \usepackage{physics}
-\usepackage[separate-uncertainty=true, multi-part-units=single, range-units=single, exponent-product=\cdot]{siunitx}
-
-\graphicspath{{../figurer/}}			% hier liegen die Grafiken für das Dokument
-\DeclareGraphicsExtensions{.pdf, .png, .JPG}	% Prioritätsfolge der Dateiformate
-
-\clubpenalties 	3 10000 150 0 	% unterbindet Schusterjungen
-\widowpenalties 3 10000 150 0 	% unterbindet Hurenkinder
-
-\pagestyle{fancy}
-
-\fancypagestyle{style1}{
-\fancyfoot{}
-\fancyfoot[CO, CE]{\sc{\tiny The University of Oslo}}
-\fancyhead{}
-\fancyhead[RO]{\sc{\small Anna Lina p. Sjur and Jan-Adrian H. Kallmyr} $|$ \thepage}
-\fancyhead[LE]{\thepage{} $|$ {\sc{\small Linear algebra in computational physics}}}
-}
-
-\fancypagestyle{style2}{
-\fancyfoot{}
-\fancyhead{}
-}
-
-\usepackage{setspace}
-
-%\usepackage{showlabels}
-
-%----------------------------------------------------------------------------------------
-\renewcommand{\UrlFont}{\footnotesize\sf}
-\renewcommand*{\bibfont}{\small}
-\renewbibmacro{in:}{}
-\renewcommand{\labelnamepunct}{\addcolon\space}
-\setlength\bibitemsep{1\itemsep}
-%\setlength\bibhang{25pt}
+\usepackage[english]{babel}
 
 
-\DeclareCiteCommand{\myparencite}[\mkbibparens]
-{\usebibmacro{prenote}}
-{\def\nameyeardelim{\addcomma\addspace}%
-	\usebibmacro{citeindex}%
-	\usebibmacro{cite}%
-	\def\nameyeardelim{\addspace}}
-{\multicitedelim}
-{\usebibmacro{postnote}}
-%----------------------------------------------------------------------------------------
-\addbibresource{mybib.bib}
-
-\AtBeginDocument{\renewcommand{\abstractname}{Abstract}}
-\setlength{\parindent}{0pt}
-\setlength{\headheight}{14pt}
-\allowdisplaybreaks[2]
-
-\author{\\ \\ \\ \textsc{Project 1}
-\\
-\\
-		\sc{Supervisor: Morten}\\[1in]
-		\sc{By} \\
-		\\
-		\textsc{\Large{Anna Lina P. Sjur}} \\
-        \textsc{\Large{Jan-Adrian H. Kallmyr}} \\
-		\\}
-\title{\textbf{\Huge{\textbf{Linear algebra in computational physics}}}}
-\date{\today}
-
-\numberwithin{equation}{section}
-\newtheorem{Theorem}{\textbf{Theorem}}[section]
-\newtheorem*{Claim}{\sc Claim}
-
-
-\newcommand{\tab}{\hspace*{2em}}
-\linespread{1.15}
-
-\renewcommand{\headrulewidth}{1pt}
-
+\graphicspath{{../figurer/}}
+\DeclareGraphicsExtensions{.pdf, .png, .JPG}
 
 \begin{document}
+
+\title{Two methods of solving Poisson's equation}
+
+\author{Anna Lina P. Sjur and Jan-Adrian H. Kallmyr}
+
 \maketitle
+
+\begin{minipage}[C]{15cm}
 \begin{center}
-\includegraphics[scale=0.3]{uiologo.jpg}
-\end{center}
-\thispagestyle{empty}
-\vspace{\fill}
-\newpage
-\thispagestyle{empty}
-\vspace*{-4\baselineskip}
-%--------------------------------------------------------------
-%\listoftodos\newpage
-%--------------------------------------------------------------
 \input{abstract}
-\enlargethispage{2\baselineskip}
-\tableofcontents
-\clearpage
-\newpage
-\pagestyle{style1}
+\end{center}
+\end{minipage}
 
-%--------------------------------------------------------------
-%--------------------------------------------------------------
-\include{introduction}
+\input{introduction}
 
-%--------------------------------------------------------------
-%--------------------------------------------------------------
 \input{methods}
+
 \input{results}
+
 \input{discussion}
 
-\appendix
-\include{appendix}
+\input{bibliography}
 
-\clearpage
-\printbibliography[heading=bibintoc, title=Bibliography]
-
-
-\listoffigures
-\listoftables
 
 \end{document}
