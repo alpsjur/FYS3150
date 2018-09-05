@@ -9,7 +9,7 @@ using namespace arma;
 
 
 void initialise(int n, mat &A, vec &f);
-void write_data(int n, vec x);
+void write_data(int n, vec x, double CPU_time);
 
 inline double init_f(double xi) {
   return 100.0*exp(-10.0*xi);
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
   // Beregner CPU-tid i milisekunder
   double CPU_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
 
-  write_data(n, x);
+  write_data(n, x, CPU_time);
 
   return 0;
 }
@@ -59,11 +59,16 @@ void initialise(int n, mat &A, vec &f) {
 }
 
 
-void write_data(int n, vec x) {
+void write_data(int n, vec x, double CPU_time) {
   ofstream datafile;                // std::ofstream
   datafile.open("../data/LU_decomp" + to_string(n) + ".dat");  // std::to_string
   for(int i = 0; i < n; ++i) {
     datafile << x[i] << endl;
   }
   datafile.close();
+
+  ofstream logg;
+  logg.open("../data/LU_time_log.dat", fstream::app);
+  logg << log10(n) << ' ' << CPU_time << endl;
+  logg.close();
 }
