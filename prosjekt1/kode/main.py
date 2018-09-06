@@ -37,8 +37,16 @@ if LU:
     LU_time = np.loadtxt("../data/LU_time_log.dat")
 max_error = np.loadtxt("../data/max_error_log.dat")
 
-#plt.plot(max_error[:,0],max_error[:,1])
-#plt.show()
+sns.set()
+sns.set_style("whitegrid")
+sns.set_palette("husl")
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
+ax.plot(max_error[:,0],max_error[:,1])
+ax.set_xlabel(r'$\log_{10}$ n', fontsize=14)
+ax.set_ylabel(r'$\log_{10}$ $\epsilon$', fontsize=14)
+plt.savefig("../figurer/error.pdf")
+plt.show()
 
 #Regner ut forholdet mellom CPU-tid for general og special
 time_diff = np.zeros((n_max,3))
