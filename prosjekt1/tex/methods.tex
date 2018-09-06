@@ -24,14 +24,14 @@ equation:
   \end{equation}
 where
   \[A =
-    \mqty[2 & -1 & 0 & \dots & \dots & 0 \\
-          -1 & 2 & -1 & 0 & \dots & 0 \\
-          0 & -1 & 2 & -1 & \dots & 0 \\
+    \mqty[2 & -1 & 0 & \hdots & \hdots & 0 \\
+          -1 & 2 & -1 & 0 & \hdots & 0 \\
+          0 & -1 & 2 & -1 & \hdots & 0 \\
           \vdots & \ddots & \ddots & \ddots & \ddots & \vdots \\
-          0 & \dots & \ddots & -1 & 2 & -1 \\
-          0 & \dots & \dots & 0 & -1 & 2],
+          0 & \hdots & \ddots & -1 & 2 & -1 \\
+          0 & \hdots & \hdots & 0 & -1 & 2],
   \]
-is a tridiagonal matrix and $d_i = h^{2}f_i$.
+is a tridiagonal matrix and $d_i = h^2f_i$.
 Having the equation in this form, we can use linear algebra to solve the set of
 linear equations, and obtain the 2nd derivative of $u\qty(x)$.
 
@@ -43,22 +43,42 @@ The fact that $A$ is tridiagonal, means that we can develop a general algorithm
 to solve the equations by the method of Gaussian elimination. If we generalise
 our matrix
   \[A =
-    \mqty[b_1 & c_1 & 0 & \dots & \dots & 0 \\
-          a_1 & b_2 & c_2 & 0 & \dots & 0 \\
-          0 & a_2 & b_3 & c_3 & \dots & 0 \\
+    \mqty[b_1 & c_1 & 0 & \hdots & \hdots & 0 \\
+          a_1 & b_2 & c_2 & 0 & \hdots & 0 \\
+          0 & a_2 & b_3 & c_3 & \hdots & 0 \\
           \vdots & \ddots & \ddots & \ddots & \ddots & \vdots \\
-          0 & \dots & \ddots & a_{n-2} & b_{n-1} & c_{n-1} \\
-          0 & \dots & \dots & 0 & a_{n-1} & b_n],
+          0 & \hdots & \ddots & a_{n-2} & b_{n-1} & c_{n-1} \\
+          0 & \hdots & \hdots & 0 & a_{n-1} & b_n],
   \]
-and row reduce by subtracting the first row times $\frac{a_1}{b_1}$ from the
-second row ($I - \frac{a_1}{b_1}II)$), we see that the new diagonal element is
-given by
-  \[\widetilde{b_2} \equiv b_2 - \frac{a_1}{b_1}c_1.\]
-Considering eq. \ref{eq:matrixeq} then, the corresponding change on the left
-hand side is given by
-  \[\widetilde{d_2} \equiv d_2 - \frac{a_1}{b_1}d_1.\]
-Performing the same operation on the next row
-($III - \frac{a_2}{\widetilde{b_2}}II$), we get
-  \[\widetilde{b_3} \equiv b_3 - \frac{a_2}{\widetilde{b_2}}c_2, \quad
-  \widetilde{d_3} \equiv d_3 - \frac{a_2}{\widetilde{b_2}}\widetilde{d_2}.
-  \]
+and row reduce $A$ to become upper-triangular (see appendix A.)
+This yields us the following relations:
+  \begin{equation}
+    \widetilde{b_i} = b_i - \frac{a_{i-1}}{\tilde{b}_{i-1}}c_{i-1}, \quad
+    \widetilde{d_i} = d_i - \frac{a_{i-1}}{\tilde{b}_{i-1}}\tilde{d}_{i-1},
+  \end{equation}
+where $\widetilde{b_1} \equiv b_1$ and $\widetilde{d_1} \equiv d_1$.
+Performing the matrix-vector multiplication in eq. \ref{eq:matrixeq}, we get
+the following relations from the second-to-last and last row:
+  \begin{equation}
+    v_i = \frac{d_i - c_iv_{i+1}}{\widetilde{b_i}}, \quad
+    v_n = \frac{\widetilde{d_n}}{\widetilde{b_n}}.
+  \end{equation}
+With these expressions, we can construct our algorithms as follows:
+  \begin{algorithm}[htbp]
+    \SetAlgoLined
+    \KwResult{$\vb{v}$}
+    initialise $\vb{v}$, $\vb{a}$, $\vb{b}$, $\vb{c}$, $\vb{d}$\;
+    \While{$i = 2, \dots, n$}{
+      $b_i -= \frac{a_{i-1}}{b_{i-1}}c_{i-1}$\;
+      $d_i -= \frac{a_{i-1}}{b_{i-1}}c_{i-1}$\;
+    }
+    $v_n = \frac{d_n}{b_n}$\;
+    \While{$i = n-1, \dots, 1$}{
+      $v_i = \frac{d_i - c_i v_{i+1}}{b_i}$\;
+    }
+    \caption{Gaussian elimination algorithm}
+  \end{algorithm}
+
+
+\subsection{LU-decomposition}
+\label{sec:LU}

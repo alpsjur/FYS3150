@@ -1,18 +1,18 @@
 \onecolumn
 \section*{A}
-\label{appendix}
-\renewcommand{\theequation}{I\thechapter.\arabic{equation}}
+\label{sec:appendix}
+\renewcommand{\theequation}{\thesection .\arabic{equation}}
 
-\subsection*{Derivation of Gaussian elimination algorithm}
+\subsection*{Derivation of Gaussian elimination algorithm terms}
 \label{sec:derivgauss}
 Considering our generalised matrix
   \[A =
-    \mqty[b_1 & c_1 & 0 & \dots & \dots & 0 \\
-          a_1 & b_2 & c_2 & 0 & \dots & 0 \\
-          0 & a_2 & b_3 & c_3 & \dots & 0 \\
+    \mqty[b_1 & c_1 & 0 & \hdots & \hdots & 0 \\
+          a_1 & b_2 & c_2 & 0 & \hdots & 0 \\
+          0 & a_2 & b_3 & c_3 & \hdots & 0 \\
           \vdots & \ddots & \ddots & \ddots & \ddots & \vdots \\
-          0 & \dots & \ddots & a_{n-2} & b_{n-1} & c_{n-1} \\
-          0 & \dots & \dots & 0 & a_{n-1} & b_n],
+          0 & \hdots & \ddots & a_{n-2} & b_{n-1} & c_{n-1} \\
+          0 & \hdots & \hdots & 0 & a_{n-1} & b_n],
   \]
 we will obtain our algorithm from row reduction by subtracting the first row
 times $\frac{a_1}{b_1}$ from the second row ($\text{I} - \frac{a_1}{b_1}\text{II}
@@ -28,6 +28,7 @@ Performing the same operation on the next row
   \]
 Letting $\widetilde{b_1} \equiv b_1$, $\widetilde{d_1} \equiv d_1$, and
 generalising, we get:
-  \[\widetilde{b_i} = b_i - \frac{a_{i-1}}{\widetilde{b}_{i-1}}c_{i-1}, \quad
-  \widetilde{d_i} = d_i - \frac{a_{i-1}}{\widetilde{b}_{i-1}}\widetilde{d_{i-1}}
-  \]
+  \begin{equation}
+    \widetilde{b_i} = b_i - \frac{a_{i-1}}{\widetilde{b}_{i-1}}c_{i-1}, \quad
+    \widetilde{d_i} = d_i - \frac{a_{i-1}}{\widetilde{b}_{i-1}}\widetilde{d_{i-1}}.
+  \end{equation}
