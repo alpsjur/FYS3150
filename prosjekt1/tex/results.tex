@@ -11,18 +11,21 @@
 %\label{fig:figure_label}
 %\end{figure}
 
+Let's start with the solution to equation (her trengs ref). Our general matrix solver gave the results shown in figure \ref{fig:compare} for n=10, n=100 and n=1000. The analytic solution is also shown. For n=1000 the numerical and analytical solutions are so similar that we can not distinguish them in the plot, even after zooming in with a factor of 100. 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{general_matrix_compare.pdf}
+	\caption{The numeric solution using different numbers of steps with the analytic solution. The window shows a section of the plot zoomed in with a factor of 100.}
 	\label{fig:compare}
-	\caption{The numeric solution using different numbers of steps with the analytic solution. n=100 and n=1000 gives almost the same results as the analytic solution.}
 \end{figure}
+
+Table \ref{table:time} shows the ratio between the CPU time for the general algorithm and the special algorithm, and the ratio between the LU decomposition algorithm and the special algorithm.  
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{error.pdf}
-	\label{fig:error}
 	\caption{The maximum error in our specialised matrix solver as a function of the number of steps/matrix size in a logarithmic scale.}
+	\label{fig:error}
 \end{figure}
 
 \begin{table}[htbp]
@@ -39,5 +42,5 @@
 		$10^5$       & 1.39                                                                                          & -                                                                                         \\
 		$10^6$       & 1.41                                                                                          & -                                                                                        \\
 		$10^7$       & 1.39                                                                                          &    -                                                                                    
-	\end{tabular} \label{table:time} \caption{Ratio between CPU time for the general algorithm ($\mathbf{t_g}$), the special algorithm ($\mathbf{t_g}$) and the LU decomposition algorithm ($\mathbf{t_{LU}}$) for different matrix sizes (\textbf{n}). The LU decomposition chrased for \textbf{n} greater than $10^4$.}
+	\end{tabular}  \caption{Ratio between CPU time for the general algorithm ($\mathbf{t_g}$), the special algorithm ($\mathbf{t_g}$) and the LU decomposition algorithm ($\mathbf{t_{LU}}$) for different matrix sizes (\textbf{n}). The LU decomposition chrased for \textbf{n} greater than $10^4$.} \label{table:time}
 \end{table} 
