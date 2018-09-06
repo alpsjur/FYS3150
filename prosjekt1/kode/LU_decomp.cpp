@@ -60,12 +60,14 @@ void initialise(int n, mat &A, vec &f) {
 
 
 void write_data(int n, vec x, double CPU_time) {
-  ofstream datafile;                // std::ofstream
-  datafile.open("../data/LU_decomp" + to_string(n) + ".dat");  // std::to_string
-  for(int i = 0; i < n; ++i) {
-    datafile << x[i] << endl;
+  if(n < 1e4) {
+    ofstream datafile;                // std::ofstream
+    datafile.open("../data/LU_decomp" + to_string(n) + ".dat");  // std::to_string
+    for(int i = 0; i < n; ++i) {
+      datafile << x[i] << endl;
+    }
+    datafile.close();
   }
-  datafile.close();
 
   ofstream logg;
   logg.open("../data/LU_time_log.dat", fstream::app);

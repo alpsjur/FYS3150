@@ -8,11 +8,11 @@ def remove_file(filename):
     if os.path.exists(filename):
         os.system("rm " + filename)
 
-N = int(sys[1])
-n_max = int(sys[2])
+N = int(sys.argv[1])
+n_max = int(sys.argv[2])
 n = np.arange(1,n_max+1)
 
-ans = input("Run LU decomposition? [y/n]")
+ans = input("Run LU decomposition? [y/n] ")
 if ans == 'y':
     LU = True
 else:
@@ -45,7 +45,7 @@ time_diff = np.zeros((n_max,3))
 for i in n:
     temp1 = general_matrix_time[(i-1)*N:i*N,1]/special_matrix_time[(i-1)*N:i*N,1]
     if LU:
-        temp2 = general_matrix_time[(i-1)*N:i*N,1]/LU_time[(i-1)*N:i*N,1]
+        temp2 = LU_time[(i-1)*N:i*N,1]/special_matrix_time[(i-1)*N:i*N,1]
     else:
         temp2 = np.nan
     time_diff[i-1] = np.array([i,np.mean(temp1), np.mean(temp2)])
