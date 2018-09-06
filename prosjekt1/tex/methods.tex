@@ -66,17 +66,15 @@ the following relations from the second-to-last and last row:
 With these expressions, we can construct our algorithms as follows:
   \begin{algorithm}[htbp]
     \SetAlgoLined
-    \KwResult{$\vb{v}$}
     initialise $\vb{v}$, $\vb{a}$, $\vb{b}$, $\vb{c}$, $\vb{d}$\;
-    \While{$i = 2, \dots, n$}{
+    \For{$i = 2, \dots, n$}{
       $b_i -= \frac{a_{i-1}}{b_{i-1}}c_{i-1}$\;
       $d_i -= \frac{a_{i-1}}{b_{i-1}}c_{i-1}$\;
     }
     $v_n = \frac{d_n}{b_n}$\;
-    \While{$i = n-1, \dots, 1$}{
+    \For{$i = n-1, \dots, 1$}{
       $v_i = \frac{d_i - c_i v_{i+1}}{b_i}$\;
     }
-    \caption{Gaussian elimination algorithm}
   \end{algorithm}
 
 
