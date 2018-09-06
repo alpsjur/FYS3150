@@ -11,12 +11,15 @@ where we have assumed that $\rho \propto \frac{1}{r}e^{-r}$ and let $ r
 Summing the backward and forward Taylor expansions of $u(x)$ and discretising
 the equation for $n$ integration points, we get:
   \begin{equation}
+  \label{eq:approx}
     \frac{v_{i+1} - 2v_i + v_{i-1}}{h^2} + \order{h^2} = f_i,
   \end{equation}
 where $h = \frac{1}{n+1}$. Using the Dirichlet boundary conditions
-$v_0 = v_{n+1} = 0$, we can rewrite the equation as a set of linear equations,
-represented as the following matrix equation:
+$v_0 = v_{n+1} = 0$ and only considering $x\in\qty(0, 1)$, we can rewrite the
+equation as a set of linear equations, represented as the following matrix
+equation:
   \begin{equation}
+  \label{eq:matrixeq}
     A\vb{v} = \vb{d},
   \end{equation}
 where
@@ -28,7 +31,7 @@ where
           0 & \dots & \ddots & -1 & 2 & -1 \\
           0 & \dots & \dots & 0 & -1 & 2],
   \]
-is a tridiagonal matrix and $d = h^{2}f_i$.
+is a tridiagonal matrix and $d_i = h^{2}f_i$.
 Having the equation in this form, we can use linear algebra to solve the set of
 linear equations, and obtain the 2nd derivative of $u\qty(x)$.
 
@@ -46,4 +49,16 @@ our matrix
           \vdots & \ddots & \ddots & \ddots & \ddots & \vdots \\
           0 & \dots & \ddots & a_{n-2} & b_{n-1} & c_{n-1} \\
           0 & \dots & \dots & 0 & a_{n-1} & b_n],
+  \]
+and row reduce by subtracting the first row times $\frac{a_1}{b_1}$ from the
+second row ($I - \frac{a_1}{b_1}II)$), we see that the new diagonal element is
+given by
+  \[\widetilde{b_2} \equiv b_2 - \frac{a_1}{b_1}c_1.\]
+Considering eq. \ref{eq:matrixeq} then, the corresponding change on the left
+hand side is given by
+  \[\widetilde{d_2} \equiv d_2 - \frac{a_1}{b_1}d_1.\]
+Performing the same operation on the next row
+($III - \frac{a_2}{\widetilde{b_2}}II$), we get
+  \[\widetilde{b_3} \equiv b_3 - \frac{a_2}{\widetilde{b_2}}c_2, \quad
+  \widetilde{d_3} \equiv d_3 - \frac{a_2}{\widetilde{b_2}}\widetilde{d_2}.
   \]
