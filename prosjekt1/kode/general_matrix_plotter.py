@@ -32,7 +32,7 @@ axins.plot(data[:,0], u(data[:,0]))
 
 legends.append('analytic')
 
-ax.set_ylabel('u(x)', fontsize=14)
+ax.set_ylabel('v(x)', fontsize=14)
 ax.set_xlabel("x", fontsize=14)
 ax.legend(legends, loc=8, fontsize=12)
 
