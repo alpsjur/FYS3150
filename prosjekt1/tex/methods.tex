@@ -11,6 +11,39 @@ where we have assumed that $\rho \propto \frac{1}{r}e^{-r}$ and let $ r
 Summing the backward and forward Taylor expansions of $u(x)$ and discretising
 the equation for $n$ integration points, we get:
   \begin{equation}
-    \frac{u_{i+1} - 2u_i + u_{i-1}}{h^2} + \order{h^2},
+    \frac{v_{i+1} - 2v_i + v_{i-1}}{h^2} + \order{h^2} = f_i,
   \end{equation}
-where $h = \frac{1}{n+1}$. Using the Dirichlet boundary conditions, we 
+where $h = \frac{1}{n+1}$. Using the Dirichlet boundary conditions
+$v_0 = v_{n+1} = 0$, we can rewrite the equation as a set of linear equations,
+represented as the following matrix equation:
+  \begin{equation}
+    A\vb{v} = \vb{d},
+  \end{equation}
+where
+  \[A =
+    \mqty[2 & -1 & 0 & \dots & \dots & 0 \\
+          -1 & 2 & -1 & 0 & \dots & 0 \\
+          0 & -1 & 2 & -1 & \dots & 0 \\
+          \vdots & \ddots & \ddots & \ddots & \ddots & \vdots \\
+          0 & \dots & \ddots & -1 & 2 & -1 \\
+          0 & \dots & \dots & 0 & -1 & 2],
+  \]
+is a tridiagonal matrix and $d = h^{2}f_i$.
+Having the equation in this form, we can use linear algebra to solve the set of
+linear equations, and obtain the 2nd derivative of $u\qty(x)$.
+
+
+\subsection{Gaussian elimination}
+\label{sec:gaussian}
+
+The fact that $A$ is tridiagonal, means that we can develop a general algorithm
+to solve the equations by the method of Gaussian elimination. If we generalise
+our matrix
+  \[A =
+    \mqty[b_1 & c_1 & 0 & \dots & \dots & 0 \\
+          a_1 & b_2 & c_2 & 0 & \dots & 0 \\
+          0 & a_2 & b_3 & c_3 & \dots & 0 \\
+          \vdots & \ddots & \ddots & \ddots & \ddots & \vdots \\
+          0 & \dots & \ddots & a_{n-2} & b_{n-1} & c_{n-1} \\
+          0 & \dots & \dots & 0 & a_{n-1} & b_n],
+  \]
