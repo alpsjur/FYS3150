@@ -1,2 +1,16 @@
 \section{Methods}
 \label{sec:methods}
+
+We would like to solve eq. \ref{eq:poisson} numerically. Generalising the
+equation, we get
+  \begin{equation}
+    -\dv[2]{u}{x} = f\qty(x),
+  \end{equation}
+where we have assumed that $\rho \propto \frac{1}{r}e^{-r}$ and let $ r
+\rightarrow x$, $\phi \rightarrow u$.
+Summing the backward and forward Taylor expansions of $u(x)$ and discretising
+the equation for $n$ integration points, we get:
+  \begin{equation}
+    \frac{u_{i+1} - 2u_i + u_{i-1}}{h^2} + \order{h^2},
+  \end{equation}
+where $h = \frac{1}{n+1}$. Using the Dirichlet boundary conditions, we 
