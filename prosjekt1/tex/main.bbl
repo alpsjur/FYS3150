@@ -1,3 +1,9 @@
-\begin{thebibliography}{}
+\begin{thebibliography}{1}
+
+\bibitem{LUref}
+Pavel Okunev and Charles~R Johnson.
+\newblock Necessary and sufficient conditions for existence of the lu
+  factorization of an arbitrary matrix.
+\newblock {\em arXiv preprint math/0506382}, 2005.
 
 \end{thebibliography}

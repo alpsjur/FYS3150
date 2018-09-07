@@ -76,10 +76,10 @@ With these expressions, we can construct our general algorithm as follows:
       $v_i = \frac{d_i - c_i v_{i+1}}{b_i}$\;
     }
   \end{algorithm}
-  
-This algorithm has a total of 8n FLOPS. 
 
-If we now take into account that our matrix has only twos along the diagonal, and -1 above and below the diagonal, we can make a specialized algorithm. Plugging in theses values in the expression for $\widetilde{b_i}$ in equation \ref{eq:gaussian} gives us the following: 
+This algorithm has a total of 8n FLOPS.
+
+If we now take into account that our matrix has only twos along the diagonal, and -1 above and below the diagonal, we can make a specialised algorithm. Plugging in theses values in the expression for $\widetilde{b_i}$ in equation \ref{eq:gaussian} gives us the following:
 
 	\begin{equation}
 	\widetilde{b_i}=2-\frac{1}{\widetilde{b}_{i-1}}, \quad \widetilde{b}_1=2
@@ -87,7 +87,7 @@ If we now take into account that our matrix has only twos along the diagonal, an
 We can prove by induction that this is the same as:
 
 	\begin{equation}
-	\widetilde{b}_i = \frac{i+1}{i}, \quad i \geq 1 
+	\widetilde{b}_i = \frac{i+1}{i}, \quad i \geq 1
 	\end{equation}
 
 Since $\widetilde{b_i}$ is only a function of $i$ we can now set up $\mathbf{\widetilde{b}}$ in the initialisation. Plugging in the values in the remaining expressions gives:
@@ -97,7 +97,7 @@ Since $\widetilde{b_i}$ is only a function of $i$ we can now set up $\mathbf{\wi
 	v_i = \frac{\widetilde{d_i}+u_{i+1}}{\widetilde{b_i}}
 	\end{equation}
 where $v_n = \frac{\widetilde{d_n}}{\widetilde{b_n}}$. This gives us the following specialised algorithm, with a total of 4n FLOPS (not counting the initialisation of $\mathbf{\widetilde{b}}$):
-	
+
 	\begin{algorithm}[h!]
 	\SetAlgoLined
 	initialise $\vb{v}$, $\vb{b}$, $\vb{d}$\;
@@ -116,6 +116,37 @@ where $v_n = \frac{\widetilde{d_n}}{\widetilde{b_n}}$. This gives us the followi
 \subsection{LU-decomposition}
 \label{sec:LU}
 
+Let A be a square matrix, then we can decompose it in the following form
+  \begin{equation}
+    A = LU,
+  \end{equation}
+where L is a lower triangular matrix and U is a upper triangular matrix. For
+further conditions on A, see \cite{LUref}. This lets us rewrite eq.
+\ref{eq:matrixeq} in the form:
+  \begin{equation}
+    \label{eq:LUvd}
+    \qty(LU)v = d,
+  \end{equation}
+where we let
+  \begin{equation}
+    \label{eq:yUv}
+    y = Uv,
+  \end{equation}
+  and rewrite eq. \ref{eq:LUvd} to
+  \begin{equation}
+    \label{eq:Lyd}
+    Ly = d.
+  \end{equation}
+To solve for $v$ then we need to first solve eqs. \ref{eq:Lyd} for $y$ and then
+substitute $y$ into eq. \ref{eq:yUv} where we can then solve for $v$, yielding
+us the solution to eq. \ref{eq:matrixeq}.
+
+This then is our general LU-decomposition method, and it has around
+$\frac{2}{3}n^3$ flops. We could elaborate further on the finite difference
+details hidden away in the notation, but this algorithm is implemented in
+armadillo (see the Programming technicalities section), and so most of these details
+aren't handled by us.
+
 \subsection{Error}
 \label{sec:error}
 
@@ -124,4 +155,13 @@ We define the error for each mesh point as:
 	\begin{equation}
 	\epsilon_i=log_{10}\left(\left|\frac{v_i-u_i}{u_i}\right|\right)
 	\end{equation}
-where $u_i=u(x_i)$ is the analytical solution given by $u(x) = 1-(1-e^{-10})x-e^{-10x}$. 
+where $u_i=u(x_i)$ is the analytical solution given by $u(x) = 1-(1-e^{-10})x-e^{-10x}$.
+
+\subsection{Programming technicalities}
+\label{sec:proglang}
+
+We implement our algorithms and methods in C++. For our Gaussian elimination
+algorithm we use only the standard library to declare and operate arrays.
+For the LU decomposition algorithm we use the armadillo library with LAPACK to
+declare matrices and perform the LU-decomposition as well as solving eqs.
+\ref{eq:Lyd} and \ref{eq:yUv}.
