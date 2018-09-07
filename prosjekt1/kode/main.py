@@ -44,7 +44,7 @@ fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
 ax.plot(max_error[:,0],max_error[:,1])
 ax.set_xlabel(r'$\log_{10}$ n', fontsize=14)
-ax.set_ylabel(r'$\log_{10}$ $\epsilon$', fontsize=14)
+ax.set_ylabel(r'$\epsilon$', fontsize=14)
 plt.savefig("../figurer/error.pdf")
 plt.show()
 
