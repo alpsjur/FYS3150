@@ -11,7 +11,7 @@
 %\label{fig:figure_label}
 %\end{figure}
 
-Let's start with the solution to equation \ref{eq:matrixeq}. Our general matrix solver gave the results shown in figure \ref{fig:compare} for n=10, n=100 and n=1000. The analytic solution is also shown. For n=1000 the numerical and analytical solutions are so close to each other that we can not distinguish them in the plot, even after zooming in with a factor of 100. Both the specialized algorithm and the LU decomposition algorithm gave the same result as shown in figure \ref{fig:compare}. 
+Let's start with the solution to equation \ref{eq:matrixeq}. Our general matrix solver gave the results shown in Figure \ref{fig:compare} for n=10, n=100 and n=1000. The analytic solution is also shown. For n=1000 the numerical and analytical solutions are so close to each other that we can not distinguish them in the plot, even after zooming in with a factor of 100. Both the specialised algorithm and the LU decomposition algorithm gave the same result as shown in figure \ref{fig:compare}.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{general_matrix_compare.pdf}
@@ -19,7 +19,7 @@ Let's start with the solution to equation \ref{eq:matrixeq}. Our general matrix 
 	\label{fig:compare}
 \end{figure}
 
-We wanted to get an idea about the efficiency of the different algorithms and how they compare. Table \ref{table:time} shows the ratio between the CPU time for the general algorithm and the special algorithm, and the ratio between the LU decomposition algorithm and the special algorithm for different values of n. We see that the special algorithm is between 40\% to 100\% faster than the general algorithm, where the difference appears to decrease as n increases. On the other hand, the ratio between the LU decomposition algorithm and the special algorithm increases rapidly with n. For n equal to $10^4$ the special algorithm is more than a million times faster than the LU decomposition. We were not able to run the program for n greater than $10^4$.  
+We wanted to get an idea about the efficiency of the different algorithms and how they compare. Table \ref{table:time} shows the ratio between the CPU time for the general algorithm and the specialised algorithm, as well as the ratio between the LU decomposition algorithm and the specialised algorithm for different values of n. We see that the specialised algorithm is between 40\% to 100\% faster than the general algorithm, where the difference appears to decrease as n increases. On the other hand, the ratio between the LU decomposition algorithm and the specialised algorithm increases rapidly with n. For n = $10^4$ the specialised algorithm is more than a million times faster than the LU decomposition. As we were not able to run the program for n $\,>10^4$, we have no values to present in this domain.
 
 \begin{table}[htbp]
 	\centering
@@ -27,22 +27,22 @@ We wanted to get an idea about the efficiency of the different algorithms and ho
 		\textbf{n} & $\mathbf{{t_g}/{t_s}}$ & $\mathbf{{t_{LU}}/{t_s}}$  \\
 		\midrule
 		\addlinespace[0.1cm]
-		
+
 		10         & 2.08                                                                                          & 3.70                                                                                        \\
 		$10^2$       & 1.89                                                                                          & $1.00\cdot 10^2 $                                                                                         \\
 		$10^3$       & 1.48                                                                                          & $1.05 \cdot 10^4 $                                                                                        \\
 		$10^4$       & 1.43                                                                                          & $1.18 \cdot 10^6$                                                                                         \\
 		$10^5$       & 1.39                                                                                          & -                                                                                         \\
 		$10^6$       & 1.41                                                                                          & -                                                                                        \\
-		$10^7$       & 1.39                                                                                          &    -                                                                                    
+		$10^7$       & 1.39                                                                                          &    -
 	\end{tabular}  \caption{Ratio between CPU time for the general algorithm ($\mathbf{t_g}$), the special algorithm ($\mathbf{t_g}$) and the LU decomposition algorithm ($\mathbf{t_{LU}}$) for different matrix sizes (\textbf{n}). The LU decomposition crashed for \textbf{n} greater than $10^4$.} \label{table:time}
-\end{table} 
+\end{table}
 
-Lastly we wanted to assert the error in our numerical solutions. Figure \ref{fig:error} shows the maximum error in our specialized algorithm as a function of n with a logarithmic scale. We see that the error decreases with n until n = $10^6$, and then increases. 
+Lastly we wanted to assert the error in our numerical solutions. Figure \ref{fig:error} shows the maximum relative error in our specialised algorithm as a function of n with a logarithmic scale. We see that the error decreases with n until n = $10^6$, and then increases.
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{error.pdf}
-	\caption{The maximum error in our specialized matrix solver as a function of the number of steps/matrix size on a logarithmic scale.}
+	\caption{The maximum error in our specialised matrix solver as a function of the number of steps/matrix size on a logarithmic scale.}
 	\label{fig:error}
 \end{figure}

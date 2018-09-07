@@ -1,2 +1,19 @@
 \section{Discussion}
 \label{sec:discussion}
+
+Having presented the different methods and their relative efficiency and
+accuracy, we would like to discuss their uses as well as their boundaries.
+We see that for our problem of solving eq. \ref{eq;gendiff}, we could construct
+a very specialised and efficient algorithm because we used a 2nd order
+central approximation to the 2nd derivative. This let us reduce the number of
+flops by a half, and our computer should, with an optimised CPU, only have to do
+half the work. In terms of accuracy, we found no significant difference between
+the algorithms, and so this also means that we get the most accuracy per CPU time
+with our specialised algorithm up until n=$10^{-6}$ (see \ref{fig:compare}).
+Thus for our problem of a linear second order differential equation with
+Dirichlet boundaries, this is clearly the most advantageous algorithm.
+
+However, while the specialised algorithm is good at solving eq. \ref{eq:gendiff},
+it is, as our naming suggests, not very general. There exists a wide variety of
+problems that can be expressed in the form of our matrix equation, eq.
+\ref{eq:matrixeq}, where the matrix A takes different forms.
