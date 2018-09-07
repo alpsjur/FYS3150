@@ -18,17 +18,19 @@ sns.set_palette("husl")
 fig, ax = plt.subplots(3, 1, sharex='col', sharey='row')
 
 dat = ["general_matrix","special_matrix","LU_decomp"]
+name = ["general algorithm", "special algorithm", "LU decomposition"]
 for j in range(3):
     legends = []
     for i in datalist:
         data = np.loadtxt("../data/" + dat[j] + "{}.dat".format(i))
-        ax[j].plot(data[:,0], data[:,1])
-        legends.append('n = {}'.format(i))
-    ax[j].plot(data[:,0], u(data[:,0]))
-    legends.append('analytic')
+        ax[j].plot(data[:,0], data[:,1],label='n = {}'.format(i))
+    ax[j].plot(data[:,0], u(data[:,0]),label='analytic')
+    ax[j].text(0.3, 0.15, name[j], horizontalalignment='center', \
+    verticalalignment='center', color="grey")
 
 
-ax[0].legend(legends, loc="best", fontsize=14)
+ax[0].legend(loc='upper center', bbox_to_anchor=(0.5, 1.3),
+          ncol=4)
 
 
 
