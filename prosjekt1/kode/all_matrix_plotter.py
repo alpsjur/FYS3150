@@ -30,7 +30,7 @@ for j in range(3):
 
 
 ax[0].legend(loc='upper center', bbox_to_anchor=(0.5, 1.3),
-          ncol=4)
+          ncol=4,fontsize=12)
 
 
 
