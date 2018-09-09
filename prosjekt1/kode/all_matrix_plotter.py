@@ -24,14 +24,13 @@ for j in range(3):
     for i in datalist:
         data = np.loadtxt("../data/" + dat[j] + "{}.dat".format(i))
         ax[j].plot(data[:,0], data[:,1],label='n = {}'.format(i))
-    ax[j].plot(data[:,0], u(data[:,0]),label='analytic')
+    #ax[j].plot(data[:,0], u(data[:,0]),label='analytic')
     ax[j].text(0.3, 0.15, name[j], horizontalalignment='center', \
     verticalalignment='center', color="grey")
 
 
 ax[0].legend(loc='upper center', bbox_to_anchor=(0.5, 1.3),
           ncol=4,fontsize=12)
-
 
 
 fig.text(0.5, 0.04, 'x', fontsize=14, ha='center')
