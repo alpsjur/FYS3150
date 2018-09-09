@@ -22,4 +22,6 @@ If matrix A is not on a tridiagonal form neither our specialised nor our general
  
 
 
-As we can see from Figure \ref{fig:error}, there seems to be a lower limit to the error. From n=10 to n=$10^5$ the error decreases with a slope of about -2. From eq. \ref{eq:approx} we have that the mathematical error in our approximation goes as $h^2$, or $n^{-2}$. From n=$10^5$ and up the slope increases, and from n=$10^6$ the error is increasing as n increases. This is no longer due to only mathematical errors, but also to machine errors. 
+As we can see from Figure \ref{fig:error}, there seems to be a lower limit to the error in the specialised algorithm. From n=10 to n=$10^5$ the error decreases with a slope of about -2. From eq. \ref{eq:approx} we have that the mathematical error in our approximation goes as $h^2$, or $n^{-2}$. So our error decreases as expected from the mathematical model. 
+
+From n=$10^5$ and up the slope increases, and from n=$10^6$ the error is increasing as n increases. This increase in the relative error is due to round-off errors caused by the computer. 
