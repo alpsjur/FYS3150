@@ -1,3 +1,13 @@
 \begin{abstract}
-  State problem. Briefly describe method and data. Summarize main results.
+  We compare the methods of Gaussian elimination (GE) and LU-decomposition (LU)
+  for solving linear second order differential equations on the form $\dv[2]{u}{x}=
+  f(x)$ where $u(0)=u(1)=0$. Comparing CPU-times we find that a highly specialised GE algorithm
+  is most efficient with $100\% - 40\%$ faster CPU-times for $10 - 10^7$
+  integration steps (n) over a more general GE algorithm, as well as $10^6$
+  times faster than the LU algorithm for $n=10^4$. The relative error is in the
+  same order of magnitude for all algorithms at around $10^{-1} - 10^{-7}$ for $n \in [10, 10^4]$,
+  and for our specialised GE algorithm, we see that the error starts to increase again at around $n = 10^6$.
+  We therefore find that the specialised GE algorithm is the most reliable for
+  this problem, however, a good compromise between generality and efficiency is
+  found in the general GE algorithm.
 \end{abstract}
