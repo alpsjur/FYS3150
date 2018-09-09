@@ -1,3 +1,6 @@
+'''
+Script for plotting the solution from the general algorithm and the analytic solution
+'''
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns

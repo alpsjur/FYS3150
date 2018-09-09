@@ -15,13 +15,13 @@ inline double init_f(double xi) {
   return 100.0*exp(-10.0*xi);
 }
 
-
+// reading n power from command line
 int main(int argc, char *argv[]) {
   const int n = pow(10, atoi(argv[1]));
   double *pos = new double [n]; // position vector
 
   // declaring matrices
-  mat A(n, n, fill::zeros); // laplacian matrix for Dirichlet bc
+  mat A(n, n, fill::zeros);    // laplacian matrix for Dirichlet bc
   mat L;                       // lower triangular matrix
   mat U;                       // upper triangular matrix
 
@@ -30,14 +30,14 @@ int main(int argc, char *argv[]) {
   vec y(n);                    // solution of Ly = f
   vec x(n);                    // solution of Ux = y
 
-  initialise(n, pos, A, f);         // initialising A with tridiagonal values
+  initialise(n, pos, A, f);    // initialising A with tridiagonal values
   clock_t c_start = clock();
   lu(L, U, A);                 // performing LU-decomposition on A
   solve(y, trimatl(L), f);     // solving for y indicating that L is triangular
   solve(x, trimatu(U), y);     // solving for x, our solution
   clock_t c_end = clock();
 
-  // Beregner CPU-tid i milisekunder
+  // calculating CPU time in miliseconds
   double CPU_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
 
   write_data(n, pos, x, CPU_time);

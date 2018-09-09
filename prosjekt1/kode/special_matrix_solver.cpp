@@ -115,6 +115,7 @@ void backward_sub(int n, double *v, double *b, double *d) {
   }
 }
 
+// // beregner log10 av relativ feil
 double calculate_error(int n, double *v, double *x, double *eps) {
   double max_error = -1000.0;
   for(int i = 0; i < n; ++i) {
@@ -145,6 +146,7 @@ void write_error(int n, double max_error) {
   logg.close();
 }
 
+//legger til n og CPU-tid til .dat fil 
 void write_CPU(int n, double CPU_time) {
   ofstream logg;
   logg.open("../data/special_matrix_time_log.dat", fstream::app);

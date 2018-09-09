@@ -15,7 +15,7 @@ void calculate_error(int n, double *v, double *x, double *eps);
 void write_data(int n, double *v, double *x, double *eps, double CPU_time);
 
 // definerer inline-funksjoner
-inline double f(double xi) {return 100.0*exp(-10*xi);
+inline double f(double xi) {return 100.0*exp(-10*xi);  // eksponensialfunksjonen std::exp <cmath>
 }
 inline double exact(double xi) {return 1.0 - (1.0 - exp(-10))*xi - exp(-10*xi);
 }
@@ -77,7 +77,7 @@ void init(int n, double *x, double *a, double *b, double *c, double *d) {
     a[i] = -1.0;
     b[i] = 2.0;
     c[i] = -1.0;
-    d[i] = hh*f(x[i]);  // eksponensialfunksjonen std::exp <cmath>
+    d[i] = hh*f(x[i]);
   }
 }
 
@@ -99,14 +99,14 @@ void backward_sub(int n, double *v, double *b, double *c, double *d) {
   }
 }
 
-
+// beregner log10 av relativ feil
 void calculate_error(int n, double *v, double *x, double *eps) {
   for(int i = 0; i < n; ++i) {
     eps[i] = log10(fabs((exact(x[i]) - v[i])/exact(x[i])));
   }
 }
 
-// skriver v-vektoren til .dat fil
+// skriver x-vektoren, v-vektoren, og feilen til .dat. Skriver tid til egen .dat fil
 // bruker pakken <fstream>
 void write_data(int n, double *v, double *x, double *eps, double CPU_time) {
   if(n < 1e4) {
