@@ -16,5 +16,12 @@ Dirichlet boundaries, this is clearly the most advantageous algorithm.
 However, while the specialised algorithm is good at solving eq. \ref{eq:gendiff},
 it is, as our naming suggests, not very general. There exists a wide variety of
 problems that can be expressed in the form of our matrix equation, eq.
-\ref{eq:matrixeq}, where the matrix A takes different forms. What we have called the general algorithm, which is almost as efficient as the specialised algorithm (see Table \ref{table:time}), can be used if the matrix A is tridiagonal. If matrix A can take \textit{any} form neither our specialised nor our general algorithm can be used.
-In the latter case, the LU-decomposition is useful, and 
+\ref{eq:matrixeq}, where the matrix A takes different forms. What we have called the general algorithm, which is almost as efficient as the specialised algorithm (see Table \ref{table:time}), can be used if the matrix A is tridiagonal.
+
+If matrix A is not on a tridiagonal form neither our specialised nor our general algorithm can be used. In the latter case, the LU-decomposition can be useful. This comes at cost of a drastically increase in CPU run time as n increases.  
+ 
+
+
+As we can see from Figure \ref{fig:error}, there seems to be a lower limit to the error in the specialised algorithm. From n=10 to n=$10^5$ the error decreases with a slope of about -2. From eq. \ref{eq:approx} we have that the mathematical error in our approximation goes as $h^2$, or $n^{-2}$. So our error decreases as expected from the mathematical model. 
+
+From n=$10^5$ and up the slope increases, and from n=$10^6$ the error is increasing as n increases. This increase in the relative error is due to round-off errors caused by the computer. 
