@@ -125,7 +125,7 @@ void transform(mat &A, mat &S,int k, int l, int n) {
   A(k,l) = 0.0;//(akk-all)*cs + akl*(cc-ss);
   A(l,k) = 0.0;//A(k,l);
   for (int i=0; i<n; ++i) {
-    if (i != k && i != k) {
+    if (i != k && i != l) {
       double aik, ail;
       aik = A(i,k);
       ail = A(i,l);
