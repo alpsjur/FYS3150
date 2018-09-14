@@ -33,15 +33,21 @@ int main(int argc, char * argv[]) {
 
   double max = 10.0;
   double tol = 1e-10;
-  int k, l;
+  int k, l, itterations;
+  itterations = 0;
   while (max > tol){
     max = find_largest(A, &k, &l, n);
     transform(A, S, k, l, n);
+    itterations++;
   }
-  cout << A << endl;
-  for (int i=0; i<n; ++i){
-    cout << analytical_eigval[i] << endl;
+
+  vec jacobi_eigval = A.diag(); //vektor med egenverdiene
+  jacobi_eigval = sort(jacobi_eigval);
+  cout << jacobi_eigval << endl;
+  for (int i=0;i<n;i++){
+    cout << analytical_eigval[n-1-i] << endl;
   }
+  cout << itterations << endl;
   return 0;
 }
 
@@ -64,6 +70,9 @@ double analytical(int i, int n, double a, double d){
 }
 
 void test_eigval(mat A, double *analytical_eigval, int n){
+  /* Tester om egenverdiene til matrisen armadillo gir stemmer
+  overens med de analytiske egenverdien
+  */
   const double tol = 1e-3;
 
   //bruker armadillo for å regne ut egenverdiene
@@ -73,7 +82,7 @@ void test_eigval(mat A, double *analytical_eigval, int n){
   //arma_eigval er i stigende rekkefølge, analytical_eigval er i synkende
   for (int i=0; i<n;++i){
     if (fabs(arma_eigval(i)-analytical_eigval[n-1-i])>tol){
-      cout << "Analytical and computed eigenvalues does not match" << endl;
+      cout << "Analytical and armadillo eigenvalues does not match" << endl;
       cout << "Diference is " << fabs(arma_eigval(i)-analytical_eigval[n-1-i]) << endl;
       break;
     }
@@ -100,6 +109,7 @@ double find_largest(mat A, int *k, int *l, int n) {
 void transform(mat &A, mat &S,int k, int l, int n) {
   double tau, t;
   tau = (A(l,l) - A(k,k))/(2.0*A(k,l));
+
   //for å unngå loss of precission når t -> inf skriver vi om uttrykket
   if (tau >= 0){
     t = 1.0/(tau+sqrt(1.0+tau*tau));   //tangens theta
@@ -116,22 +126,19 @@ void transform(mat &A, mat &S,int k, int l, int n) {
   cs = c*s;
 
   //oppdaterer A
-  double akk, all, akl;
+  double akk;
   akk = A(k,k);
-  all = A(l,l);
-  akl = A(k,l);
-  A(k,k) = akk*cc - 2*akl*cs + all*ss;
-  A(l,l) = all*cc + 2*akl*cs + akk*ss;
+  A(k,k) = akk*cc - 2*A(k,l)*cs + A(l,l)*ss;
+  A(l,l) = A(l,l)*cc + 2*A(k,l)*cs + akk*ss;
   A(k,l) = 0.0;//(akk-all)*cs + akl*(cc-ss);
   A(l,k) = 0.0;//A(k,l);
   for (int i=0; i<n; ++i) {
     if (i != k && i != l) {
-      double aik, ail;
+      double aik;
       aik = A(i,k);
-      ail = A(i,l);
-      A(i,k) = aik*c - ail*s;
+      A(i,k) = aik*c - A(i,l)*s;
       A(k,i) = A(i,k);
-      A(i,l) = ail*c + aik*s;
+      A(i,l) = A(i,l)*c + aik*s;
       A(l,i) = A(i,l);
     }
     //kalkulerer egenvektorene
