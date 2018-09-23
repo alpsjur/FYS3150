@@ -9,9 +9,10 @@ using namespace arma;
 
 void initialize(mat &A, double *analytical_eigval,double a, double d, int n);
 double analytical(int i, int n, double a, double d);
-void test_eigval(mat A, double *analytical_eigval, int n);
+void test_eigval(double *analytical_eigval, vec arma_eigval, int n);
 double find_largest(mat A, int *k, int *l, int n);
 void transform(mat &A, mat &S,int k, int l, int n);
+void write_data(int n, int itterations, double arma_time, double jacobi_time);
 
 int main(int argc, char * argv[]) {
 
@@ -29,25 +30,38 @@ int main(int argc, char * argv[]) {
 
   initialize(A, analytical_eigval, a, d, n);
 
-  test_eigval(A, analytical_eigval, n);
+  //bruker armadillo for å regne ut egenverdiene
+  //tar tiden
+  clock_t c_start = clock();
+  vec arma_eigval = eig_sym(A); //gir egenverdiene i økende rekkefølge
+  clock_t c_end = clock();
 
+  // Beregner CPU-tid i milisekunder
+  double arma_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
+
+  test_eigval(analytical_eigval, arma_eigval, n);
+
+  //beregner egenvektorene med Jacobis metode
   double max = 10.0;
   double tol = 1e-10;
   int k, l, itterations;
   itterations = 0;
+  c_start = clock();   //tar tiden
   while (max > tol){
     max = find_largest(A, &k, &l, n);
     transform(A, S, k, l, n);
     itterations++;
   }
+  c_end = clock();
+
+  // Beregner CPU-tid i milisekunder
+  double jacobi_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
 
   vec jacobi_eigval = A.diag(); //vektor med egenverdiene
   jacobi_eigval = sort(jacobi_eigval);
-  cout << jacobi_eigval << endl;
-  for (int i=0;i<n;i++){
-    cout << analytical_eigval[n-1-i] << endl;
-  }
-  cout << itterations << endl;
+
+  write_data(n, itterations, arma_time, jacobi_time);
+
   return 0;
 }
 
@@ -69,23 +83,29 @@ double analytical(int i, int n, double a, double d){
   return d+2.0*a*cos((i+1)*pi/(n+1.0));
 }
 
-void test_eigval(mat A, double *analytical_eigval, int n){
-  /* Tester om egenverdiene til matrisen armadillo gir stemmer
+void test_eigval(double *analytical_eigval, vec arma_eigval, int n){
+  /*
+  Tester om egenverdiene til matrisen armadillo gir stemmer
   overens med de analytiske egenverdien
   */
   const double tol = 1e-3;
+  int count = 0;
+  double tot_rel_err = 0;
 
-  //bruker armadillo for å regne ut egenverdiene
-  vec arma_eigval = eig_sym(A); //gir egenverdiene i økende rekkefølge
-
-  //itterer over egenverdiene og ser som differansen er innenfor tolleransen
+  //itterer over egenverdiene og ser som relativ feil er innenfor tolleransen
   //arma_eigval er i stigende rekkefølge, analytical_eigval er i synkende
   for (int i=0; i<n;++i){
-    if (fabs(arma_eigval(i)-analytical_eigval[n-1-i])>tol){
-      cout << "Analytical and armadillo eigenvalues does not match" << endl;
-      cout << "Diference is " << fabs(arma_eigval(i)-analytical_eigval[n-1-i]) << endl;
-      break;
+    if (fabs((arma_eigval[i]-analytical_eigval[n-1-i])/
+        analytical_eigval[n-1-i])>tol){
+      count++;
+      tot_rel_err += fabs((arma_eigval[i]-analytical_eigval[n-1-i])/
+                     analytical_eigval[n-1-i]);
     }
+  }
+  if (count > 0){
+    cout << "Analytisk og armadillo egenverdier var forskellige " <<
+            count << " ganger for n=" << n << endl;
+    cout << "I snitt var relativ feil " << tot_rel_err/count << endl;
   }
   return;
 }
@@ -98,7 +118,7 @@ double find_largest(mat A, int *k, int *l, int n) {
       double aij = fabs(A(i,j));
       if (aij>largest){
         largest = aij;
-        *k = i;  //ER DETTE RIKTIG?!?!?!
+        *k = i;
         *l = j;
       }
     }
@@ -149,4 +169,11 @@ void transform(mat &A, mat &S,int k, int l, int n) {
     S(i,l) = c*sil + s*sik;
   }
   return;
+}
+
+void write_data(int n, int itterations, double arma_time, double jacobi_time){
+  ofstream logg;
+  logg.open("../data/jacobi_log.dat", fstream::app);
+  logg << n << ' ' << itterations << ' ' << jacobi_time << ' ' << arma_time << endl;
+  logg.close();
 }
