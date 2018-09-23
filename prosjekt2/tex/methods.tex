@@ -1,2 +1,32 @@
 \section{Methods}
 \label{sec:methods}
+
+\subsection{The buckling beam}
+\label{sec:bucklingbeam}
+
+Considering first the buckling beam problem, we have
+  \begin{equation}
+    \gamma \dv[2]{u}{x} = -F u\qty(x), \quad x \in [0, L]
+  \end{equation}
+where $\gamma$ is a property constant, $u\qty(x)$ the vertical displacement, and
+$F$ the force applied at (L, 0) towards the origin. We can scale this equation by defining
+a parameter $\rho = \frac{x}{L}$. Inserting, we get
+  \begin{equation}
+    -\dv[2]{}{\rho}u\qty(\rho) = \lambda u\qty(\rho), \quad \rho \in [0, 1]
+  \end{equation}
+where $\lambda = \frac{FL^2}{\gamma}$. Now we see that this equation is on the form
+of eq. \ref{eq:eigenspecial}. However, enforcing Dirichlet boundary conditions
+$u\qty(0) = u\qty(1) = 0$ and using a 2nd order central approximation for n integration steps:
+  \begin{equation}
+    \frac{v_{i+1} - 2v_i + v_{i-1}}{h^2} + \order{h^2} = \lambda_i v_i,
+  \end{equation}
+where $h = \frac{1}{n+1}$. Disregarding the boundaries (which are set to 0) we obtain the eigenvalue equations
+  \begin{equation}
+    A\vb{v} = \lambda \vb{v}.
+  \end{equation}
+Here A is a tridiagonal matrix, $\lambda$ is an eigenvalue, and $\vb{v} \in \qty(0, n)$ is a vector.
+
+
+\subsection{Quantum dots}
+
+\subsection{Algorithm: Jacobi's determinant}
