@@ -1,2 +1,28 @@
 \section{Introduction}
 \label{sec:introduction}
+
+A great variety of problems in the physical sciences can be represented as
+eigenvalue problems, which generally takes the form:
+  \begin{equation}
+    \label{eq:eigengeneral}
+    O\vb{v} = \lambda \vb{v},
+  \end{equation}
+where $O$ is an operator, $\lambda$ is an eigenvalue, and $\vb{v}$ is eigenvector.
+Such problems can easily be solved in terms of linear algebra, and is therefore
+of great use in simplifying complicated problems, as well as providing a framework for creating efficient
+algorithms.
+In particular, we will look at the motion of a fixed buckling beam, and show that this is numerically
+identical to the motion of quantum dots. Specifically, we will solve following
+eigenvalue problem
+  \being{equation}
+  \label{eq:eigenspecial}
+    \dv[2]{v}{x} = \lambda v(x).
+  \end{equation}
+Starting with the methods section, we will present the buckling beam problem, as well
+as the quantum dot problem, scaling and generalising them to the form of eq. \ref{eq:eigengeneral}.
+Using different numerical methods, we will use unit testing to make sure that each
+algorithm is implemented correctly.
+Moving on to the results section, we will present the efficiency and error of each
+algorithm in terms of CPU-time and relative error respectively. Then finally,
+in the discussion section, we will compare the different methods, and look at
+more possiblities for problems that can be solved using the same general algorithms.
