@@ -19,3 +19,44 @@
 	\caption{The numeric solution using different solving algorithms. The graphs for n=100 and n=1000 are so similar that they are not distinguishable.}
 	\label{fig:all}
 \end{figure}
+
+\subsection*{Derivation of the radial equation}
+\label{sec:radeq}
+Considering the case of a particle in a three dimensional harmonic oscillator
+potential, we have the Hamiltonian
+  \begin{equation}
+    H = -\frac{\hbar^2}{2m}\laplacian + V\qty(r), \quad r = \sqrt{x^2 + y^2 + z^2}
+  \end{equation}
+which in spherical coordinates is given by
+  \begin{equation}
+    H = -\frac{\hbar^2}{2m}\frac{1}{r^2}\pdv{}{r}\qty(r^2\pdv{}{r}) + V\qty(r) + \frac{L^2}{2mr^2},
+  \end{equation}
+where
+  \begin{equation}
+    L^2 = -\hbar^2 \qty[\frac{1}{\sin\theta}\pdv{}{\theta}\qty(\sin{\theta}\pdv{\theta})
+    + \frac{1}{\sin^2\theta}\pdv[2]{}{\phi}],
+  \end{equation}
+is the squared angular momentum operator. Since $L^2$ does not act on
+$r$, we have that $H$ and $L^2$ commute, and neglecting spin, a quantum state can
+then be represented as a wavefunction
+  \begin{equation}
+    \ket{\Psi} \simeq \Psi\qty(r, \phi, \theta) = R\qty(r)Y_{l}^m\qty(\phi, \theta),
+  \end{equation}
+where $R\qty(r)$ is the radial solution, and $Y_{l}^m\qty(\theta, \phi)$ are the
+eigenfunctions of $L^2$ (spherical harmonics).
+The Schrodinger equation is then
+  \begin{equation}
+    HR\qty(r)Y_{l}^m\qty(\phi, \theta) = ER\qty(r)Y_{l}^m\qty(\phi, \theta).
+  \end{equation}
+Here $E$ are the eigenvalues of $\Psi\qty(r, \theta, \phi)$. Letting $L^2$ act on $Y_{m}^l\qty(\theta, \phi)$ we obtain
+its eigenvalues $\hbar^2 l\qty(l+1)$. Substituting $R\qty(r) = \frac{u\qty(r)}{r}$,
+we see that
+  \[
+    \frac{1}{r^2}\pdv{}{r}\qty(r^2\pdv{}{r})\frac{u\qty(r)}{r}
+    = \frac{1}{r^2}\pdv{}{r}\qty[r^2\qty(\pdv{u}{r}\frac{1}{r} - \frac{u\qty(r)}{r^2})]
+    = \frac{1}{r^2}\qty(\pdv{u}{r} + r\pdv[2]{u}{r} - \pdv{u}{r}) = \frac{1}{r}\pdv[2]{u}{r}.
+  \]
+Multiplying by r on both sides, the problem then reduces to the radial equation
+\begin{equation}
+  -\frac{\hbar^2}{2m}\qty(\dv[2]{}{r} - V(r) - \frac{l\qty(l+1)}{r^2})u\qty(r) = Eu\qty(r).
+\end{equation}

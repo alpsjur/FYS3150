@@ -18,15 +18,91 @@ where $\lambda = \frac{FL^2}{\gamma}$. Now we see that this equation is on the f
 of eq. \ref{eq:eigenspecial}. However, enforcing Dirichlet boundary conditions
 $u\qty(0) = u\qty(1) = 0$ and using a 2nd order central approximation for n integration steps:
   \begin{equation}
+  \label{eq:disc1}
     \frac{v_{i+1} - 2v_i + v_{i-1}}{h^2} + \order{h^2} = \lambda_i v_i,
   \end{equation}
 where $h = \frac{1}{n+1}$. Disregarding the boundaries (which are set to 0) we obtain the eigenvalue equations
   \begin{equation}
+  \label{eq:buckbeam}
     A\vb{v} = \lambda \vb{v}.
   \end{equation}
-Here A is a tridiagonal matrix, $\lambda$ is an eigenvalue, and $\vb{v} \in \qty(0, n)$ is a vector.
+Here
+  \begin{equation}
+    A =
+      \mqty[d & a & 0 & \hdots & \hdots & 0 \\
+            a & d & a & 0 & \hdots & 0 \\
+            0 & a & d & a & \hdots & 0 \\
+            \vdots & \ddots & \ddots & \ddots & \ddots & \vdots \\
+            0 & \hdots & \ddots & a & d & a \\
+            0 & \hdots & \hdots & 0 & a & d],
+  \end{equation}
+ is an tridiagonal matrix where $d = \frac{2}{h^2}$ and $a = -\frac{1}{h^2}$,
+ $\lambda$ is an eigenvalue, and $\vb{v} \in \qty(0, n)$ is an eigenvector.
+ The analytical eigenvalues are given by
+  \begin{equation}
+    \lambda_j = d + 2a\cos\qty(\frac{j\pi}{n + 1}),
+  \end{equation}
+$j = 1, 2, \dots n-1$.
+
 
 
 \subsection{Quantum dots}
+\label{sec:qmdots}
+
+We want to model an electron in a three dimensional harmonic oscillator potential
+  \begin{equation}
+    V\qty(r) = \frac{1}{2}m\omega^2r^2, \quad r=\sqrt{x^2 + y^2 + z^2}
+  \end{equation}
+$r \in \qty(0, \infty)$, $m$ is the mass, and $\omega$ is the frequency.
+The quantum state can then be represented as the wavefunction
+\begin{equation}
+  \ket{\Psi} \simeq \Psi\qty(r, \phi, \theta) = R\qty(r)Y_{l}^m\qty(\phi, \theta),
+\end{equation}
+where $R\qty(r)$ is the radial part, and $Y_{l}^m\qty(\theta, \phi)$ are the spherical
+harmonics. For reasons that will be elaborated further later, what we need to solve
+then is the radial equation (see appendix for more details on the wavefunction and the
+radial eq.)
+\begin{equation}
+  \label{eq:radeq}
+  -\frac{\hbar^2}{2m}\qty(\dv[2]{}{r} - V\qty(r) - \frac{l\qty(l+1)}{r^2})u\qty(r) = Eu\qty(r).
+\end{equation}
+Here $l$ is the orbital momentum, $u\qty(r) = rR\qty(r)$, and $E$ are the
+eigenvalues of $\Psi\qty(r, \theta, \phi)$.
+We will assume our electron has no orbital momentum ($l = 0$), and scale eq. \ref{eq:radeq}
+by substituting $\rho = \frac{r}{\alpha}$ and $\lambda = \frac{E}{\epsilon}$, inserting $V\qty(r)$, and get
+  \begin{equation}
+    -\frac{\hbar^2}{2m\alpha^2}\qty(\dv[2]{}{\rho} - \frac{m^2\omega^2 \alpha^4}{\hbar^2} \rho^2)u\qty(\rho) = \epsilon\lambda u\qty(\rho),
+  \end{equation}
+where we can define a natural energy scale $\epsilon = \frac{\hbar^2}{2m\alpha^2}$,
+and a natural length scale $\alpha = \sqrt{\frac{\hbar}{m\omega}}$, yielding the
+dimensionless equation
+  \begin{equation}
+    -\dv[2]{u}{\rho} + \rho^2u\qty(\rho) = \lambda u\qty(\rho).
+  \end{equation}
+Discretising as in eq. \ref{eq:disc1}, the equation becomes
+  \begin{equation}
+  \label{eq:disc2}
+    -\frac{v_{i+1} - 2v_i + v_{i-1}}{h^2} + V_i v_i = \lambda v_i,
+  \end{equation}
+where $V_i = \rho_{i}^2=\qty(ih)^2$. Enforcing the Dirichlet boundary conditions,
+we see that \ref{eq:disc2} can be written on the same form as \ref{eq:buckbeam}
+  \begin{equation}
+    A\vb{v} = \lambda \vb{v}.
+  \end{equation}
+Here
+  \begin{equation}
+    A =
+      \mqty[\widetilde{d}_1 & a & 0 & \hdots & \hdots & 0 \\
+            a & \widetilde{d}_2 & a & 0 & \hdots & 0 \\
+            0 & a & \widetilde{d}_3 & a & \hdots & 0 \\
+            \vdots & \ddots & \ddots & \ddots & \ddots & \vdots \\
+            0 & \hdots & \ddots & a & \widetilde{d}_{n-1} & a \\
+            0 & \hdots & \hdots & 0 & a & \widetilde{d}_n],
+  \end{equation}
+where $\widetilde{d_i} = \frac{2}{h^2} + V_i$ and $a$ is as before.
 
 \subsection{Algorithm: Jacobi's determinant}
+\label{sec:jacobi}
+
+\subsection{Programming technicalities}
+\label{sec:progtech}
