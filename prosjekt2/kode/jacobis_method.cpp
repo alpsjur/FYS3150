@@ -15,7 +15,6 @@ int main(int argc, char * argv[]) {
   const double hh = h*h;
   double a = 2/hh;
   double d = -1/hh;
-  int iterations;
 
   //deklarerer matriser og vektore
   mat A(n, n, fill::zeros);
@@ -34,10 +33,9 @@ int main(int argc, char * argv[]) {
   // Beregner CPU-tid i milisekunder
   double arma_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
 
-  test_eigval(analytical_eigval, arma_eigval, n);
-
   //beregner egenvektorene med Jacobis metode
   //tar tiden
+  int iterations;
   c_start = clock();
   jacobi(n, iterations, A, S, jacobi_eigval);
   c_end = clock();
@@ -45,7 +43,10 @@ int main(int argc, char * argv[]) {
   // Beregner CPU-tid i milisekunder
   double jacobi_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
 
-  write_data(n, iterations, arma_time, jacobi_time);
+  //kalkulerer maks relativ feil
+  double max_error = calculate_max_error(n, arma_eigval, jacobi_eigval);
+
+  write_data(n, iterations, arma_time, jacobi_time, max_error);
 
   return 0;
 }
@@ -60,32 +61,6 @@ void initialize(mat &A, double *analytical_eigval,double a, double d, int n){
     A(i,i) = d;
     A(i-1,i) = a;
     A(i, i-1) = a;
-  }
-  return;
-}
-
-void test_eigval(double *analytical_eigval, vec arma_eigval, int n){
-  /*
-  Tester om egenverdiene til matrisen armadillo gir stemmer
-  overens med de analytiske egenverdien
-  */
-  const double tol = 1e-3;
-  int count = 0;
-  double tot_rel_err = 0;
-
-  //itterer over egenverdiene og ser som relativ feil er innenfor tolleransen
-  for (int i=0; i<n;++i){
-    if (fabs((arma_eigval[i]-analytical_eigval[i])/
-        analytical_eigval[i])>tol){
-      count++;
-      tot_rel_err += fabs((arma_eigval[i]-analytical_eigval[i])/
-                     analytical_eigval[i]);
-    }
-  }
-  if (count > 0){
-    cout << "Analytisk og armadillo egenverdier var forskellige " <<
-            count << " ganger for n=" << n << endl;
-    cout << "I snitt var relativ feil " << tot_rel_err/count << endl;
   }
   return;
 }
@@ -167,9 +142,23 @@ void jacobi(int n, int &iterations, mat A, mat &S, vec &jacobi_eigval){
   return;
 }
 
-void write_data(int n, int iterations, double arma_time, double jacobi_time){
+void write_data(int n, int iterations, double arma_time, double jacobi_time,
+                double max_error){
   ofstream logg;
   logg.open("../data/jacobi_log.dat", fstream::app);
-  logg << n << ' ' << iterations << ' ' << jacobi_time << ' ' << arma_time << endl;
+  logg << n << ' ' << iterations << ' ' << jacobi_time << ' ' << arma_time
+       << ' ' << max_error << endl;
   logg.close();
+}
+
+double calculate_max_error(int n, vec arma_eigval, vec jacobi_eigval) {
+  double max_error = -1000.0;
+  double temp;
+  for(int i = 0; i < n; ++i) {
+    temp = fabs((arma_eigval[i]-jacobi_eigval[i])/arma_eigval[i]);
+    if (temp > max_error){
+      max_error = temp;
+    }
+  }
+  return max_error;
 }
