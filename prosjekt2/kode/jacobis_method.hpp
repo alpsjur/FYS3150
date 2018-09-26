@@ -12,7 +12,7 @@ using namespace arma;
 
 void initialize(mat &, double *, double, double, int);
 double analytical(int, int, double, double);
-double find_largest(mat, int *, int *, int);
+double find_largest(mat, int &, int &, int);
 void transform(mat &, mat &, int, int, int);
 void jacobi(int, int &, mat, mat &, vec &);
 void write_data(int, int, double, double, double);

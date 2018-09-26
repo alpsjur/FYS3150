@@ -5,52 +5,23 @@
 #include <ctime>
 
 #include "jacobis_method.hpp"
-#include "catch.hpp"
 
 
-int main(int argc, char * argv[]) {
-
-  //deklarerer konstanter
-  const int n = atoi(argv[1]); //leser inn dimensjonen n fra kommandolinja
-  const double h = 1.0/n;
-  const double hh = h*h;
-  double a = 2/hh;
-  double d = -1/hh;
-
-  //deklarerer matriser og vektore
-  mat A(n, n, fill::zeros);
-  mat S(n, n, fill::eye);     //matrix to hold eigenvectors as row elements
-  double *analytical_eigval = new double [n];
-  vec jacobi_eigval(n);
-
-  initialize(A, analytical_eigval, a, d, n);
-
-  //bruker armadillo for å regne ut egenverdiene
-  //tar tiden
-  clock_t c_start = clock();
-  vec arma_eigval = eig_sym(A); //gir egenverdiene i økende rekkefølge
-  clock_t c_end = clock();
-
-  // Beregner CPU-tid i milisekunder
-  double arma_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
-
-  //beregner egenvektorene med Jacobis metode
-  //tar tiden
-  int iterations;
-  c_start = clock();
-  jacobi(n, iterations, A, S, jacobi_eigval);
-  c_end = clock();
-
-  // Beregner CPU-tid i milisekunder
-  double jacobi_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
-
-  //kalkulerer maks relativ feil
-  double max_error = calculate_max_error(n, arma_eigval, jacobi_eigval);
-
-  write_data(n, iterations, arma_time, jacobi_time, max_error);
-
-  return 0;
+void jacobi(int n, int &iterations, mat A, mat &S, vec &jacobi_eigval){
+  double max = 10.0;
+  double tol = 1e-10;
+  int k, l;
+  iterations = 0;
+  while (max > tol){
+    max = find_largest(A, k, l, n);
+    transform(A, S, k, l, n);
+    iterations++;
+  }
+  jacobi_eigval = A.diag();                //vektor med egenverdiene
+  jacobi_eigval = sort(jacobi_eigval);     //sorterer i stigende rekkefølge
+  return;
 }
+
 
 void initialize(mat &A, double *analytical_eigval,double a, double d, int n){
   //setter diagonalelementene til a og elementene direkte over og under til d
@@ -66,17 +37,17 @@ void initialize(mat &A, double *analytical_eigval,double a, double d, int n){
   return;
 }
 
-double find_largest(mat A, int *k, int *l, int n) {
+double find_largest(mat A, int &k, int &l, int n) {
   //finner indeksene til det største elementet i matrisen
   double largest = 0.0;
   //ittererer over øvre halvdel av matrisen, siden matrisen er symmetrisk
   for (int i=0; i<n; ++i){
-    for (int j=i+1;j<n;++j){
+    for (int j=i+1; j<n; ++j){
       double aij = fabs(A(i,j));
       if (aij>largest){
         largest = aij;
-        *k = i;
-        *l = j;
+        k = i;
+        l = j;
       }
     }
   }
@@ -128,20 +99,6 @@ void transform(mat &A, mat &S,int k, int l, int n) {
   return;
 }
 
-void jacobi(int n, int &iterations, mat A, mat &S, vec &jacobi_eigval){
-  double max = 10.0;
-  double tol = 1e-10;
-  int k, l;
-  iterations = 0;
-  while (max > tol){
-    max = find_largest(A, &k, &l, n);
-    transform(A, S, k, l, n);
-    iterations++;
-  }
-  jacobi_eigval = A.diag();                //vektor med egenverdiene
-  jacobi_eigval = sort(jacobi_eigval);     //sorterer i stigende rekkefølge
-  return;
-}
 
 void write_data(int n, int iterations, double arma_time, double jacobi_time,
                 double max_error){
