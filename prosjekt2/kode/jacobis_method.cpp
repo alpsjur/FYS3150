@@ -4,15 +4,8 @@
 #include <cmath>
 #include <ctime>
 
-using namespace std;
-using namespace arma;
+#include "jacobis_method.hpp"
 
-void initialize(mat &A, double *analytical_eigval,double a, double d, int n);
-double analytical(int i, int n, double a, double d);
-void test_eigval(double *analytical_eigval, vec arma_eigval, int n);
-double find_largest(mat A, int *k, int *l, int n);
-void transform(mat &A, mat &S,int k, int l, int n);
-void write_data(int n, int itterations, double arma_time, double jacobi_time);
 
 int main(int argc, char * argv[]) {
 
