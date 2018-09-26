@@ -5,6 +5,7 @@
 #include <ctime>
 
 #include "jacobis_method.hpp"
+#include "catch.hpp"
 
 
 int main(int argc, char * argv[]) {
