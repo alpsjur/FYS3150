@@ -71,11 +71,6 @@ void initialize(mat &A, double *analytical_eigval,double a, double d, int n){
   return;
 }
 
-double analytical(int i, int n, double a, double d){
-  const double pi = 3.14159;
-  return d+2.0*a*cos((i+1)*pi/(n+1.0));
-}
-
 void test_eigval(double *analytical_eigval, vec arma_eigval, int n){
   /*
   Tester om egenverdiene til matrisen armadillo gir stemmer

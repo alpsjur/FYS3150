@@ -17,4 +17,9 @@ double find_largest(mat, int *, int *, int);
 void transform(mat &, mat &, int, int, int);
 void write_data(int, int, double, double);
 
+inline double analytical(int i, int n, double a, double d){
+  const double pi = 3.14159;
+  return d+2.0*a*cos((i+1)*pi/(n+1.0));
+}
+
 #endif /* JACOBIS_METHOD_H */
