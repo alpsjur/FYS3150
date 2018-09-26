@@ -1,7 +1,7 @@
 \section{Methods}
 \label{sec:methods}
 
-We will
+We will FLAGG
 
 \subsection{The buckling beam}
 \label{sec:bucklingbeam}
@@ -18,7 +18,7 @@ a parameter $\rho = \frac{x}{L}$. Inserting, we get
   \end{equation}
 where $\lambda = \frac{FL^2}{\gamma}$. Now we see that this equation is on the form
 of eq. \ref{eq:eigenspecial}. However, enforcing Dirichlet boundary conditions
-$u\qty(0) = u\qty(1) = 0$ and using a 2nd order central approximation for n integration steps:
+$u\qty(0) = u\qty(1) = 0$ and using a 2nd order central approximation for n integration steps we obtain
   \begin{equation}
   \label{eq:disc1}
     -\frac{v_{i+1} - 2v_i + v_{i-1}}{h^2} + \order{h^2} = \lambda_i v_i,
@@ -55,19 +55,18 @@ We want to model an electron in a three dimensional harmonic oscillator potentia
   \begin{equation}
     V\qty(r) = \frac{1}{2}m\omega^2r^2, \quad r=\sqrt{x^2 + y^2 + z^2}
   \end{equation}
-$r \in \qty(0, \infty)$, $m$ is the mass, and $\omega$ is the frequency.
+$r \in \qty(0, \infty)$ FLAGG, $m$ is the mass, and $\omega$ is the frequency.
 The quantum state can then be represented as the wavefunction
 \begin{equation}
   \ket{\Psi} \simeq \Psi\qty(r, \phi, \theta) = R\qty(r)Y_{l}^m\qty(\phi, \theta),
 \end{equation}
 where $R\qty(r)$ is the radial part, and $Y_{l}^m\qty(\theta, \phi)$ are the spherical
 harmonics. What we need to solve then is the radial equation
-(see appendix for more details on the wavefunction and the radial eq.)
 \begin{equation}
   \label{eq:radeq}
   \qty(\frac{-\hbar^2}{2m}\dv[2]{}{r} + V\qty(r) + \frac{l\qty(l+1)}{r^2})u\qty(r) = Eu\qty(r).
 \end{equation}
-Here $l$ is the orbital momentum, $u\qty(r) = rR\qty(r)$, and $E$ are the
+(See the appendix for more details on the wavefunction and the radial eq.) Here $l$ is the orbital momentum, $u\qty(r) = rR\qty(r)$, and $E$ are the
 eigenvalues of $\Psi\qty(r, \theta, \phi)$.
 We will assume our electron has no orbital momentum ($l = 0$), and scale eq. \ref{eq:radeq}
 by substituting $\rho = \frac{r}{\alpha}$ and $\lambda = \frac{E}{\epsilon}$, inserting $V\qty(r)$, and get
@@ -127,13 +126,25 @@ as usual, and enforcing the Dirichlet conditions, we get our equation on matrix 
   \]
 where the diagonal elements are now given by $d_{i}^{2e} = \frac{2}{h^2} + \omega_r^2 \rho^2 + \frac{1}{\rho}$.
 
-\subsection{Algorithm: Jacobi's determinant}
+\subsection{Algorithm: Jacobi's method}
 \label{sec:jacobi}
-
+The strategy of Jacobi's method is to preform a series of similarity transformations on the matrix A in order to diagonalize the matrix. We say that matrix B is similar to A if
+ \begin{equation*}
+	B = S^{-1}AS, 
+ \end{equation*}
+and that the transformation from A to B is a similarity transformation. If S is a real, orthogonal matrix we have that 
+ \begin{equation*}
+	 S^{-1}=S^T \quad \text{and} \quad B = S^TAS.
+ \end{equation*}
+Since A is a real symmetric matrix there exists a real orthogonal matrix P such that 
+ \begin{equation*}
+     D=P^TAP
+ \end{equation*}
+is a diagonal matrix. Furthermore, the entries along the diagonal of D is the eigenvalues of A.  
 \subsection{Programming technicalities}
 \label{sec:progtech}
 
 All our programs are written in C++, using python3.6 to produce figures and tables.
 We use armadillo with LAPACK to define matrices and vectors, as well as comparing
 LAPACK's eigenvalue solver with the Jacobi algorithm. All our code can be found in
-a github repository "FYS3150" by janadr\footnote(https://github.com/janadr/FYS3150/tree/master/prosjekt2).
+a github repository "FYS3150" by janadr\footnote{https://github.com/janadr/FYS3150/tree/master/prosjekt2}.
