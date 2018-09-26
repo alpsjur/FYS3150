@@ -15,11 +15,13 @@ int main(int argc, char * argv[]) {
   const double hh = h*h;
   double a = 2/hh;
   double d = -1/hh;
+  int iterations;
 
-  //deklarerer matriser og vektorer
+  //deklarerer matriser og vektore
   mat A(n, n, fill::zeros);
   mat S(n, n, fill::eye);     //matrix to hold eigenvectors as row elements
   double *analytical_eigval = new double [n];
+  vec jacobi_eigval(n);
 
   initialize(A, analytical_eigval, a, d, n);
 
@@ -35,25 +37,15 @@ int main(int argc, char * argv[]) {
   test_eigval(analytical_eigval, arma_eigval, n);
 
   //beregner egenvektorene med Jacobis metode
-  double max = 10.0;
-  double tol = 1e-10;
-  int k, l, itterations;
-  itterations = 0;
-  c_start = clock();   //tar tiden
-  while (max > tol){
-    max = find_largest(A, &k, &l, n);
-    transform(A, S, k, l, n);
-    itterations++;
-  }
+  //tar tiden
+  c_start = clock();
+  jacobi(n, iterations, A, S, jacobi_eigval);
   c_end = clock();
 
   // Beregner CPU-tid i milisekunder
   double jacobi_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
 
-  vec jacobi_eigval = A.diag(); //vektor med egenverdiene
-  jacobi_eigval = sort(jacobi_eigval);
-
-  write_data(n, itterations, arma_time, jacobi_time);
+  write_data(n, iterations, arma_time, jacobi_time);
 
   return 0;
 }
@@ -61,9 +53,10 @@ int main(int argc, char * argv[]) {
 void initialize(mat &A, double *analytical_eigval,double a, double d, int n){
   //setter diagonalelementene til a og elementene direkte over og under til d
   A(0,0) = d;
-  analytical_eigval[0] = analytical(0, n, a, d);
+  analytical_eigval[n-1] = analytical(0, n, a, d);
   for (int i=1; i < n; ++i) {
-    analytical_eigval[i] = analytical(i, n, a, d);
+    //beregner analytiske egenverdier i tigende rekkefølge
+    analytical_eigval[n-1-i] = analytical(i, n, a, d);
     A(i,i) = d;
     A(i-1,i) = a;
     A(i, i-1) = a;
@@ -81,13 +74,12 @@ void test_eigval(double *analytical_eigval, vec arma_eigval, int n){
   double tot_rel_err = 0;
 
   //itterer over egenverdiene og ser som relativ feil er innenfor tolleransen
-  //arma_eigval er i stigende rekkefølge, analytical_eigval er i synkende
   for (int i=0; i<n;++i){
-    if (fabs((arma_eigval[i]-analytical_eigval[n-1-i])/
-        analytical_eigval[n-1-i])>tol){
+    if (fabs((arma_eigval[i]-analytical_eigval[i])/
+        analytical_eigval[i])>tol){
       count++;
-      tot_rel_err += fabs((arma_eigval[i]-analytical_eigval[n-1-i])/
-                     analytical_eigval[n-1-i]);
+      tot_rel_err += fabs((arma_eigval[i]-analytical_eigval[i])/
+                     analytical_eigval[i]);
     }
   }
   if (count > 0){
@@ -99,6 +91,7 @@ void test_eigval(double *analytical_eigval, vec arma_eigval, int n){
 }
 
 double find_largest(mat A, int *k, int *l, int n) {
+  //finner indeksene til det største elementet i matrisen
   double largest = 0.0;
   //ittererer over øvre halvdel av matrisen, siden matrisen er symmetrisk
   for (int i=0; i<n; ++i){
@@ -159,9 +152,24 @@ void transform(mat &A, mat &S,int k, int l, int n) {
   return;
 }
 
-void write_data(int n, int itterations, double arma_time, double jacobi_time){
+void jacobi(int n, int &iterations, mat A, mat &S, vec &jacobi_eigval){
+  double max = 10.0;
+  double tol = 1e-10;
+  int k, l;
+  iterations = 0;
+  while (max > tol){
+    max = find_largest(A, &k, &l, n);
+    transform(A, S, k, l, n);
+    iterations++;
+  }
+  jacobi_eigval = A.diag();                //vektor med egenverdiene
+  jacobi_eigval = sort(jacobi_eigval);     //sorterer i stigende rekkefølge
+  return;
+}
+
+void write_data(int n, int iterations, double arma_time, double jacobi_time){
   ofstream logg;
   logg.open("../data/jacobi_log.dat", fstream::app);
-  logg << n << ' ' << itterations << ' ' << jacobi_time << ' ' << arma_time << endl;
+  logg << n << ' ' << iterations << ' ' << jacobi_time << ' ' << arma_time << endl;
   logg.close();
 }

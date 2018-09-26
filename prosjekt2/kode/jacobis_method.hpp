@@ -15,6 +15,7 @@ double analytical(int, int, double, double);
 void test_eigval(double *, vec, int);
 double find_largest(mat, int *, int *, int);
 void transform(mat &, mat &, int, int, int);
+void jacobi(int, int &, mat, mat &, vec &);
 void write_data(int, int, double, double);
 
 inline double analytical(int i, int n, double a, double d){

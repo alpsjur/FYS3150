@@ -26,7 +26,7 @@ for i in n:
 jacobi_data = np.loadtxt("../data/jacobi_log.dat")
 
 jacobi_n = jacobi_data[:,0]
-jacobi_itterations = jacobi_data[:,1]
+jacobi_iterations = jacobi_data[:,1]
 jacobi_time = jacobi_data[:,2]
 arma_time = jacobi_data[:,3]
 
@@ -35,9 +35,9 @@ sns.set_style("whitegrid")
 sns.set_palette("husl")
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
-ax.plot(np.log10(jacobi_n),np.log10(jacobi_itterations))
+ax.plot(np.log10(jacobi_n),np.log10(jacobi_iterations))
 ax.set_xlabel(r'$\log_{10}$ n', fontsize=14)
-ax.set_ylabel(r'$\log_{10}$ itterations', fontsize=14)
+ax.set_ylabel(r'$\log_{10}$ iterations', fontsize=14)
 plt.savefig("../figurer/n_vs_itterations.pdf")
 plt.show()
 
