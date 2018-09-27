@@ -13,13 +13,15 @@ int main(int argc, char * argv[]) {
   // 0 = buckling beam, 1 = 1 quantum dot, 2 = 2 quantum dots
   const int problem = atoi(argv[2]);
 
+  const int eigwrite = atoi(argv[3]);
+
   // a  trengs hvis vi vil teste eigenverdiene med de analytiske
   double a, omega_r;
   int iterations;
 
   // tar omega_r fra terminalen hvis vi ser på to elektroner
   if(problem == 2){
-    omega_r = atof(argv[3]);
+    omega_r = atof(argv[4]);
   }
 
   double rhomin = 0.0;
@@ -57,8 +59,9 @@ int main(int argc, char * argv[]) {
   double max_error = calculate_max_error(n, arma_eigval, jacobi_eigval);
 
   write_log(n, iterations, arma_time, jacobi_time, max_error);
-
-  write_eig(n,problem, jacobi_eigval, S);
+  if(eigwrite == 1){
+    write_eig(n,problem, jacobi_eigval, S);
+  }
 
   return 0;
 }
