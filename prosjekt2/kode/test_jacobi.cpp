@@ -63,6 +63,43 @@ TEST_CASE("Buckling beam : analytical eigval == numerical eigval"){
   delete[] analytical_eigval;
 }
 
+TEST_CASE("Quantum dots : Sjekker at egenvektorene er ortonorale"){
+  int n = 4;
+  int problem = 2;
+
+  double rhomin = 0.0;
+  double rhomax = 1.0;
+
+  double a, omega_r;
+  omega_r=0.01;
+
+  mat A(n, n, fill::zeros);
+  mat S(n, n, fill::eye);
+  vec jacobi_eigval(n);
+
+  double *d = new double [n];
+
+  initialize(A, d, a, rhomin, rhomax, omega_r, problem, n);
+
+  delete[] d;
+
+  int iterations;
+  jacobi(n, iterations, A, S, jacobi_eigval);
+
+  double product;
+  for (int i=0; i<n; ++i){
+    for (int j=0; j<n; ++j){
+      product = dot(S.col(i).t(), S.col(j));
+      if (i==j){
+        REQUIRE(product==Approx(1));
+      }
+      else {
+        REQUIRE(product==Approx(0));
+      }
+    }
+  }
+}
+
 
 TEST_CASE("Quantum dot : Sjekker om vi finner største verdi i matrisen"){
     int n = 3;
