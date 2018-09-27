@@ -10,18 +10,27 @@ int main(int argc, char * argv[]) {
 
   //deklarerer konstanter
   const int n = atoi(argv[1]); //leser inn dimensjonen n fra kommandolinja
-  const double h = 1.0/n;
-  const double hh = h*h;
-  double a = -1/hh;
-  double d = 2/hh;
+  const int problem = atoi(argv[2]);
 
-  //deklarerer matriser og vektore
+  double a, omega_r;
+  int iterations;
+
+  if(problem == 2){
+    omega_r = atof(argv[3]);
+  }
+
+  double rhomin = 0.0;
+  double rhomax = 1.0;
+
+  double *d = new double [n];
+
+  //deklarerer matriser og vektorer
   mat A(n, n, fill::zeros);
   mat S(n, n, fill::eye);     //matrix to hold eigenvectors as row elements
-  double *analytical_eigval = new double [n];
   vec jacobi_eigval(n);
 
-  initialize(A, analytical_eigval, a, d, n);
+  initialize(A, d, a, rhomin, rhomax, omega_r, problem, n);
+  delete[] d;
 
   //bruker armadillo for å regne ut egenverdiene
   //tar tiden
@@ -34,7 +43,6 @@ int main(int argc, char * argv[]) {
 
   //beregner egenvektorene med Jacobis metode
   //tar tiden
-  int iterations;
   c_start = clock();
   jacobi(n, iterations, A, S, jacobi_eigval);
   c_end = clock();

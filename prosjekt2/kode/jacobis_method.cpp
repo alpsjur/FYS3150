@@ -23,14 +23,27 @@ void jacobi(int n, int &iterations, mat A, mat &S, vec &jacobi_eigval){
 }
 
 
-void initialize(mat &A, double *analytical_eigval,double a, double d, int n){
+void initialize(mat &A, double *d, double &a, double rhomin, double rhomax, double omega_r, int problem, int n){
+  const double h = (rhomax - rhomin)/double(n);
+  const double hh = h*h;
+  a = -1.0/hh;
+
+  for(int i = 0; i < n; ++i){
+    d[i] = 2.0/hh;
+
+    double rho = (rhomin + i*h);
+    double V = rho*rho;
+    if(problem == 1){
+      d[i] += V;
+    } else if(problem == 2){
+      d[i] += omega_r*V + 1.0/rho;
+    }
+  }
   //setter diagonalelementene til a og elementene direkte over og under til d
-  A(0,0) = d;
-  analytical_eigval[n-1] = analytical(0, n, a, d);
+  A(0,0) = d[0];
   for (int i=1; i < n; ++i) {
-    //beregner analytiske egenverdier i tigende rekkefølge
-    analytical_eigval[n-1-i] = analytical(i, n, a, d);
-    A(i,i) = d;
+    //beregner analytiske egenverdier i stigende rekkefølge
+    A(i,i) = d[i];
     A(i-1,i) = a;
     A(i, i-1) = a;
   }
