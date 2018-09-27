@@ -21,7 +21,7 @@ remove_file("../data/jacobi_log.dat")
 #running the c++ programs
 for i in n:
     for j in range(N):
-        os.system("./main.exe {} {} 0.01".format(i, 2))
+        os.system("./main.exe {} {} {}".format(i, 0, 0))
 
 jacobi_data = np.loadtxt("../data/jacobi_log.dat")
 
@@ -30,6 +30,20 @@ jacobi_iterations = jacobi_data[:,1]
 jacobi_time = jacobi_data[:,2]
 arma_time = jacobi_data[:,3]
 max_error = jacobi_data[:,4]
+
+n_values = np.linspace(10, 100, 10)
+for i in range(90, )
+    arma_avgtime = np.mean(arma_time[-n_max:])
+    arma_std = np.std(arma_time[-n_max:])
+
+    jacobi_avgtime = np.mean(jacobi_time[-n_max:])
+    jacobi_std = np.std(jacobi_time[-n_max:])
+
+
+print("Mean CPU times and standard deviation")
+print("Jacobi time = {}, Jacobi std = {}".format(jacobi_avgtime, jacobi_std))
+print("Armadillo time = {}, Armadillo std = {}".format(arma_avgtime, arma_std))
+print("Time ratio = {}".format(jacobi_avgtime/arma_avgtime))
 
 
 sns.set()
@@ -52,5 +66,3 @@ ax2.set_ylabel(r'$\log_{10}$ $\epsilon$', fontsize=14)
 
 
 plt.show()
-
-time_ratio = jacobi_time/arma_time
