@@ -60,3 +60,26 @@ Multiplying by r on both sides, the problem then reduces to the radial equation
 \begin{equation}
   -\frac{\hbar^2}{2m}\qty(\dv[2]{}{r} - V(r) - \frac{l\qty(l+1)}{r^2})u\qty(r) = Eu\qty(r).
 \end{equation}
+
+\subsection*{Expressions for computing the Jacobi rotation}
+ The resulting matrix from the transformation in eq. \ref{eq:sim}, written on the same form as eq. \ref{eq:S}, is 
+ \begin{equation}\label{eq:rotate}
+ \begin{split}
+ &b_{ii} = a_{ii}, \quad i\neq k,l  \\
+ &b_{ik} = a_{ik}\cos{\theta} - a_{il}\sin \theta, \quad i\neq k,l \\
+ &b_{il} = a_{il}\cos{\theta} + a_{ik}\sin \theta, \quad i\neq k,l \\
+ &b_{kk} = a_{ll}\cos^2{\theta} - 2a_{kl}\cos{\theta}\sin{\theta} + a_{kk}\sin^2{\theta}  \\
+ &b_{ll} = a_{kk}\cos^2{\theta} + 2a_{kl}\cos{\theta}\sin{\theta} + a_{ll}\sin^2{\theta}  \\
+ &b_{kl} = \left( a_{kk} - a_{ll}\right) \cos{\theta}\sin{\theta} + a_{kl}\left( \cos^2\theta - \sin^2\theta\right) 
+ \end{split}
+ \end{equation}
+ 
+ Using eq. \ref{eq:rotate}, and letting $\tau = \cos{2\theta}$, we get
+ \begin{equation}
+ \begin{split}
+ &\tau =  \frac{a_{ll}-a_{kk}}{2a_{kl}} \\
+ &\tan \theta = -\tau \pm \sqrt{1+\tau^2} \\
+ &\cos \theta = \frac{1}{\sqrt{1+\tan^2 \theta}} \\
+ &\sin \theta = \tan \theta \cos \theta 
+ \end{split}
+ \end{equation}
