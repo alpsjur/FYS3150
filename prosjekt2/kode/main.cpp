@@ -10,17 +10,20 @@ int main(int argc, char * argv[]) {
 
   //deklarerer konstanter
   const int n = atoi(argv[1]); //leser inn dimensjonen n fra kommandolinja
+  // 0 = buckling beam, 1 = 1 quantum dot, 2 = 2 quantum dots
   const int problem = atoi(argv[2]);
 
+  // a  trengs hvis vi vil teste eigenverdiene med de analytiske
   double a, omega_r;
   int iterations;
 
+  // tar omega_r fra terminalen hvis vi ser på to elektroner
   if(problem == 2){
     omega_r = atof(argv[3]);
   }
 
   double rhomin = 0.0;
-  double rhomax = 1.0;
+  double rhomax = 10.0;
 
   double *d = new double [n];
 
