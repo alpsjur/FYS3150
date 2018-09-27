@@ -18,7 +18,7 @@ void jacobi(int n, int &iterations, mat A, mat &S, vec &jacobi_eigval){
     iterations++;
   }
   jacobi_eigval = A.diag();                //vektor med egenverdiene
-  jacobi_eigval = sort(jacobi_eigval);     //sorterer i stigende rekkefølge
+  //jacobi_eigval = sort(jacobi_eigval);     //sorterer i stigende rekkefølge
   return;
 }
 
@@ -115,7 +115,7 @@ void transform(mat &A, mat &S,int k, int l, int n) {
 }
 
 
-void write_data(int n, int iterations, double arma_time, double jacobi_time,
+void write_log(int n, int iterations, double arma_time, double jacobi_time,
                 double max_error){
   ofstream logg;
   logg.open("../data/jacobi_log.dat", fstream::app);
@@ -124,9 +124,19 @@ void write_data(int n, int iterations, double arma_time, double jacobi_time,
   logg.close();
 }
 
+void write_eig(int n, int prob,vec jacobi_eig, mat S){
+  ofstream file;
+  file.open("../data/jacobi_eig"+ to_string(prob)+ '_' + to_string(n) + ".dat");
+  for (int i=0;i<n;++i){
+    file << jacobi_eig(i) << ' ' << S.col(i).t();
+  }
+  file.close();
+}
+
 double calculate_max_error(int n, vec arma_eigval, vec jacobi_eigval) {
   double max_error = -1000.0;
   double temp;
+  jacobi_eigval = sort(jacobi_eigval);
   for(int i = 0; i < n; ++i) {
     temp = fabs((arma_eigval[i]-jacobi_eigval[i])/arma_eigval[i]);
     if (temp > max_error){

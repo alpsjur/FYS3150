@@ -55,6 +55,7 @@ TEST_CASE("Buckling beam : analytical eigval == numerical eigval"){
 
   int iterations;
   jacobi(n, iterations, A, S, jacobi_eigval);
+  jacobi_eigval = sort(jacobi_eigval);
 
   for(int i = 0; i<n; ++i){
     REQUIRE(analytical_eigval[i] == Approx(jacobi_eigval[i]));
@@ -117,7 +118,7 @@ TEST_CASE("Quantun dot: analytiske eigval == numeriske eigval"){
 
   int iterations;
   jacobi(n, iterations, A, S, jacobi_eigval);
-
+  jacobi_eigval = sort(jacobi_eigval);
   for(int i = 0; i<3; ++i){
     REQUIRE(analytical_eigval[i] == Approx(jacobi_eigval[i]).epsilon(0.001));
   }

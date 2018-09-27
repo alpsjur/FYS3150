@@ -56,7 +56,9 @@ int main(int argc, char * argv[]) {
   //kalkulerer maks relativ feil
   double max_error = calculate_max_error(n, arma_eigval, jacobi_eigval);
 
-  write_data(n, iterations, arma_time, jacobi_time, max_error);
+  write_log(n, iterations, arma_time, jacobi_time, max_error);
+
+  write_eig(n,problem, jacobi_eigval, S);
 
   return 0;
 }

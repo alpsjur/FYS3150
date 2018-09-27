@@ -15,8 +15,9 @@ double analytical(int, int, double, double);
 double find_largest(mat, int &, int &, int);
 void transform(mat &, mat &, int, int, int);
 void jacobi(int, int &, mat, mat &, vec &);
-void write_data(int, int, double, double, double);
+void write_log(int, int, double, double, double);
 double calculate_max_error(int, vec, vec);
+void write_eig(int, int,vec, mat);
 
 inline double analytical_buck(int i, int n, double a, double di){
   const double pi = 3.14159;
