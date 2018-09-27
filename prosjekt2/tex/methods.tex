@@ -129,11 +129,11 @@ where the diagonal elements are now given by $d_{i}^{2e} = \frac{2}{h^2} + \omeg
 
 \subsection{Algorithm: Jacobi's method}
 \label{sec:jacobi}
-The strategy of Jacobi's method is to preform a series of similarity transformations on the matrix A in order to diagonalize the matrix. We say that matrix B is similar to A if
+The strategy of Jacobi's method is to perform a series of similarity transformations on the matrix A in order to diagonalize the matrix. We say that matrix B is similar to A if
  \begin{equation*}
 	B = S^{-1}AS, 
  \end{equation*}
-and that the transformation from A to B is a similarity transformation. If S is a real, orthogonal matrix we have that 
+and that the transformation from A to B is a similarity transformation. If S is a real orthogonal matrix we have that 
  \begin{equation*}
 	 S^{-1}=S^T \quad \text{and} \quad B = S^TAS.
  \end{equation*}
@@ -141,7 +141,15 @@ Since A is a real symmetric matrix there exists a real orthogonal matrix P such 
  \begin{equation*}
      D=P^TAP
  \end{equation*}
-is a diagonal matrix. Furthermore, the entries along the diagonal of D is the eigenvalues of A.  
+is a diagonal matrix. Furthermore, the entries along the diagonal of D is the eigenvalues of A. Since the matrix product of two orthogonal matrices is another orthogonal matrix, we can preform a series of similarity transformations until we get a diagonal matrix. That is 
+\begin{equation*}
+S_k^TS_{k-1}^T\cdots S_1^TAS_1 \cdots S_{k-1}S_k = D
+\end{equation*}
+where $S_i, \quad i = 1, \ldots, k $ are real orthogonal matrices.  
+
+
+
+
 \subsection{Programming technicalities}
 \label{sec:progtech}
 

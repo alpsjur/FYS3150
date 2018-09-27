@@ -21,7 +21,7 @@ remove_file("../data/jacobi_log.dat")
 #running the c++ programs
 for i in n:
     for j in range(N):
-        os.system("./jacobis_method.exe {}".format(i))
+        os.system("./main.exe {}".format(i))
 
 jacobi_data = np.loadtxt("../data/jacobi_log.dat")
 

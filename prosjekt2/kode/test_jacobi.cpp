@@ -26,5 +26,5 @@ TEST_CASE("Sjekker om vi finner største verdi i matrisen"){
 
 
 TEST_CASE("Sjekker om eigenverdiene stemmer med analytiske verdier"){
-  int n = 3
+  int n = 3;
 }

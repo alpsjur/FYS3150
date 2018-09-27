@@ -19,14 +19,14 @@ ${PROG} : main.o jacobis_method.o
 ${TEST_PROG} : tests_main.o test_jacobi.o jacobis_method.o
 	${CPPflags} tests_main.o test_jacobi.o jacobis_method.o ${LIB} -o ${TEST_PROG}
 
-main.o : $<
-	${CPPflags} -c $<
+main.o : main.cpp
+	${CPPflags} -c main.cpp
 
-jacobis_method.o : $<
-	${CPPflags} -c $<
+jacobis_method.o : jacobis_method.cpp
+	${CPPflags} -c jacobis_method.cpp
 
-tests_main.o : $<
-	${CPPflags} -c $<
+tests_main.o : tests_main.cpp
+	${CPPflags} -c tests_main.cpp
 
-test_jacobi.o : $<
-	${CPPflags} -c $<
+test_jacobi.o : test_jacobi.cpp
+	${CPPflags} -c test_jacobi.cpp

@@ -38,7 +38,6 @@ int main(int argc, char * argv[]) {
   c_start = clock();
   jacobi(n, iterations, A, S, jacobi_eigval);
   c_end = clock();
-  cout << A << endl;
 
   // Beregner CPU-tid i milisekunder
   double jacobi_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
