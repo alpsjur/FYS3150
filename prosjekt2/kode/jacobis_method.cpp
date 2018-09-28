@@ -105,11 +105,10 @@ void transform(mat &A, mat &S,int k, int l, int n) {
       A(l,i) = A(i,l);
     }
     //kalkulerer egenvektorene
-    double sik, sil;
+    double sik;
     sik = S(i,k);
-    sil = S(i,l);
-    S(i,k) = c*sik - s*sil;
-    S(i,l) = c*sil + s*sik;
+    S(i,k) = c*sik - s*S(i,l);
+    S(i,l) = c*S(i,l) + s*sik;
   }
   return;
 }
@@ -133,12 +132,12 @@ void write_eig(int n, int prob,vec jacobi_eig, mat S){
   file.close();
 }
 
-double calculate_max_error(int n, vec arma_eigval, vec jacobi_eigval) {
+double calculate_max_error(int n, vec computed_eigval, double *analytical_eigval) {
   double max_error = -1000.0;
   double temp;
-  jacobi_eigval = sort(jacobi_eigval);
+  computed_eigval = sort(computed_eigval);
   for(int i = 0; i < n; ++i) {
-    temp = fabs((arma_eigval[i]-jacobi_eigval[i])/arma_eigval[i]);
+    temp = fabs((analytical_eigval[i]-computed_eigval[i])/analytical_eigval[i]);
     if (temp > max_error){
       max_error = temp;
     }

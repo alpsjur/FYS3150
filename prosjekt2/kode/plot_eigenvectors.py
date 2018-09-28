@@ -23,7 +23,7 @@ def make_plot(ax, problem, n, omega_r,which_to_plot):
     sortedeigenvectors = eigenvectors[inds]
 
     for i in which_to_plot:
-        ax.plot(x,eigenvectors[i]*eigenvectors[i],label="n={}".format(n))
+        ax.plot(x,eigenvectors[i]*n,label="n={}".format(n)) #ganger med n for å normalisere
 
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)

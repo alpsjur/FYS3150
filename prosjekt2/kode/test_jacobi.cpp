@@ -12,14 +12,12 @@ TEST_CASE("Buckling beam : Sjekker om vi finner største verdi i matrisen"){
     int k, l;
 
     double *d = new double [n];
-    double *analytical_eigval = new double [n];
 
     mat A(n,n, fill::zeros);
 
     //initialize matrices and vector
 
     initialize(A, d, a, rhomin, rhomax, omega_r, problem, n);
-    delete[] analytical_eigval, d;
     //find maximum matrix element
     double largest = find_largest(A, k, l, n);
 
