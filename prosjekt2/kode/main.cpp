@@ -39,16 +39,18 @@ int main(int argc, char * argv[]) {
 
   initialize(A, d, a, rhomin, rhomax, omega_r, problem, n);
 
-  //bruker armadillo for å regne ut egenverdiene
+  //bruker armadillo for å regne ut egenverdiene og egenvektorene
+  vec arma_eigval;
+  mat arma_eigvec;
   //tar tiden
   clock_t c_start = clock();
-  vec arma_eigval = eig_sym(A); //gir egenverdiene i økende rekkefølge
+  eig_sym(arma_eigval, arma_eigvec, A);  //gir egenverdiene i økende rekkefølge
   clock_t c_end = clock();
 
   // Beregner CPU-tid i milisekunder
   double arma_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
 
-  //beregner egenvektorene med Jacobis metode
+  //beregner egenverdiene og egenvektorene med Jacobis metode
   //tar tiden
   c_start = clock();
   jacobi(n, iterations, A, S, jacobi_eigval);

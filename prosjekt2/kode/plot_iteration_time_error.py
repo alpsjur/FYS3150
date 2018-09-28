@@ -54,6 +54,8 @@ for i in n:
 sns.set()
 sns.set_style("whitegrid")
 sns.set_palette("husl")
+plt.rc('text', usetex=True)
+
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
 ax.plot(np.log10(jacobi_n),np.log10(jacobi_iterations),
@@ -75,18 +77,18 @@ fig2 = plt.figure()
 ax2 = fig2.add_subplot(1, 1, 1)
 ax2.plot(np.log10(jacobi_n),np.log10(max_error))
 ax2.set_xlabel(r'$\log_{10}$ n', fontsize=14)
-ax2.set_ylabel(r'$\log_{10}$ $\epsilon$', fontsize=14)
+ax2.set_ylabel(r'$\log_{10}$ $\epsilon_{max}$', fontsize=14)
 #plt.savefig("../figurer/relative_error.pdf")
 
 
 fig3 = plt.figure()
 ax3 = fig3.add_subplot(1, 1, 1)
-ax3.plot(np.log10(n), np.log10(jacobi_avgtime),label="Jacobis method")
-ax3.plot(np.log10(n), np.log10(arma_avgtime),label="armadillo")
+ax3.plot(np.log10(n), np.log10(jacobi_avgtime),label=r"Jacobis method")
+ax3.plot(np.log10(n), np.log10(arma_avgtime),label=r"armadillo")
 ax3.set_xlabel(r'$\log_{10}$ n', fontsize=14)
-ax3.set_ylabel(r'$\log_{10}$ CPU-time [$\log_{10}$ms]', fontsize=14)
+ax3.set_ylabel(r'$\log_{10}$ mean CPU-time [$\log_{10}$ms]', fontsize=14)
 ax3.legend(fontsize=12)
-plt.savefig("../figurer/CPU_time.pdf")
+#plt.savefig("../figurer/CPU_time.pdf")
 
 
 plt.show()
