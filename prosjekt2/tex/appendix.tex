@@ -13,13 +13,6 @@
           0 & \hdots & \hdots & 0 & a_{n-1} & b_n],
   \]
 
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=\textwidth]{examplefig}
-	\caption{The numeric solution using different solving algorithms. The graphs for n=100 and n=1000 are so similar that they are not distinguishable.}
-	\label{fig:all}
-\end{figure}
-
 \subsection*{Derivation of the radial equation}
 \label{sec:radeq}
 Considering the case of a particle in a three dimensional harmonic oscillator
@@ -73,11 +66,17 @@ Multiplying by r on both sides, the problem then reduces to the radial equation
  &b_{kl} = \left( a_{kk} - a_{ll}\right) \cos{\theta}\sin{\theta} + a_{kl}\left( \cos^2\theta - \sin^2\theta\right) 
  \end{split}
  \end{equation}
- 
- Using eq. \ref{eq:rotate}, and letting $\tau = \cos{2\theta}$, we get
+ Using eq. \ref{eq:rotate}, and letting $\tau = \cot{2\theta}$, we get that to satisfy $b_{kl}=0$, we must have 
+ \begin{equation}
+  \tau =  \frac{a_{ll}-a_{kk}}{2a_{kl}} 
+ \end{equation}
+ By using the trigonometric identity $\cot{2\theta} = \frac{1}{2}\left( \cot \theta - \tan \theta\right)$, we get the quadratic equation
+ \begin{equation}
+ \tan^2 \theta + 2\tau \tan \theta - 1 = 0
+ \end{equation}
+ with the solution
  \begin{equation}
  \begin{split}
- &\tau =  \frac{a_{ll}-a_{kk}}{2a_{kl}} \\
  &\tan \theta = -\tau \pm \sqrt{1+\tau^2} \\
  &\cos \theta = \frac{1}{\sqrt{1+\tan^2 \theta}} \\
  &\sin \theta = \tan \theta \cos \theta 

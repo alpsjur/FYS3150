@@ -1,3 +1,3 @@
 \begin{abstract}
-  
+  We implement Jacobi's method for solving eigenvalue problems on the form $A\mathbf{v} = \lambda \mathbf{v}$, where $A$ is a symmetric matrix. By scaling the equations, we can use our algorithm to solve the buckling beam, single electron in an harmonic oscillator potential, and two electrons in an harmonic oscillator potential problems. By looking at the buckling beam problem, we find that the number of iterations needed to diagonalize the matrix is proportional to $n^2$, while the CPU-time is proportional to $n^4$. The relative error in the eigenvalues converges to $\sim10^{-5.77}$ for $n$ larger than 25. For $n$ lager than 20, the Armadillo function \texttt{eig\_sym} is faster than Jacobi's method. We therefore conclude that Jacobi's method gives a good approximation, even though it is slow for large $n$.  
 \end{abstract}

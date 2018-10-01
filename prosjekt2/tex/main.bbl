@@ -1,3 +1,8 @@
-\begin{thebibliography}{}
+\begin{thebibliography}{1}
+
+\bibitem{linalg}
+D.C. Lay.
+\newblock {\em Linear Algebra and Its Applications}.
+\newblock Pearson Education, 2002.
 
 \end{thebibliography}
