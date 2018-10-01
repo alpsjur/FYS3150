@@ -63,11 +63,11 @@ for omega in omegalist:
     filename_nointeract = make_file(problem, n, omega, interact=0)
     filename_interact = make_file(problem, n, omega, interact=1)
 
-    plot_eigenvectors(ax[0], filename_nointeract, n, problem, [0], color='r')
-    plot_eigenvalues(ax[1], filename_nointeract, omega, 0, color='r')
+    plot_eigenvectors(ax[0], filename_nointeract, n, problem, [0], color='steelblue')
+    plot_eigenvalues(ax[1], filename_nointeract, omega, 0, color='steelblue')
 
-    plot_eigenvectors(ax[0], filename_interact, n, problem, [0], color='b')
-    plot_eigenvalues(ax[1], filename_interact, omega, 0, color='b')
+    plot_eigenvectors(ax[0], filename_interact, n, problem, [0], color='orchid')
+    plot_eigenvalues(ax[1], filename_interact, omega, 0, color='orchid')
 
 ax[0].set_xlabel(r'$\rho$', fontsize=14)
 ax[0].set_ylabel(r'$\psi_0 ^2$', fontsize=14)
@@ -77,8 +77,8 @@ ax[0].legend(['no interaction', 'interaction'], fontsize=14, frameon=False)
 ax[1].set_xlabel(r'$\omega_r$', fontsize=14)
 ax[1].set_ylabel(r'$\lambda_0$', fontsize=14)
 
-#plt.subplots_adjust(hspace=0.35)
+plt.subplots_adjust(hspace=0.35)
 
-#plt.savefig("../figurer/quantom_dots_nointer.pdf")
+plt.savefig("../figurer/quantom_dots_yesinter.pdf")
 
 plt.show()
