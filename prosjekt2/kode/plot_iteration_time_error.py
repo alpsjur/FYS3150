@@ -24,6 +24,7 @@ for i in n:
     for j in range(N):
         os.system("./main.exe {} {} {}".format(i, 0, 0))
 
+#loading data from file
 jacobi_data = np.loadtxt("../data/jacobi_log.dat")
 
 jacobi_n = jacobi_data[:,0]
@@ -32,6 +33,7 @@ jacobi_time = jacobi_data[:,2]
 arma_time = jacobi_data[:,3]
 max_error = jacobi_data[:,4]
 
+#calculating average CPU-time and the standard deviation
 jacobi_avgtime = np.zeros(n_max-1)
 jacobi_std = np.zeros(n_max-1)
 
@@ -51,6 +53,7 @@ for i in n:
     arma_avgtime[int(i)-2] = np.mean(tempa)
     arma_std[int(i)-2] = np.std(tempa)
 
+#plotting
 sns.set()
 sns.set_style("whitegrid")
 sns.set_palette("husl")
@@ -75,7 +78,7 @@ ax.set_ylabel(r'$\log_{10}$ iterations', fontsize=14)
 
 fig2 = plt.figure()
 ax2 = fig2.add_subplot(1, 1, 1)
-ax2.plot(np.log10(jacobi_n),np.log10(max_error))
+ax2.scatter(np.log10(jacobi_n),np.log10(max_error))
 ax2.set_xlabel(r'$\log_{10}$ n', fontsize=14)
 ax2.set_ylabel(r'$\log_{10}$ $\epsilon_{max}$', fontsize=14)
 #plt.savefig("../figurer/relative_error.pdf")

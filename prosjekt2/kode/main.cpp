@@ -62,23 +62,9 @@ int main(int argc, char * argv[]) {
   // Beregner CPU-tid i milisekunder
   double jacobi_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
 
-  // Beregner analytiske egenvedier FLAGG foreløpig bare buckling beam
-  double *analytical_eigval = new double [n];
-  if (problem==0){
-    for(int i = 0; i < n; ++i){
-      analytical_eigval[i] = analytical_buck(i, n, a, d[i]);
-    }
-  }
-  else if (problem == 1){
-    for(int i = 0; i < n; ++i){
-      analytical_eigval[i] = analytical_dot(i);
-    }
-  }
-
   //kalkulerer maks relativ feil
-  double max_error = calculate_max_error(n, jacobi_eigval, analytical_eigval);
+  double max_error = calculate_max_error(n, a, d, problem,jacobi_eigval);
 
-  delete[] analytical_eigval;
   delete[] d;
 
   write_log(n, iterations, arma_time, jacobi_time, max_error);

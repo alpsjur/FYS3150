@@ -133,15 +133,29 @@ void write_eig(int n, int prob,vec jacobi_eig, mat S){
   file.close();
 }
 
-double calculate_max_error(int n, vec computed_eigval, double *analytical_eigval) {
+double calculate_max_error(int n, double a,double *d,int problem,vec computed_eigval) {
   double max_error = -1000.0;
   double temp;
+  double *analytical_eigval = new double [n];
   computed_eigval = sort(computed_eigval);
+
+  // Beregner analytiske egenvedier FLAGG foreløpig bare buckling beam
+  if (problem==0){
+    for(int i = 0; i < n; ++i){
+      analytical_eigval[i] = analytical_buck(i, n, a, d[i]);
+    }
+  }
+  else if (problem == 1){
+    for(int i = 0; i < n; ++i){
+      analytical_eigval[i] = analytical_dot(i);
+    }
+  }
   for(int i = 0; i < n; ++i) {
     temp = fabs((analytical_eigval[i]-computed_eigval[i])/analytical_eigval[i]);
     if (temp > max_error){
       max_error = temp;
     }
   }
+  delete[] analytical_eigval;
   return max_error;
 }
