@@ -15,7 +15,10 @@ for higher n.
 In Figure \ref{fig:CPUtime} we compare the CPU time between Jacobi's method and
 armadillo's built-in eigenvalue solver, where we see that the CPU time of Jacobi's method
 has a similar shape as in Figure \ref{fig:n_vs_it}. Looking at the graph for the armadillo
-function we see that the slope is less steep
+function we see that the slope is rising slower, but have a similar shape, except
+for the fluctuations occuring after the $\log_{10} n = 1.25$ mark. We also calculated
+the standard deviation for these values, but they were on the order of FLAGG, and
+are thus not visible in the figure.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{CPU_time.pdf}
@@ -23,6 +26,9 @@ function we see that the slope is less steep
 	\label{fig:CPUtime}
 \end{figure}
 
+Here (Figure \ref{fig:error}), we show the maximum relative error of the Jacobi
+algorithm. We see that the error increases linearly with a steep slope for low n,
+before converging towards a constant error for increasing n.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{relative_error.pdf}
