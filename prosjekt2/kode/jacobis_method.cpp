@@ -17,7 +17,7 @@ void jacobi(int n, int &iterations, mat A, mat &S, vec &jacobi_eigval){
     transform(A, S, k, l, n);
     iterations++;
   }
-  jacobi_eigval = A.diag();                //vektor med egenverdiene
+  jacobi_eigval = A.diag();                  //vektor med egenverdiene
   //jacobi_eigval = sort(jacobi_eigval);     //sorterer i stigende rekkefølge
   return;
 }

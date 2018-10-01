@@ -16,30 +16,31 @@ def make_plot(ax, problem, n, omega_r, interact, which_to_plot):
     filename = "../data/jacobi_eig{}_{}.dat".format(problem, n)
     data = np.loadtxt(filename)
     remove_file(filename)
-    x = np.linspace(1./n,1-1./n,n)
+    #x = np.linspace(1./n,1-1./n,n)
+    x = np.linspace(0,1,n+2)
     eigenvalues = data[:,0]
     eigenvectors = data[:,1:]
     inds = eigenvalues.argsort()
-    sorted = eigenvectors[inds]
-
-    if problem in [1,2]:
-        normalised = sorted*sorted*n/10.
-    else:
-        normalised = sorted*sorted*n #FLAGG
+    sortert = eigenvectors[inds]
 
     for i in which_to_plot:
-        ax.plot(x, normalised,label=r"n={}, $\omega_r = {}$, interact = {}".format(n, omega_r, interact))
+        y = sortert[i]*(n+2)/np.sum(np.abs(sortert[i]))   #normaliserer egenvektoren
+        y = np.insert(y, [0,n], [0,0])
+        if problem in [1,2]:
+            y = y*y
+        ax.plot(x, y,label=r"n={}, $\omega_r = {}$, interact = {}".format(n, omega_r, interact))
 
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
 
-"""
-for j in np.arange(10,201,10):
-    make_plot(ax, 2, j, 0.01,[0])
-"""
+'''
+for j in np.arange(10,101,10):
+    make_plot(ax, 0, j, 0.01 ,0 ,[2])
+'''
 omegalist = [0.01, 0.5, 1.0, 5.0]
 
 make_plot(ax, 2, 200, 0.01, 0, [0])
 make_plot(ax, 2, 200, 0.01, 1, [0])
 ax.legend()
+
 plt.show()
