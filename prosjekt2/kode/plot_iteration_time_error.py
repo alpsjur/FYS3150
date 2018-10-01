@@ -78,10 +78,10 @@ ax.set_ylabel(r'$\log_{10}$ iterations', fontsize=14)
 
 fig2 = plt.figure()
 ax2 = fig2.add_subplot(1, 1, 1)
-ax2.scatter(np.log10(jacobi_n),np.log10(max_error))
-ax2.set_xlabel(r'$\log_{10}$ n', fontsize=14)
+ax2.scatter(jacobi_n,np.log10(max_error))
+ax2.set_xlabel(r'n', fontsize=14)
 ax2.set_ylabel(r'$\log_{10}$ $\epsilon_{max}$', fontsize=14)
-#plt.savefig("../figurer/relative_error.pdf")
+plt.savefig("../figurer/relative_error.pdf")
 
 
 fig3 = plt.figure()

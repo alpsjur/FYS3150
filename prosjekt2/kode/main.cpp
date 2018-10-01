@@ -18,7 +18,6 @@ int main(int argc, char * argv[]) {
   // 0 = skriver ikke egenparene til fil, 1 = skriver egenparene til fil
   const int eigwrite = atoi(argv[3]);
 
-  // a  trengs hvis vi vil teste eigenverdiene med de analytiske
   double a;
   int iterations;
 
@@ -47,8 +46,7 @@ int main(int argc, char * argv[]) {
   mat arma_eigvec;
   //tar tiden
   clock_t c_start = clock();
-  eig_sym(arma_eigval, arma_eigvec, A);  //gir egenverdiene i økende rekkefølge
-  clock_t c_end = clock();
+  eig_sym(arma_eigval, arma_eigvec, A); 
 
   // Beregner CPU-tid i milisekunder
   double arma_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
@@ -67,6 +65,7 @@ int main(int argc, char * argv[]) {
 
   delete[] d;
 
+  //skriver til logg og fil
   write_log(n, iterations, arma_time, jacobi_time, max_error);
   if(eigwrite == 1){
     write_eig(n,problem, jacobi_eigval, S);

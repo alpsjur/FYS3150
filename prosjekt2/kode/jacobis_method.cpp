@@ -17,8 +17,7 @@ void jacobi(int n, int &iterations, mat A, mat &S, vec &jacobi_eigval){
     transform(A, S, k, l, n);
     iterations++;
   }
-  jacobi_eigval = A.diag();                  //vektor med egenverdiene
-  //jacobi_eigval = sort(jacobi_eigval);     //sorterer i stigende rekkefølge
+  jacobi_eigval = A.diag();            //vektor med egenverdiene
   return;
 }
 
@@ -42,10 +41,9 @@ void initialize(mat &A, double *d, double &a, double rhomin, double rhomax, doub
       }
     }
   }
-  //setter diagonalelementene til a og elementene direkte over og under til d
+  //setter diagonalelementene i A til d og elementene direkte over og under til a
   A(0,0) = d[0];
   for (int i=1; i < n; ++i) {
-    //beregner analytiske egenverdier i stigende rekkefølge
     A(i,i) = d[i];
     A(i-1,i) = a;
     A(i, i-1) = a;
@@ -54,7 +52,7 @@ void initialize(mat &A, double *d, double &a, double rhomin, double rhomax, doub
 }
 
 double find_largest(mat A, int &k, int &l, int n) {
-  //finner indeksene til det største elementet i matrisen
+  //finner indeksene til det største elementet i matrisen, og returnerer maxverdien
   double largest = 0.0;
   //ittererer over øvre halvdel av matrisen, siden matrisen er symmetrisk
   for (int i=0; i<n; ++i){
@@ -83,9 +81,9 @@ void transform(mat &A, mat &S,int k, int l, int n) {
   }
 
   double c, cc, s, ss, cs;
-  c = 1.0/(sqrt(1+t*t));             //cosinus theta
+  c = 1.0/(sqrt(1+t*t));               //cosinus theta
   cc = c*c;
-  s = c*t;                           //sinus theta
+  s = c*t;                             //sinus theta
   ss = s*s;
   cs = c*s;
 
@@ -105,7 +103,7 @@ void transform(mat &A, mat &S,int k, int l, int n) {
       A(i,l) = A(i,l)*c + aik*s;
       A(l,i) = A(i,l);
     }
-    //kalkulerer egenvektorene
+  //oppdaterer S
     double sik;
     sik = S(i,k);
     S(i,k) = c*sik - s*S(i,l);
@@ -117,6 +115,7 @@ void transform(mat &A, mat &S,int k, int l, int n) {
 
 void write_log(int n, int iterations, double arma_time, double jacobi_time,
                 double max_error){
+  // skriver n, CPU-tid og max relativ feil til logg
   ofstream logg;
   logg.open("../data/jacobi_log.dat", fstream::app);
   logg << n << ' ' << iterations << ' ' << jacobi_time << ' ' << arma_time
@@ -125,6 +124,7 @@ void write_log(int n, int iterations, double arma_time, double jacobi_time,
 }
 
 void write_eig(int n, int prob,vec jacobi_eig, mat S){
+  //skriver egenverdiene og egenvektorene til fil
   ofstream file;
   file.open("../data/jacobi_eig"+ to_string(prob)+ '_' + to_string(n) + ".dat");
   for (int i=0;i<n;++i){
@@ -139,7 +139,7 @@ double calculate_max_error(int n, double a,double *d,int problem,vec computed_ei
   double *analytical_eigval = new double [n];
   computed_eigval = sort(computed_eigval);
 
-  // Beregner analytiske egenvedier FLAGG foreløpig bare buckling beam
+  // Beregner analytiske egenvedier FLAGG foreløpig bare buckling beam og quantom dot
   if (problem==0){
     for(int i = 0; i < n; ++i){
       analytical_eigval[i] = analytical_buck(i, n, a, d[i]);
@@ -150,6 +150,7 @@ double calculate_max_error(int n, double a,double *d,int problem,vec computed_ei
       analytical_eigval[i] = analytical_dot(i);
     }
   }
+  //beregner maksimal relativ feil
   for(int i = 0; i < n; ++i) {
     temp = fabs((analytical_eigval[i]-computed_eigval[i])/analytical_eigval[i]);
     if (temp > max_error){

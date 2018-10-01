@@ -21,21 +21,25 @@ def make_plot(ax, problem, n, omega_r, interact, which_to_plot):
     eigenvalues = data[:,0]
     eigenvectors = data[:,1:]
     inds = eigenvalues.argsort()
-    sortert = eigenvectors[inds]
+
+    sorted_eigenvectors = eigenvectors[inds]
 
     for i in which_to_plot:
-        y = sortert[i]
-        y /= np.sqrt(np.sum(y**2))
-        y = np.insert(y, [0,n], [0,0])
+        y = sorted_eigenvectors[i]
+        y = np.insert(y, [0,n], [0,0])   #legger til grensene
+        #normaliserer løsningen
         if problem in [1,2]:
-            y *= y
-        s = 0
-        for j in y:
-            s += j*(10/(n+2))
-        print(s)
-        #y = y*(n+2)/y2   #normaliserer egenvektoren
+            y *= y                       #kvadrerer for å få sansynlighetsfordelingen
+            y = y*(n+2)/(np.sum(np.abs(y))*10)
+        else:
+            y = y*(n+2)/np.sum(np.abs(y))
         ax.plot(x, y,label=r"n={}, $\omega_r = {}$, interact = {}".format(n, omega_r, interact))
 
+#plotting
+sns.set()
+sns.set_style("whitegrid")
+sns.set_palette("husl")
+plt.rc('text', usetex=True)
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
 
@@ -46,7 +50,10 @@ for j in np.arange(10,101,10):
 omegalist = [0.01, 0.5, 1.0, 5.0]
 for omega in omegalist:
     make_plot(ax, 2, 200, omega, 0, [0])
+    ax.set_xlabel(r'$\rho$',fontsize=14)
+    ax.set_ylabel(r'$\Psi ^2$',fontsize=14)
 
-ax.legend()
+ax.legend(fontsize=12)
+plt.savefig("../figurer/quantom_dots.pdf")
 
 plt.show()
