@@ -1,20 +1,24 @@
 \section{Results}
 \label{sec:results}
 
-
-\begin{table}[htbp]
+\begin{figure}[htbp]
 	\centering
-	\begin{tabular}{lrr}
-		\textbf{n} & $\mathbf{{t_g}/{t_s}}$ & $\mathbf{{t_{LU}}/{t_s}}$  \\
-		\midrule
-		\addlinespace[0.1cm]
+	\includegraphics[width=0.5\textwidth]{n_vs_itterations.pdf}
+	\caption{Number of iterations used for solving the buckling beam as a function of the matrix dimension n with a logarithmic scale. The slope of the linear fit is 2.11.}
+	\label{fig:n_vs_it}
+\end{figure}
 
-		10         & 2.08                                                                                          & 3.70                                                                                        \\
-		$10^2$       & 1.89                                                                                          & $1.00\cdot 10^2 $                                                                                         \\
-		$10^3$       & 1.48                                                                                          & $1.05 \cdot 10^4 $                                                                                        \\
-		$10^4$       & 1.43                                                                                          & $1.18 \cdot 10^6$                                                                                         \\
-		$10^5$       & 1.39                                                                                          & -                                                                                         \\
-		$10^6$       & 1.41                                                                                          & -                                                                                        \\
-		$10^7$       & 1.39                                                                                          &    -
-	\end{tabular}  \caption{Ratio between CPU time for the general algorithm ($\mathbf{t_g}$), the special algorithm ($\mathbf{t_g}$) and the LU decomposition algorithm ($\mathbf{t_{LU}}$) for different matrix sizes (\textbf{n}). The LU decomposition crashed for \textbf{n} greater than $10^4$.} \label{table:time}
-\end{table}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.5\textwidth]{CPU_time.pdf}
+	\caption{CPU time in ms for solving the buckling beam as a function the matrix dimension n. Both Jacobi's method and armadillo's \texttt{eig\_sym} function is shown. The scale is logarithmic.}
+	\label{fig:CPUtime}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.5\textwidth]{relative_error.pdf}
+	\caption{}
+	\label{fig:error}
+\end{figure}
+

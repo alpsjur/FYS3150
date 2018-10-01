@@ -171,7 +171,7 @@ Using the same procedure on the new matrix, we repeat until all non-diagonal ele
 	\SetAlgoLined
 	initialise $A$, $S$\;
 	\While{$max > tol$ }{
-		find $k,l$\;
+		find $max,k,l$\;
 		compute $\tau, \sin\theta, \cos\theta$\;
 		rotate $A$\;
 		update $S$\;
@@ -180,6 +180,17 @@ Using the same procedure on the new matrix, we repeat until all non-diagonal ele
  
 \noindent Now, the diagonal elements of $A$ and the column vectors of $S$ are the eigenvalues and the corresponding eigenvectors, respectively. 
 
+\subsection{Error}
+\label{sec:error}
+
+When the analytical solution is known, we define the error in the eigenvalue as
+
+\begin{equation}
+\epsilon_i=\left(\left|\frac{\lambda_i-\lambda_i^{comp}}{\lambda_i}\right|\right)
+\end{equation}
+where $\lambda_i$ is the analytical value and $\lambda_i^{comp}$ is the computed value.
+\subsection{Comparing CPU time}
+To get an ide how the algorithm perform we compare the CPU time for our implementation of Jacobi's method and Armadillo's \texttt{eig\_sym} function applied at the buckling beam problem. In both cases we time the computation of both the eigenvalues and the eigenvectors. The mean time of ten runs is recorded for each n.  
 \subsection{Programming technicalities}
 \label{sec:progtech}
 
