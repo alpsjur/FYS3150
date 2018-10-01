@@ -1,7 +1,7 @@
 \section{Methods}
 \label{sec:methods}
 
-We will FLAGG
+We will solve three different problems and develop one algorithm
 
 \subsection{The buckling beam}
 \label{sec:bucklingbeam}
@@ -114,9 +114,8 @@ where $\beta e^2 = 1.44 eVnm$, $e$ is the electron charge, and $\vb{r}_1$ and $\
 positions of electron 1 and 2 respectively.
 To get the modified radial equation on the form of eq. \ref{eq:eigenspecial}, we use the relative distance
 $\vb{r} \equiv \vb{r}_1 - \vb{r}_2$, center of mass $\vb{R} \equiv \frac{1}{2}\qty(\vb{r}_1 + \vb{r}_2)$
-reference system. We will further only consider the radial solution of the relative distance, and not the center of mass.
-Using the same scaling parameters $\alpha$, $\epsilon$, as before
-(see appendix for the full procedure), we obtain the equation:
+reference system. Furthermore, we will only consider the radial solution of the relative distance, and not the center of mass.
+Using the same scaling parameters $\alpha$, $\epsilon$, as before, we obtain the equation:
   \begin{equation}
     \qty(-\dv[2]{}{\rho} + \omega_r^2\rho^2 + \frac{1}{\rho})\psi\qty(r) = \lambda \psi\qty(r).
   \end{equation}
@@ -126,6 +125,10 @@ as usual, and enforcing the Dirichlet conditions, we get our equation on matrix 
   \[A\vb{v} = \lambda \vb{v},
   \]
 where the diagonal elements are now given by $d_{i}^{2e} = \frac{2}{h^2} + \omega_r^2 \rho^2 + \frac{1}{\rho}$.
+When we look at the eigenfunction corrsponding to the ground state of this equation,
+we will refer to it as the "wavefunction". For our case, where $l=0$, this is not
+entirely untrue, since the spherical harmonic $Y_0^0$ corresponds to a constant.
+We can therefore just imagine we have scaled the eigenfunction with this constant as well.
 
 \subsection{Algorithm: Jacobi's method}
 \label{sec:jacobi}
@@ -178,7 +181,7 @@ Using the same procedure on the new matrix, we repeat until all non-diagonal ele
 	}
 \end{algorithm}
 
-\noindent Now, the diagonal elements of $A$ and the column vectors of $S$ are the eigenvalues and the corresponding eigenvectors, respectively. 
+\noindent Now, the diagonal elements of $A$ and the column vectors of $S$ are the eigenvalues and the corresponding eigenvectors, respectively.
 
 \subsection{Error}
 \label{sec:error}
