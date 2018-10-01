@@ -115,14 +115,13 @@ TEST_CASE("Quantum dot : Sjekker om vi finner største verdi i matrisen"){
     int k, l;
 
     double *d = new double [n];
-    double *analytical_eigval = new double [n];
 
     mat A(n,n, fill::zeros);
 
     //initialize matrices and vector
 
     initialize(A, d, a, rhomin, rhomax, omega_r, problem, interact, n);
-    delete[] analytical_eigval, d;
+    delete[] d;
     //find maximum matrix element
     double largest = find_largest(A, k, l, n);
 
@@ -139,7 +138,8 @@ TEST_CASE("Quantun dot: analytiske eigval == numeriske eigval"){
   double rhomin = 0.0;
   double rhomax = 10;
 
-  double a, omega_r;
+  double a;
+  double omega_r = 1;
 
   mat A(n, n, fill::zeros);
   mat S(n, n, fill::eye);
@@ -150,12 +150,11 @@ TEST_CASE("Quantun dot: analytiske eigval == numeriske eigval"){
 
 
   initialize(A, d, a, rhomin, rhomax, omega_r, problem, interact, n);
-
-  analytical_eigval[0] = 3.0;
-  for(int i = 1; i < n; ++i){
-    analytical_eigval[i] = analytical_eigval[i-1] +  4.0;
-  }
   delete[] d;
+
+  for(int i = 0; i < n; ++i){
+    analytical_eigval[i] = analytical_dot(i);
+  }
 
   int iterations;
   jacobi(n, iterations, A, S, jacobi_eigval);
