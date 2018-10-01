@@ -16,12 +16,15 @@ int main(int argc, char * argv[]) {
   const int eigwrite = atoi(argv[3]);
 
   // a  trengs hvis vi vil teste eigenverdiene med de analytiske
-  double a, omega_r;
+  double a;
   int iterations;
 
   // tar omega_r fra terminalen hvis vi ser på to elektroner
+  double omega_r = 1;
+  int interact = 0;
   if(problem == 2){
     omega_r = atof(argv[4]);
+    interact = atof(argv[5]);
   }
 
   double rhomin = 0.0;
@@ -34,7 +37,7 @@ int main(int argc, char * argv[]) {
   mat S(n, n, fill::eye);     //matrix to hold eigenvectors as row elements
   vec jacobi_eigval(n);
 
-  initialize(A, d, a, rhomin, rhomax, omega_r, problem, n);
+  initialize(A, d, a, rhomin, rhomax, omega_r, problem, interact, n);
   delete[] d;
 
   //bruker armadillo for å regne ut egenverdiene

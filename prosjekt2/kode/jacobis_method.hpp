@@ -10,7 +10,7 @@
 using namespace std;
 using namespace arma;
 
-void initialize(mat &, double *, double &, double, double, double, int, int);
+void initialize(mat &, double *, double &, double, double, double, int, int, int);
 double analytical(int, int, double, double);
 double find_largest(mat, int &, int &, int);
 void transform(mat &, mat &, int, int, int);

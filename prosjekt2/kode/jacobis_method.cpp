@@ -23,7 +23,7 @@ void jacobi(int n, int &iterations, mat A, mat &S, vec &jacobi_eigval){
 }
 
 
-void initialize(mat &A, double *d, double &a, double rhomin, double rhomax, double omega_r, int problem, int n){
+void initialize(mat &A, double *d, double &a, double rhomin, double rhomax, double omega_r, int problem, int interact, int n){
   // definerer step size og diagonalelementer
   const double h = (rhomax - rhomin)/double(n);
   const double hh = h*h;
@@ -35,10 +35,11 @@ void initialize(mat &A, double *d, double &a, double rhomin, double rhomax, doub
     double rho = (rhomin + (i+1)*h);
     double V = rho*rho;
     // sjekker hvilket problem vi ser på, og velger potensialet
-    if(problem == 1){
-      d[i] += V;
-    } else if(problem == 2){
-      d[i] += omega_r*V + 1.0/rho;
+    if(problem == 1 or problem == 2){
+      d[i] += omega_r*V;
+      if(interact == 1 and problem == 2){
+        d[i] += 1.0/rho;
+      }
     }
   }
   //setter diagonalelementene til a og elementene direkte over og under til d

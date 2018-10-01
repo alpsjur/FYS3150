@@ -4,6 +4,7 @@
 TEST_CASE("Buckling beam : Sjekker om vi finner største verdi i matrisen"){
     int n = 3;
     int problem = 0;
+    int interact = 0;
 
     double rhomin = 0.0;
     double rhomax = 1.0;
@@ -18,7 +19,7 @@ TEST_CASE("Buckling beam : Sjekker om vi finner største verdi i matrisen"){
 
     //initialize matrices and vector
 
-    initialize(A, d, a, rhomin, rhomax, omega_r, problem, n);
+    initialize(A, d, a, rhomin, rhomax, omega_r, problem, interact, n);
     delete[] analytical_eigval, d;
     //find maximum matrix element
     double largest = find_largest(A, k, l, n);
@@ -32,6 +33,7 @@ TEST_CASE("Buckling beam : Sjekker om vi finner største verdi i matrisen"){
 TEST_CASE("Buckling beam : analytical eigval == numerical eigval"){
   int n = 3;
   int problem = 0;
+  int interact = 0;
 
   double rhomin = 0.0;
   double rhomax = 1.0;
@@ -46,7 +48,7 @@ TEST_CASE("Buckling beam : analytical eigval == numerical eigval"){
   double *analytical_eigval = new double [n];
 
 
-  initialize(A, d, a, rhomin, rhomax, omega_r, problem, n);
+  initialize(A, d, a, rhomin, rhomax, omega_r, problem, interact, n);
 
   for(int i = 0; i < n; ++i){
     analytical_eigval[i] = analytical_buck(i, n, a, d[i]);
@@ -66,6 +68,7 @@ TEST_CASE("Buckling beam : analytical eigval == numerical eigval"){
 TEST_CASE("Quantum dots : Sjekker at egenvektorene er ortonorale"){
   int n = 4;
   int problem = 2;
+  int interact = 0;
 
   double rhomin = 0.0;
   double rhomax = 1.0;
@@ -79,7 +82,7 @@ TEST_CASE("Quantum dots : Sjekker at egenvektorene er ortonorale"){
 
   double *d = new double [n];
 
-  initialize(A, d, a, rhomin, rhomax, omega_r, problem, n);
+  initialize(A, d, a, rhomin, rhomax, omega_r, problem, interact, n);
 
   delete[] d;
 
@@ -104,6 +107,7 @@ TEST_CASE("Quantum dots : Sjekker at egenvektorene er ortonorale"){
 TEST_CASE("Quantum dot : Sjekker om vi finner største verdi i matrisen"){
     int n = 3;
     int problem = 1;
+    int interact = 0;
 
     double rhomin = 0.0;
     double rhomax = 10.0;
@@ -118,7 +122,7 @@ TEST_CASE("Quantum dot : Sjekker om vi finner største verdi i matrisen"){
 
     //initialize matrices and vector
 
-    initialize(A, d, a, rhomin, rhomax, omega_r, problem, n);
+    initialize(A, d, a, rhomin, rhomax, omega_r, problem, interact, n);
     delete[] analytical_eigval, d;
     //find maximum matrix element
     double largest = find_largest(A, k, l, n);
@@ -131,6 +135,7 @@ TEST_CASE("Quantum dot : Sjekker om vi finner største verdi i matrisen"){
 TEST_CASE("Quantun dot: analytiske eigval == numeriske eigval"){
   int n = 180;
   int problem = 1;
+  int interact = 0;
 
   double rhomin = 0.0;
   double rhomax = 10;
@@ -145,7 +150,7 @@ TEST_CASE("Quantun dot: analytiske eigval == numeriske eigval"){
   double *analytical_eigval = new double [n];
 
 
-  initialize(A, d, a, rhomin, rhomax, omega_r, problem, n);
+  initialize(A, d, a, rhomin, rhomax, omega_r, problem, interact, n);
 
   analytical_eigval[0] = 3.0;
   for(int i = 1; i < n; ++i){
