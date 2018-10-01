@@ -40,12 +40,8 @@ int main(int argc, char * argv[]) {
   mat S(n, n, fill::eye);     //matrix to hold eigenvectors as row elements
   vec jacobi_eigval(n);
 
-<<<<<<< HEAD
   initialize(A, d, a, rhomin, rhomax, omega_r, problem, interact, n);
   delete[] d;
-=======
-  initialize(A, d, a, rhomin, rhomax, omega_r, problem, n);
->>>>>>> e9b9b03c304ec5cc94365d2259df0b948343be73
 
   //bruker armadillo for å regne ut egenverdiene og egenvektorene
   vec arma_eigval;

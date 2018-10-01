@@ -1,12 +1,14 @@
 \section{Results}
 \label{sec:results}
 
+The first thing we measured was the convergence rate of Jacobi's algorithm
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{n_vs_itterations.pdf}
 	\caption{Number of iterations used for solving the buckling beam as a function of the matrix dimension n with a logarithmic scale. The slope of the linear fit is 2.11.}
 	\label{fig:n_vs_it}
 \end{figure}
+
 
 \begin{figure}[htbp]
 	\centering
@@ -18,7 +20,7 @@
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{relative_error.pdf}
-	\caption{}
+	\caption{Maximum relative error, $\epsilon_{max}$ of Jacobi's algorithm applied on the buckling beam problem.
+	Here $n$ is the matrix dimension, and the scale is logarithmic.}
 	\label{fig:error}
 \end{figure}
-

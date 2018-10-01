@@ -131,17 +131,17 @@ where the diagonal elements are now given by $d_{i}^{2e} = \frac{2}{h^2} + \omeg
 \label{sec:jacobi}
 The strategy of Jacobi's method is to perform a series of similarity transformations on the matrix A in order to diagonalize the matrix. We say that matrix B is similar to A if
  \begin{equation}
-	B = S^{-1}AS, 
+	B = S^{-1}AS,
  \end{equation}
-and that the transformation from A to B is a similarity transformation. If S is a real orthogonal matrix we have that 
+and that the transformation from A to B is a similarity transformation. If S is a real orthogonal matrix we have that
  \begin{equation}\label{eq:sim}
 	 S^{-1}=S^T \quad \text{and} \quad B = S^TAS.
  \end{equation}
-Since A is a real symmetric matrix there exists a real orthogonal matrix P such that 
+Since A is a real symmetric matrix there exists a real orthogonal matrix P such that
  \begin{equation}
      D=P^TAP
  \end{equation}
-is a diagonal matrix. Furthermore, the entries along the diagonal of D is the eigenvalues of A, and the column vectors of P are the corresponding eigenvectors. Since the matrix product of two orthogonal matrices is another orthogonal matrix, we can preform a series of similarity transformations until we (ideally) get a diagonal matrix. That is 
+is a diagonal matrix. Furthermore, the entries along the diagonal of D is the eigenvalues of A, and the column vectors of P are the corresponding eigenvectors. Since the matrix product of two orthogonal matrices is another orthogonal matrix, we can preform a series of similarity transformations until we (ideally) get a diagonal matrix. That is
 \begin{equation}
 S_j^TS_{j-1}^T\cdots S_1^TAS_1 \cdots S_{j-1}S_j = D
 \end{equation}
@@ -153,17 +153,17 @@ S =
 \vdots & \ddots & \vdots \\
 s_{n1} & \hdots & s_{nn} ],
 \end{equation}
-where 
+where
 \begin{equation}
 \begin{split}
 &s_{kk}=s_{ll} = \cos \theta \\
 &s_{lk} = -s_{kl} = \sin \theta \\
-&s_{ii} =  1, \quad i \neq k,l 
+&s_{ii} =  1, \quad i \neq k,l
 \end{split}
 \end{equation}
 and elsewhere zero. The matrix $S_i$ is a rotational matrix, which performs a plane rotation around an angle $\theta$ in the n-dimensional Euclidean space. For the full transformation expressions, see the appendix.
 
- The idea now is to set $k$ and $l$ such that $a_{kl}=a_{lk}$ is the largest (not considering the sign) non-diagonal element in A, and choose $\theta$ so that $b_{kl}=0$. See the appendix for the expression for $\theta$. 
+ The idea now is to set $k$ and $l$ such that $a_{kl}=a_{lk}$ is the largest (not considering the sign) non-diagonal element in A, and choose $\theta$ so that $b_{kl}=0$. See the appendix for the expression for $\theta$.
 Notice that when rotating A such that $a_{kl}$ is set to zero, other matrix elements previously equal to zero may change. However, the frobenius norm of an orthogonal transformation is always
 preserved, so no elements will blow up.
 Using the same procedure on the new matrix, we repeat until all non-diagonal element are essentially zero. Since we want the eigenvectors as well, we need to compute $S_1 \cdots S_{j-1}S_j$ continuously. This gives us the following algorithm
@@ -176,9 +176,9 @@ Using the same procedure on the new matrix, we repeat until all non-diagonal ele
 		rotate $A$\;
 		update $S$\;
 	}
-\end{algorithm} 
- 
-\noindent Now, the diagonal elements of $A$ and the column vectors of $S$ are the eigenvalues and the corresponding eigenvectors, respectively. 
+\end{algorithm}
+
+\noindent Now, the diagonal elements of $A$ and the column vectors of $S$ are the eigenvalues and the corresponding eigenvectors, respectively.
 
 \subsection{Error}
 \label{sec:error}
@@ -190,7 +190,8 @@ When the analytical solution is known, we define the error in the eigenvalue as
 \end{equation}
 where $\lambda_i$ is the analytical value and $\lambda_i^{comp}$ is the computed value.
 \subsection{Comparing CPU time}
-To get an ide how the algorithm perform we compare the CPU time for our implementation of Jacobi's method and Armadillo's \texttt{eig\_sym} function applied at the buckling beam problem. In both cases we time the computation of both the eigenvalues and the eigenvectors. The mean time of ten runs is recorded for each n.  
+To get an ide how the algorithm perform we compare the CPU time for our implementation of Jacobi's method and Armadillo's \texttt{eig\_sym} function applied at the buckling beam problem. In both cases we time the computation of both the eigenvalues and the eigenvectors, not including the initialisation of the program. The mean time of ten runs is recorded for each n, and
+we measure the standard deviation for each sample.
 \subsection{Programming technicalities}
 \label{sec:progtech}
 

@@ -18,12 +18,8 @@ TEST_CASE("Buckling beam : Sjekker om vi finner største verdi i matrisen"){
 
     //initialize matrices and vector
 
-<<<<<<< HEAD
     initialize(A, d, a, rhomin, rhomax, omega_r, problem, interact, n);
     delete[] analytical_eigval, d;
-=======
-    initialize(A, d, a, rhomin, rhomax, omega_r, problem, n);
->>>>>>> e9b9b03c304ec5cc94365d2259df0b948343be73
     //find maximum matrix element
     double largest = find_largest(A, k, l, n);
 
