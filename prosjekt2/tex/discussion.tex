@@ -1,8 +1,39 @@
 \section{Discussion}
 \label{sec:discussion}
 
-As we have seen in Figure \ref{fig:CPUtime}, Jacobi's method is quite time consuming for large $n$, compared to Armadillos function \texttt{eig\_sym}.  Our implementation of Jacobi's method is more efficient than Armadillo's function for $n$ smaller than about 20, but for larger $n$ the roles changes. Reading off the slope, we get that the CPU-time is proportional to approx. $n^4$. The number of iterations is proportional to approx. $n^2$, so CPU-time per iteration must increase as $n^2$. In our case, $n$ is the resolution in the discretization of the displacement function for the buckling beam, and of the wave function for the electron(s). So large $n$ is usually preferred, and therefore Armadillo may be a better choice. 
+As we have seen in Figure \ref{fig:CPUtime}, Jacobi's method is quite time consuming for large $n$, compared to Armadillos function \texttt{eig\_sym}.  Our implementation of Jacobi's method is more efficient than Armadillo's function for $n$ smaller than about 20, but for larger $n$ the roles changes. Reading off the slope, we get that the CPU-time is proportional to approx. $n^4$. The number of iterations is proportional to approx. $n^2$, so CPU-time per iteration must increase as $n^2$. In our case, $n$ is the resolution in the discretization of the displacement function for the buckling beam, and of the wave function for the electron(s). So large $n$ is usually preferred, and therefore Armadillo may be a better choice.
 
-The relative error, on the other hand, converges quickly, as shown in Figure \ref{fig:error}. The relative error is smallest for small $n$, and stabilises quickly to $\sim10^{-5.77}$ for $n$ larger than 20. 
+The relative error, on the other hand, converges quickly, as shown in Figure \ref{fig:error}. The relative error is smallest for small $n$, and stabilises quickly to $\sim10^{-5.77}$ for $n$ larger than 20.
 
-So Jacobi's method gives a good approximation, even though it can be slow for large $n$. 
+So Jacobi's method gives a good approximation, even though it can be slow for large $n$.
+
+Looking back at Figure \ref{fig:quantum_dots_nointer}, the effects of increasing
+$\omega_r$ can be understood in the perspective that $\omega_r$ alters the strength
+of the potential. So for larger $\omega_r$, the potential is stronger, and the electrons are more likely to be measured
+closer to eachother. As for the narrowing of the wave function,
+we see that the energy eigenvalues increase because of the greater potential energy
+of the electrons. We see then that as $\omega_r$ increases, the electrons become
+more and more trapped, and they are therefore less likely to be spread out.
+
+Comparing the case of no Coloumb interaction, and the case with, we see that
+the wave function is shifted to the right for all $\omega_r$, but at the greatest
+for the lowest $\omega_r$. This means that the effect is most prominent for weaker
+potentials. At close range, the Coloumb force $\frac{1}{\rho}$ will dominate,
+and the electrons will repel eachother heavily. The spread in $\psi_0^2$ will thus increase
+until there is a new equillibrium between the two. This makes it so that it is more likely to
+measure the electrons further away from eachother. The fact that the energy eigenvalues
+increase more and more for increasing $\omega_r$ is because the stronger harmonic oscillator
+potential makes the Coloumb interaction store more potential energy, as $\rho$ must be smaller
+to stay in equillibrium.
+
+In conclusion, we have implemented and benchmarked Jacobi's algorithm for solving eigenvalue problems.
+Here, we find that our implementation is generally slow compared to armadillo's built-in function $eig_sym()$,
+but that the error stabilises for increasing $n$ very quickly.
+We applied the algorithm on three different physical systems, where we used the case
+of the buckling beam for benchmarking, and the case of the single electron for
+showing similarity between the two. Our analysis was therefore focused on the problem
+of two interacting electrons, where we find that a greater harmonic oscillator potential
+results in a narrower wave function as well as higher energy eigenvalues. Including
+the Coloumb interaction between the electrons, we see find that they are more likely to be
+found further apart, and that the interaction amplifies the effect of increasing
+the potential energy of the electrons.
