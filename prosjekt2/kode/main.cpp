@@ -46,7 +46,8 @@ int main(int argc, char * argv[]) {
   mat arma_eigvec;
   //tar tiden
   clock_t c_start = clock();
-  eig_sym(arma_eigval, arma_eigvec, A); 
+  eig_sym(arma_eigval, arma_eigvec, A);
+  clock_t c_end = clock();
 
   // Beregner CPU-tid i milisekunder
   double arma_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
