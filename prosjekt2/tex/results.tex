@@ -2,8 +2,8 @@
 \label{sec:results}
 
 The first thing we measured was the convergence rate of Jacobi's algorithm, see Figure \ref{fig:n_vs_it}.
-We see that after some fluctuations for low n, the curve becomes linear as n increases, with a slope of approximately 2. 
-As this is in logspace, we have that the number of iterations increases as $\sim  n^2$. 
+We see that after some fluctuations for low n, the curve becomes linear as n increases, with a slope of approximately 2.
+As this is in logspace, we have that the number of iterations increases as $\sim  n^2$.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{n_vs_itterations.pdf}
@@ -32,4 +32,13 @@ before converging towards a constant error for increasing n.
 	\caption{Maximum relative error, $\epsilon_{max}$ of Jacobi's algorithm applied on the buckling beam problem.
 	Here $n$ is the matrix dimension, and the scale is logarithmic.}
 	\label{fig:error}
+\end{figure}
+
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.5\textwidth]{quantum_dots_nointer.pdf}
+	\caption{The "wavefunction" for the ground state for different values of $\omega_r$ with $n=200$ and no Coloumb interaction.
+	Underneath is the energy eigenvalue $\lambda_0$ of the ground state as a function of $\omega_r$.}
+	\label{fig:quantum_dots_nointer}
 \end{figure}
