@@ -10,7 +10,7 @@ def make_file(problem, n, omega_r, interact):
         os.system("./main.exe {} {} 1 {} {}".format(n, problem, omega_r, interact))
     return filename
 
-def plot_eigenvectors(ax, filename):
+def plot_eigenvectors(ax, filename, which_to_plot):
     rhomin = 0
     rhomax = 10
 

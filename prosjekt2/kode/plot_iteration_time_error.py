@@ -53,6 +53,7 @@ for i in n:
     arma_avgtime[int(i)-2] = np.mean(tempa)
     arma_std[int(i)-2] = np.std(tempa)
 
+
 #plotting
 sns.set()
 sns.set_style("whitegrid")
@@ -81,16 +82,26 @@ ax2 = fig2.add_subplot(1, 1, 1)
 ax2.scatter(jacobi_n,np.log10(max_error))
 ax2.set_xlabel(r'n', fontsize=14)
 ax2.set_ylabel(r'$\log_{10}$ $\epsilon_{max}$', fontsize=14)
-plt.savefig("../figurer/relative_error.pdf")
+#plt.savefig("../figurer/relative_error.pdf")
 
 
 fig3 = plt.figure()
 ax3 = fig3.add_subplot(1, 1, 1)
+
+'''
+ax3.set_yscale('log')
+ax3.set_xscale('log')
+ax3.errorbar(n,jacobi_avgtime,yerr=jacobi_std)
+ax3.errorbar(n,arma_avgtime,yerr=arma_std)
+'''
+
 ax3.plot(np.log10(n), np.log10(jacobi_avgtime),label=r"Jacobis method")
 ax3.plot(np.log10(n), np.log10(arma_avgtime),label=r"armadillo")
 ax3.set_xlabel(r'$\log_{10}$ n', fontsize=14)
 ax3.set_ylabel(r'$\log_{10}$ mean CPU-time [$\log_{10}$ms]', fontsize=14)
 ax3.legend(fontsize=12)
+
+
 #plt.savefig("../figurer/CPU_time.pdf")
 
 
