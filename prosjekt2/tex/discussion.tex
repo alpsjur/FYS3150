@@ -1,6 +1,8 @@
 \section{Discussion}
 \label{sec:discussion}
 
-As we have seen in Figure \ref{fig:CPUtime}, Jacobi's method is quite time consuming for large $n$. Here, our implementation of Jacobi's method is more efficient than Armadillo's function for $n$ smaller than about 20. But for larger $n$ the roles have changed. In our case, $n$ is the resolution in the discretization of the displacement function for the buckling beam, and of the wave function for the electron(s). So large $n$ is usually preferred. 
+As we have seen in Figure \ref{fig:CPUtime}, Jacobi's method is quite time consuming for large $n$, compared to Armadillos function \texttt{eig\_sym}.  Our implementation of Jacobi's method is more efficient than Armadillo's function for $n$ smaller than about 20, but for larger $n$ the roles changes. Reading off the slope, we get that the CPU-time is proportional to approx. $n^4$. The number of iterations is proportional to approx. $n^2$, so CPU-time per iteration must increase as $n^2$. In our case, $n$ is the resolution in the discretization of the displacement function for the buckling beam, and of the wave function for the electron(s). So large $n$ is usually preferred, and therefore Armadillo may be a better choice. 
 
-As we see in Figure \ref{fig:n_vs_it}, the number of iterations is proportional to $n^2$. 
+The relative error, on the other hand, converges quickly, as shown in Figure \ref{fig:error}. The relative error is smallest for small $n$, and stabilises quickly to $\sim10^{-5.77}$ for $n$ larger than 20. 
+
+So Jacobi's method gives a good approximation, even though it can be slow for large $n$. 
