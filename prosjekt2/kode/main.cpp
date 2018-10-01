@@ -6,6 +6,9 @@
 
 #include "jacobis_method.hpp"
 
+void write_log(int, int, double, double, double);
+void write_eig(int, int, int, double, vec, mat);
+
 int main(int argc, char * argv[]) {
 
   //deklarerer konstanter
@@ -18,11 +21,10 @@ int main(int argc, char * argv[]) {
   // 0 = skriver ikke egenparene til fil, 1 = skriver egenparene til fil
   const int eigwrite = atoi(argv[3]);
 
-  double a;
+  double a, omega_r;
   int iterations;
 
   // tar omega_r fra terminalen hvis vi ser på to elektroner
-  double omega_r = 1;
   int interact = 0;
   if(problem == 2){
     omega_r = atof(argv[4]);
@@ -69,8 +71,29 @@ int main(int argc, char * argv[]) {
   //skriver til logg og fil
   write_log(n, iterations, arma_time, jacobi_time, max_error);
   if(eigwrite == 1){
-    write_eig(n,problem, jacobi_eigval, S);
+    write_eig(n, problem, interact, omega_r, jacobi_eigval, S);
   }
 
   return 0;
+}
+
+void write_log(int n, int iterations, double arma_time, double jacobi_time,
+                double max_error){
+  // skriver n, CPU-tid og max relativ feil til logg
+  ofstream logg;
+  logg.open("../data/jacobi_log.dat", fstream::app);
+  logg << n << ' ' << iterations << ' ' << jacobi_time << ' ' << arma_time
+       << ' ' << max_error << endl;
+  logg.close();
+}
+
+void write_eig(int n, int problem, int interact, double omega_r, vec jacobi_eig, mat S){
+  //skriver egenverdiene og egenvektorene til fil
+  ofstream file;
+  file.open("../data/jacobi_eig_"+ to_string(problem)+ '_' + to_string(n) + '_'
+            + to_string(omega_r) + '_' + to_string(interact) + ".dat");
+  for (int i=0;i<n;++i){
+    file << jacobi_eig(i) << ' ' << S.col(i).t();
+  }
+  file.close();
 }

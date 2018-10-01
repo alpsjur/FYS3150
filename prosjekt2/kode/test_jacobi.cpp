@@ -138,8 +138,7 @@ TEST_CASE("Quantun dot: analytiske eigval == numeriske eigval"){
   double rhomin = 0.0;
   double rhomax = 10;
 
-  double a;
-  double omega_r = 1;
+  double a, omega_r;
 
   mat A(n, n, fill::zeros);
   mat S(n, n, fill::eye);
