@@ -41,7 +41,6 @@ int main(int argc, char * argv[]) {
   vec jacobi_eigval(n);
 
   initialize(A, d, a, rhomin, rhomax, omega_r, problem, interact, n);
-  delete[] d;
 
   //bruker armadillo for å regne ut egenverdiene og egenvektorene
   vec arma_eigval;
