@@ -88,10 +88,11 @@ void write_log(int n, int iterations, double arma_time, double jacobi_time,
 }
 
 void write_eig(int n, int problem, int interact, double omega_r, vec jacobi_eig, mat S){
+  string omegastr = to_string(omega_r);
   //skriver egenverdiene og egenvektorene til fil
   ofstream file;
   file.open("../data/jacobi_eig_"+ to_string(problem)+ '_' + to_string(n) + '_'
-            + to_string(omega_r) + '_' + to_string(interact) + ".dat");
+            + omegastr[0] + omegastr[2] + omegastr[3] + '_' + to_string(interact) + ".dat");
   for (int i=0;i<n;++i){
     file << jacobi_eig(i) << ' ' << S.col(i).t();
   }
