@@ -34,9 +34,12 @@ void initialize(mat &A, double *d, double &a, double rhomin, double rhomax, doub
     double rho = (rhomin + (i+1)*h);
     double V = rho*rho;
     // sjekker hvilket problem vi ser på, og velger potensialet
-    if(problem == 1 or problem == 2){
+    if(problem == 1){
+      d[i] += V;
+    }
+    else if (problem == 2){
       d[i] += omega_r*V;
-      if(interact == 1 and problem == 2){
+      if(interact == 1){
         d[i] += 1.0/rho;
       }
     }
@@ -112,26 +115,6 @@ void transform(mat &A, mat &S,int k, int l, int n) {
   return;
 }
 
-
-void write_log(int n, int iterations, double arma_time, double jacobi_time,
-                double max_error){
-  // skriver n, CPU-tid og max relativ feil til logg
-  ofstream logg;
-  logg.open("../data/jacobi_log.dat", fstream::app);
-  logg << n << ' ' << iterations << ' ' << jacobi_time << ' ' << arma_time
-       << ' ' << max_error << endl;
-  logg.close();
-}
-
-void write_eig(int n, int prob,vec jacobi_eig, mat S){
-  //skriver egenverdiene og egenvektorene til fil
-  ofstream file;
-  file.open("../data/jacobi_eig"+ to_string(prob)+ '_' + to_string(n) + ".dat");
-  for (int i=0;i<n;++i){
-    file << jacobi_eig(i) << ' ' << S.col(i).t();
-  }
-  file.close();
-}
 
 double calculate_max_error(int n, double a,double *d,int problem,vec computed_eigval) {
   double max_error = -1000.0;
