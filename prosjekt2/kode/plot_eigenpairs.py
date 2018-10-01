@@ -4,21 +4,18 @@ import numpy as np
 import seaborn as sns
 import sys
 
-def remove_file(filename):
-    if os.path.exists(filename):
-        os.system("rm " + filename)
+def make_file(problem, n, omega_r, interact):
+    filename = "../data/jacobi_eig_{}_{}_{}_{}.dat".format(problem, n, omega, interact)
+    if not os.path.exists(filename):
+        os.system("./main.exe {} {} 1 {} {}".format(n, problem, omega_r, interact))
+    return filename
 
-def plot_eigenvectors(ax, problem, n, omega_r, interact, which_to_plot):
+def plot_eigenvectors(ax, filename):
     rhomin = 0
     rhomax = 10
 
-    #os.system("./main.exe {} {} {}".format(n, problem, omega_r))
-    os.system("./main.exe {} {} 1 {} {}".format(n, problem, omega_r, interact))
-
-    filename = "../data/jacobi_eig{}_{}.dat".format(problem, n)
     data = np.loadtxt(filename)
-    remove_file(filename)
-    #x = np.linspace(1./n,1-1./n,n)
+
     x = np.linspace(rhomin, rhomax, n+2)
     eigenvalues = data[:,0]
     eigenvectors = data[:,1:]
@@ -39,19 +36,14 @@ def plot_eigenvectors(ax, problem, n, omega_r, interact, which_to_plot):
         ax.plot(x, y,label=r"$\omega_r = {}$".format(omega_r))
 
 
-def plot_eigenvalues(ax, problem, n, omegalist, interact, which_to_plot):
-    eigenvalues = np.zeros(len(omegalist))
-    i = 0
-    for omega_r in omegalist:
-        os.system("./main.exe {} {} 1 {} {}".format(n, problem, omega_r, interact))
+def plot_eigenvalues(ax, filename, which_to_plot):
 
-        filename = "../data/jacobi_eig{}_{}.dat".format(problem, n)
-        data = np.loadtxt(filename)
-        remove_file(filename)
-        eigenvalues_temp = np.sort(data[:,0])
-        eigenvalues[i] = eigenvalues_temp[which_to_plot]
-        i += 1
-    ax.plot(omegalist,eigenvalues,'o')
+    data = np.loadtxt(filename)
+
+    eigenvalues_temp = np.sort(data[:,0])
+    eigenvalue = eigenvalues_temp[which_to_plot]
+
+    ax.plot(omega,eigenvalue,'o')
 
 #plotting
 sns.set()
@@ -63,8 +55,9 @@ fig, ax = plt.subplots(2, 1)
 
 omegalist = [0.01, 0.5, 1.0, 5.0]
 for omega in omegalist:
-    plot_eigenvectors(ax[0], 2, 200, omega, 0, [0])
-plot_eigenvalues(ax[1], 2, 200, omegalist, 0, 0)
+    filename = make_file(1, 200, omega, 0)
+    plot_eigenvectors(ax[0], filename, [0])
+    plot_eigenvalues(ax[1], filename, 0)
 
 ax[0].set_xlabel(r'$\rho$', fontsize=14)
 ax[0].set_ylabel(r'$\psi_0 ^2$', fontsize=14)
