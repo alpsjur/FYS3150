@@ -91,6 +91,7 @@ void write_eig(int n, int problem, int interact, double omega_r, vec jacobi_eig,
   string omegastr = to_string(omega_r);
   //skriver egenverdiene og egenvektorene til fil
   ofstream file;
+  // funker bare for 0.01 - 100 foreløpig
   file.open("../data/jacobi_eig_"+ to_string(problem)+ '_' + to_string(n) + '_'
             + omegastr[0] + omegastr[2] + omegastr[3] + '_' + to_string(interact) + ".dat");
   for (int i=0;i<n;++i){
