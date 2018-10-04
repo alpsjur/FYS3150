@@ -8,20 +8,25 @@ LIB = -larmadillo -llapack -lblas
 PROG = main.exe
 TEST_PROG = test_functions.exe
 
-all : target
-#tests
+all : target tests
 
 target : ${PROG}
-#tests : ${TEST_PROG}
+tests : ${TEST_PROG}
 
 ${PROG} : main.o coordinate.o
 	${CPPflags} main.o coordinate.o ${LIB} -o ${PROG}
 
-#${TEST_PROG} : tests_main.o test_jacobi.o jacobis_method.o
-	#${CPPflags} tests_main.o test_jacobi.o jacobis_method.o ${LIB} -o ${TEST_PROG}
+${TEST_PROG} : tests_main.o test_coordinate.o coordinate.o
+	${CPPflags} tests_main.o test_coordinate.o coordinate.o ${LIB} -o ${TEST_PROG}
 
 main.o : main.cpp
 	${CPPflags} -c main.cpp
 
 coordinate.o : coordinate.cpp
 	${CPPflags} -c coordinate.cpp
+
+tests_main.o : tests_main.cpp
+	${CPPflags} -c tests_main.cpp
+
+test_coordinate.o : test_coordinate.cpp
+	${CPPflags} -c test_coordinate.cpp
