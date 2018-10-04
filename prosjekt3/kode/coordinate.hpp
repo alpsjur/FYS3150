@@ -20,6 +20,7 @@ public:
   : m_x(x), m_y(y), m_z(z){
     // initialising coordinates if they are provided
   }
+  friend bool operator == (const Coordinate &lhs, const Coordinate &rhs);
   friend Coordinate operator + (const Coordinate &lhs, const Coordinate &rhs);
   friend Coordinate operator - (const Coordinate &lhs, const Coordinate &rhs);
   friend Coordinate operator * (double scalar, const Coordinate &rhs);
