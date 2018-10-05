@@ -7,6 +7,7 @@ using namespace std;
 
 
 class Coordinate{
+  // member declarations
 private:
   double m_x;
   double m_y;

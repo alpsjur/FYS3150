@@ -1,10 +1,9 @@
 #include <string>
-#include <cstdlib>
 
 using namespace std;
 
 class Body{
-  // constant/variable declarations
+  // member declarations
 private:
   string m_name;
   double m_mass;
@@ -17,7 +16,7 @@ private:
 
 public:
   Body()
-  : m_name("UFO"), m_mass(1.0), m_initPos(Coordinate()), m_initVel(Coordinate()),
+  : m_name("Planet X"), m_mass(1.0), m_initPos(Coordinate()), m_initVel(Coordinate()),
   m_pos(new Coordinate), m_vel(new Coordinate) {
     // default initialisation
   }
