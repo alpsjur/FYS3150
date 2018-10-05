@@ -6,15 +6,20 @@ CPPflags = c++ -std=c++0x -O3
 LIB = -larmadillo -llapack -lblas
 # Here we define the name of the executable
 PROG = main.exe
+PROG2 = system.exe
 TEST_PROG = test_functions.exe
 
-all : target tests
+all : target target2 tests
 
 target : ${PROG}
+target2 : ${PROG2}
 tests : ${TEST_PROG}
 
 ${PROG} : main.o coordinate.o
 	${CPPflags} main.o coordinate.o ${LIB} -o ${PROG}
+
+${PROG2} : system.o coordinate.o
+	${CPPflags} system.o coordinate.o ${LIB} -o ${PROG2}
 
 ${TEST_PROG} : tests_main.o test_coordinate.o coordinate.o
 	${CPPflags} tests_main.o test_coordinate.o coordinate.o ${LIB} -o ${TEST_PROG}
@@ -24,6 +29,9 @@ main.o : main.cpp
 
 coordinate.o : coordinate.cpp
 	${CPPflags} -c coordinate.cpp
+
+system.o : system.cpp
+	${CPPflags} -c system.cpp
 
 tests_main.o : tests_main.cpp
 	${CPPflags} -c tests_main.cpp
