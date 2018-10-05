@@ -4,10 +4,10 @@
 using namespace std;
 
 int main(){
-  Coordinate pos(2, 1, 2);
-  Coordinate vel(1, 2, 3);
-  double dt = 0.001;
-  pos = pos + dt*vel;
+  Coordinate pos(1, 1, 1);
+  Coordinate vel(1, 1, 1);
+  Coordinate acc(1, 1, 1);
+  pos = pos + vel + acc;
   cout << pos;
   return 0;
 }
