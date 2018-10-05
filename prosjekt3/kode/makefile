@@ -7,12 +7,14 @@ LIB = -larmadillo -llapack -lblas
 # Here we define the name of the executable
 PROG = main.exe
 PROG2 = body.exe
+PROG3 = system.exe
 TEST_PROG = test_functions.exe
 
-all : target target2 tests
+all : target target2 target3 tests
 
 target : ${PROG}
 target2 : ${PROG2}
+target3 : ${PROG3}
 tests : ${TEST_PROG}
 
 ${PROG} : main.o coordinate.o
@@ -20,6 +22,9 @@ ${PROG} : main.o coordinate.o
 
 ${PROG2} : body.o coordinate.o
 	${CPPflags} body.o coordinate.o ${LIB} -o ${PROG2}
+
+${PROG3} : system.o body.o .coordinate.o
+	${CPPflags} system.o body.o coordinate.o ${LIB} -o ${PROG3}
 
 ${TEST_PROG} : tests_main.o test_coordinate.o coordinate.o
 	${CPPflags} tests_main.o test_coordinate.o coordinate.o ${LIB} -o ${TEST_PROG}
@@ -29,6 +34,9 @@ main.o : main.cpp
 
 coordinate.o : coordinate.cpp
 	${CPPflags} -c coordinate.cpp
+
+body.o : body.cpp
+	${CPPflags} -c body.cpp
 
 system.o : system.cpp
 	${CPPflags} -c system.cpp

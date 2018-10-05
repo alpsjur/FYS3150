@@ -55,6 +55,6 @@ Coordinate operator / (const Coordinate& lhs, double scalar){
 ostream &operator << (ostream &out, const Coordinate &rhs){
   out << rhs.m_x << ' ';
   out << rhs.m_y << ' ';
-  out << rhs.m_z << endl;
+  out << rhs.m_z;
   return out;
 }

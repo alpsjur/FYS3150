@@ -27,6 +27,8 @@ int main(){
 
   Body jupiter(nameJupiter, massJupiter, initPosJupiter, initVelJupiter);
   cout << jupiter.getMass() << endl;
+  cout << jupiter.getInitPos() << endl;
+  cout << earth.getInitPos() << endl;
 
   return 0;
 }
