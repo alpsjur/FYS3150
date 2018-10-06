@@ -3,31 +3,18 @@
 # Here we define compiler option, libraries and the  target
 CPPflags = c++ -std=c++0x -O3
 # Here we define the library functions we nee
-LIB = -larmadillo -llapack -lblas
+#LIB = -larmadillo -llapack -lblas
 # Here we define the name of the executable
 PROG = main.exe
-PROG2 = body.exe
-PROG3 = system.exe
 TEST_PROG = test_functions.exe
 
-all : target target2 target3 tests
+all : target tests
 
 target : ${PROG}
-target2 : ${PROG2}
-target3 : ${PROG3}
 tests : ${TEST_PROG}
 
-${PROG} : main.o coordinate.o
-	${CPPflags} main.o coordinate.o ${LIB} -o ${PROG}
-
-${PROG2} : body.o coordinate.o
-	${CPPflags} body.o coordinate.o ${LIB} -o ${PROG2}
-
-${PROG3} : system.o body.o .coordinate.o
-	${CPPflags} system.o body.o coordinate.o ${LIB} -o ${PROG3}
-
-${TEST_PROG} : tests_main.o test_coordinate.o coordinate.o
-	${CPPflags} tests_main.o test_coordinate.o coordinate.o ${LIB} -o ${TEST_PROG}
+${PROG} : main.o system.o planet.o coordinate.o
+	${CPPflags} main.o system.o planet.o coordinate.o ${LIB} -o ${PROG}
 
 main.o : main.cpp
 	${CPPflags} -c main.cpp
@@ -35,8 +22,8 @@ main.o : main.cpp
 coordinate.o : coordinate.cpp
 	${CPPflags} -c coordinate.cpp
 
-body.o : body.cpp
-	${CPPflags} -c body.cpp
+planet.o : planet.cpp
+	${CPPflags} -c planet.cpp
 
 system.o : system.cpp
 	${CPPflags} -c system.cpp

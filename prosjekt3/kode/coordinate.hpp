@@ -1,3 +1,6 @@
+#ifndef COORDINATE_HPP
+#define	COORDINATE_HPP
+
 #include <cstdlib>
 #include <string>
 #include <iostream>
@@ -31,3 +34,5 @@ public:
 
   double norm(){return sqrt(m_x*m_x + m_y*m_y + m_z*m_z);}
 };
+
+#endif /* COORDINATE_HPP */

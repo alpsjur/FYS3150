@@ -1,5 +1,10 @@
+#ifndef SYSTEM_HPP
+#define	SYSTEM_HPP
+
 #include <string>
 #include <cmath>
+
+#include "planet.hpp"
 
 using namespace std;
 
@@ -9,24 +14,26 @@ private:
   double m_pi = 3.14159265358979;
   double m_gm = 4.0*m_pi*m_pi;
   string m_name;
-  int m_numberofBodies;
-  Body *m_bodies;
-
-  void initArrays();
+  int m_numberofPlanets;
+  Planet *m_planets;
 
 public:
-  System(string name, Body bodies[])
-  : m_name(name), m_numberofBodies(sizeof(bodies)/sizeof(*bodies)),
-    m_bodies(bodies) {
+  System(string name, Planet *planets, int numberofPlanets)
+  : m_name(name), m_planets(planets), m_numberofPlanets(numberofPlanets) {
       // constructor to initialise variables and constants
     }
-  //System(const System& rocks)
-  //: m_bodies(new Body(rocks.copy_body())) {
-    // copy constructor to handle multiple system instances
-  //}
-  //~System(){delete[] m_bodies;}  // destructor to deallocate m_bodies
+  System(const System& rocks)
+  : m_planets(new Planet(rocks.copy_planet())){
+    // copy constructor
+  }
+  ~System(){delete[] m_planets;}
   // public functions
-  //const Body& copy_body() const {return *m_bodies;}
-  void solve(double endtime, double dt);
+  const Planet& copy_planet() const {return *m_planets;}
 
+  string getName(){return m_name;}
+  int getNumberofPlanets(){return m_numberofPlanets;}
+  void initPlanets(int integrationSteps);
+  void solve(double endtime, double dt);
 };
+
+#endif /* SYSTEM_HPP */
