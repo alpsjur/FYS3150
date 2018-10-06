@@ -10,6 +10,7 @@
 using namespace std;
 
 int main(){
+  // EKSEMPLER PÅ HVORDAN DET FUNKER
   Coordinate pos(1, 1, 1);
   Coordinate vel(1, 1, 1);
   Coordinate acc(1, 1, 1);
@@ -44,12 +45,9 @@ int main(){
   System earthjupiter(sysname, planetlist, 2);
   cout << earthjupiter.getName() << endl;
   cout << earthjupiter.getNumberofPlanets()<< endl;
-
-  string sysname2 = "testsystem2";
-  System earthsys(sysname2, planetlist, 1);
-  cout << earthsys.getName() << endl;
-  cout << earthsys.getNumberofPlanets() << endl;
-  cout << 2;
+  double endtime = 10;
+  double dt = 0.001;
+  earthjupiter.solve(endtime, dt);
 
   return 0;
 }

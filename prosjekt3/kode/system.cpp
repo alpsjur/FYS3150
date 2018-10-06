@@ -12,4 +12,5 @@ void System::initPlanets(int integrationSteps){
 void System::solve(double endtime, double dt){
   int integrationSteps = int(endtime/dt);
   initPlanets(integrationSteps);
+  // KODE FOR Å LØSE NEWTONS LOVER
 }

@@ -10,7 +10,8 @@ using namespace std;
 
 
 class Coordinate{
-  // member declarations
+  friend class Planet;
+  // kamerat deklareringer
 private:
   double m_x;
   double m_y;
@@ -18,12 +19,13 @@ private:
 public:
   Coordinate()
   : m_x(0), m_y(0), m_z(0){
-    // initialisation if no values are provided
+    // standard byggeren hvis ingenting blir gitt i initialiseringen
   }
   Coordinate(double x, double y, double z)
   : m_x(x), m_y(y), m_z(z){
-    // initialising coordinates if they are provided
+    // initialiserer verdiene hvis de blir gitt
   }
+  // operator funksjoner for vektor aritmetikk
   friend bool operator == (const Coordinate &lhs, const Coordinate &rhs);
   friend Coordinate operator + (const Coordinate &lhs, const Coordinate &rhs);
   friend Coordinate operator - (const Coordinate &lhs, const Coordinate &rhs);
