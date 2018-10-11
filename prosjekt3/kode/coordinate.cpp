@@ -44,6 +44,20 @@ Coordinate operator * (const Coordinate &lhs, double scalar){
   return temp;
 }
 
+double operator * (const Coordinate &lhs, const Coordinate &rhs){
+  double temp;
+  temp = lhs.m_x * rhs.m_x + lhs.m_y * rhs.m_y + lhs.m_z * rhs.m_z;
+  return temp;
+}
+
+Coordinate operator ^ (const Coordinate &lhs, const Coordinate &rhs){
+  Coordinate temp;
+  temp.m_x = lhs.m_y * rhs.m_z - lhs.m_z * rhs.m_y;
+  temp.m_y = lhs.m_z * rhs.m_x - lhs.m_x * rhs.m_z;
+  temp.m_z = lhs.m_x * rhs.m_y - lhs.m_y * rhs.m_x;
+  return temp;
+}
+
 Coordinate operator / (const Coordinate& lhs, double scalar){
   Coordinate temp;
   temp.m_x = lhs.m_x / scalar;

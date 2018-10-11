@@ -27,8 +27,8 @@ private:
   void initArrays(int integrationSteps);
   void initPos(){m_pos[0] = m_initPos;}
   void initVel(){m_vel[0] = m_initVel;}
-  Coordinate setPos(int i, Coordinate pos){m_pos[i] = pos;}
-  Coordinate setVel(int i, Coordinate vel){m_vel[i] = vel;}
+  void setPos(int i, Coordinate pos){m_pos[i] = pos;}
+  void setVel(int i, Coordinate vel){m_vel[i] = vel;}
 
 public:
   Planet()

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <cmath>
+#include <fstream>
 
 #include "planet.hpp"
 
@@ -13,12 +14,14 @@ class System{
   // kamerat deklareringer
 private:
   double m_pi = 3.14159265358979;
-  double m_gm = 4.0*m_pi*m_pi;
+  double m_sunM = 2e+30;
+  double m_g = 4.0*m_pi*m_pi/m_sunM;
   string m_name;
   int m_numberofPlanets;
+  int m_integrationSteps = 0;
   Planet *m_planets;
 
-  void initPlanets(int integrationSteps);
+  void initPlanets();
   const Planet& copy_planet() const {return *m_planets;}
 
 public:
@@ -35,7 +38,11 @@ public:
 
   string getName(){return m_name;}
   int getNumberofPlanets(){return m_numberofPlanets;}
-  void solve(double endtime, double dt);
+  void solve(double endtime, double dt, int method, int relativistic);
+  Coordinate calculateAcc(int i, int j, int relativistic);
+  void velocityVerlet(int i, int j, double dt, int relativistic);
+  void forwardEuler(int i, int j, double dt, int relativistic);
+  void writetoFile();
 };
 
 #endif /* SYSTEM_HPP */

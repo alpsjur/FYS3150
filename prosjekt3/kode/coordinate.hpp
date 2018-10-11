@@ -31,6 +31,8 @@ public:
   friend Coordinate operator - (const Coordinate &lhs, const Coordinate &rhs);
   friend Coordinate operator * (double scalar, const Coordinate &rhs);
   friend Coordinate operator * (const Coordinate &lhs, double scalar);
+  friend double operator * (const Coordinate &lhs, const Coordinate &rhs);
+  friend Coordinate operator ^ (const Coordinate &lhs, const Coordinate &rhs);
   friend Coordinate operator / (const Coordinate &lhs, double scalar);
   friend ostream &operator << (ostream &out, const Coordinate &rhs);
 
