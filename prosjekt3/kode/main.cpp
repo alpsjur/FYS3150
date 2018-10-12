@@ -52,11 +52,11 @@ int main(){
   sunMercuryList[0] = sun;
   sunMercuryList[1] = mercury;
 
-  taskC(sunEarthList);
-  taskD(sunEarthList);
-  //taskE(sunEarthJupiterList);
-  //taskF(allplanets);
-  //taskG(sunMercuryList);
+  //taskC(sunEarthList);
+  //taskD(sunEarthList);
+  taskE(sunEarthJupiterList);
+  taskF(allplanets);
+  taskG(sunMercuryList);
 
 }
 
@@ -95,17 +95,17 @@ void taskD(Planet *sunEarthList){
   double dt = 0.001;
   double endtime = 2;
 
-  System sunEarth("Sun-Earth system", sunEarthList, 2);
+  System sunEarthScale("Sun-Earth system", sunEarthList, 2);
 
-  sunEarth.setBeta(beta);                               //endrer beta i kraftfunksjonen
-  sunEarth.solveVerlet(endtime, dt);
-  sunEarth.writetoFile("../data/change_beta");
-  sunEarth.setBeta(2);                                  //resetter beat til 2
+  sunEarthScale.setBeta(beta);                               //endrer beta i kraftfunksjonen
+  sunEarthScale.solveVerlet(endtime, dt);
+  sunEarthScale.writetoFile("../data/change_beta");
+  sunEarthScale.setBeta(2);                                  //resetter beat til 2
 
-  sunEarth.scalePlanetInitVel(velosityScale, 1);        //skalerer hastigheten til Jorda
-  sunEarth.solveVerlet(endtime, dt);
-  sunEarth.writetoFile("../data/escape_velocity");
-  double scaledVelocity = sunEarth.getPlanetInitVel(1); //henter skalert initsialhastighet
+  sunEarthScale.scalePlanetInitVel(velosityScale, 1);        //skalerer hastigheten til Jorda
+  sunEarthScale.solveVerlet(endtime, dt);
+  sunEarthScale.writetoFile("../data/escape_velocity");
+  double scaledVelocity = sunEarthScale.getPlanetInitVel(1); //henter skalert initsialhastighet
 
   cout << scaledVelocity << endl;
 }
