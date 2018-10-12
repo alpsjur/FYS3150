@@ -14,12 +14,14 @@ class System{
   // kamerat deklareringer
 private:
   double m_pi = 3.14159265358979;
-  double m_sunM = 2e+30;
-  double m_g = 4.0*m_pi*m_pi/m_sunM;
+  double m_g = 4.0*m_pi*m_pi;
+  double m_c = 63239.7263;
   string m_name;
   int m_numberofPlanets;
   int m_integrationSteps = 0;
   Planet *m_planets;
+  int m_relativistic = 0;
+  double m_beta = 2;
 
   void initPlanets();
   const Planet& copy_planet() const {return *m_planets;}
@@ -38,11 +40,18 @@ public:
 
   string getName(){return m_name;}
   int getNumberofPlanets(){return m_numberofPlanets;}
-  void solve(double endtime, double dt, int method, int relativistic);
-  Coordinate calculateAcc(int i, int j, int relativistic);
-  void velocityVerlet(int i, int j, double dt, int relativistic);
-  void forwardEuler(int i, int j, double dt, int relativistic);
-  void writetoFile();
+  void calculateCenterofMass();
+  void solveEuler(double endtime, double dt);
+  void solveVerlet(double endtime, double dt);
+  Coordinate calculateAcc(int i, int j);
+  void velocityVerlet(int i, int j, double dt);
+  void forwardEuler(int i, int j, double dt);
+  void writetoFile(string folder);
+  void relativistic(string arg);
+  void setBeta(double beta){m_beta=beta;}
+  void scalePlanetInitVel(double scale, int planet);
+  void scalePlanetMass(double scale, int planet);
+  double getPlanetInitVel(int planet){return m_planets[planet].m_initVel.norm();}
 };
 
 #endif /* SYSTEM_HPP */
