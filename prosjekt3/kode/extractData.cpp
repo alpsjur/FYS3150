@@ -13,7 +13,7 @@ Planet extract(string filename, int i){
 
   Coordinate initPos(stod(x),stod(y),stod(z));
   Coordinate initVel(stod(vx),stod(vy),stod(vz));
-  Planet planet(name, stod(mass), initPos, initVel*365.0);
+  Planet planet(name, stod(mass)/2e30, initPos, initVel*365.25);
 
   return planet;
 }
