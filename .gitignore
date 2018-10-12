@@ -4,6 +4,8 @@
 *.a
 # programs:
 *.exe
+# datafiles
+*.dat
 # temporary files:
 *.pyc
 *.bak

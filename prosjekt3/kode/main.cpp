@@ -52,6 +52,7 @@ int main(){
   sunMercuryList[0] = sun;
   sunMercuryList[1] = mercury;
 
+<<<<<<< HEAD
   //taskC(sunEarthList);
   //taskD(sunEarthList);
   //taskE(sunEarthJupiterList);
@@ -59,6 +60,18 @@ int main(){
   //taskG(sunMercuryList);
 
 
+=======
+  try {
+    //taskC(sunEarthList);
+    //taskD(sunEarthList);
+    taskE(sunEarthJupiterList);
+    //taskF(allplanets);
+    //taskG(sunMercuryList);
+  }
+  catch(bad_alloc) {
+    cout << "!FAILED TO ALLOCATE MEMORY FOR ARRAYS!" << '\n';
+  }
+>>>>>>> 07f3b98035ff0d97acfee72655ea3463891b68f7
 
 }
 
@@ -115,7 +128,7 @@ void taskD(Planet *sunEarthList){
 void taskE(Planet *sunEarthJupiterList){
   //FLAGG lese inn dt og endtime fra kommandolinja
   double dt = 0.001;
-  double endtime = 10;
+  double endtime = 3;
 
   System sunEarthJupiter("Sun-Earth_jupiter system", sunEarthJupiterList, 3);
 
