@@ -52,16 +52,13 @@ int main(){
   sunMercuryList[0] = sun;
   sunMercuryList[1] = mercury;
 
-<<<<<<< HEAD
-  taskC(sunEarthList);
-  taskD(sunEarthList);
-=======
   //taskC(sunEarthList);
   //taskD(sunEarthList);
->>>>>>> 62892cbfc12a8f0e9cadce7dcdd6ab22bcb5270d
-  taskE(sunEarthJupiterList);
+  //taskE(sunEarthJupiterList);
   taskF(allplanets);
-  taskG(sunMercuryList);
+  //taskG(sunMercuryList);
+
+
 
 }
 
@@ -143,8 +140,8 @@ void taskF(Planet *allplanets){
   double endtime = 10;
 
   System solarsystem("Solar system", allplanets, 9);
-  solarsystem.calculateCenterofMass();
-  solarsystem.solveVerlet(endtime,dt);
+  //solarsystem.calculateCenterofMass();
+  solarsystem.solveVerlet(endtime, dt);
   solarsystem.writetoFile("../data/solarsystem");
 }
 

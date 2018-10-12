@@ -57,7 +57,7 @@ Coordinate System::calculateAcc(int i, int j){
   for (int k = 0; k < m_numberofPlanets; ++k){
     if (j != k){
       Coordinate rjk = m_planets[k].m_pos[i] - m_planets[j].m_pos[i];
-      forcejk=  m_g*m_planets[j].m_mass*m_planets[k].m_mass*rjk /
+      forcejk =  m_g*m_planets[j].m_mass*m_planets[k].m_mass*rjk /
                 pow(rjk.norm(),m_beta+1);
       if (m_relativistic == 1){
         double l = (rjk^m_planets[j].m_vel[i]).norm();
