@@ -54,9 +54,9 @@ int main(){
 
   taskC(sunEarthList);
   taskD(sunEarthList);
-  //taskE(sunEarthJupiterList);
-  //taskF(allplanets);
-  //taskG(sunMercuryList);
+  taskE(sunEarthJupiterList);
+  taskF(allplanets);
+  taskG(sunMercuryList);
 
 }
 
