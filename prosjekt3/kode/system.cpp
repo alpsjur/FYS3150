@@ -41,12 +41,9 @@ void System::solveEuler(double endtime, double dt){
 void System::solveVerlet(double endtime, double dt){
   m_integrationSteps = int(endtime/dt);
   initPlanets();
-
   for (int i = 0; i < m_integrationSteps-1; ++i){
     //itererer over planetene
-    for (int j = 0; j < m_numberofPlanets; ++j){
-        velocityVerlet(i, j, dt);
-    }
+        velocityVerlet(i, dt);
   }
 }
 
@@ -57,8 +54,7 @@ Coordinate System::calculateAcc(int i, int j){
   for (int k = 0; k < m_numberofPlanets; ++k){
     if (j != k){
       Coordinate rjk = m_planets[k].m_pos[i] - m_planets[j].m_pos[i];
-      forcejk=  m_g*m_planets[j].m_mass*m_planets[k].m_mass*rjk /
-                pow(rjk.norm(),m_beta+1);
+      forcejk =  m_g*m_planets[j].m_mass*m_planets[k].m_mass*rjk/pow(rjk.norm(),m_beta+1);
       if (m_relativistic == 1){
         double l = (rjk^m_planets[j].m_vel[i]).norm();
         double r = rjk.norm();
@@ -70,15 +66,19 @@ Coordinate System::calculateAcc(int i, int j){
   return force/m_planets[j].m_mass;
 }
 
-void System::velocityVerlet(int i, int j, double dt){
+void System::velocityVerlet(int i, double dt){
   double dt2 = dt/2.0;
   double dtdt2 = dt*dt/2.0;
-  Coordinate acc, accNew;
-
-  acc = calculateAcc(i, j);
-  m_planets[j].m_pos[i+1] = m_planets[j].m_pos[i] + dt*m_planets[j].m_vel[i] + dtdt2*acc;
-  accNew = calculateAcc(i+1, j);
-  m_planets[j].m_vel[i+1] = m_planets[j].m_vel[i] + dt2*(acc + accNew);
+  Coordinate acc[m_numberofPlanets];
+  Coordinate accNew;
+  for (int j = 0; j < m_numberofPlanets; j++){
+    acc[j] = calculateAcc(i, j);
+    m_planets[j].m_pos[i+1] = m_planets[j].m_pos[i] + dt*m_planets[j].m_vel[i] + dtdt2*acc[j];
+  }
+  for (int j = 0; j < m_numberofPlanets; j++){
+    accNew = calculateAcc(i+1, j);
+    m_planets[j].m_vel[i+1] = m_planets[j].m_vel[i] + dt2*(acc[j] + accNew);
+  }
 }
 
 void System::forwardEuler(int i, int j, double dt){

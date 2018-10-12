@@ -16,8 +16,8 @@ tests : ${TEST_PROG}
 ${PROG} : main.o system.o planet.o coordinate.o extractData.o
 	${CPPflags} main.o system.o planet.o coordinate.o extractData.o -o ${PROG}
 
-${TEST_PROG} : tests_main.o test_coordinate.o
-	${CPPflags} tests_main.o test_coordinate.o ${TEST_PROG}
+${TEST_PROG} : tests_main.o test_coordinate.o coordinate.o
+	${CPPflags} tests_main.o test_coordinate.o coordinate.o -o ${TEST_PROG}
 
 main.o : main.cpp
 	${CPPflags} -c main.cpp

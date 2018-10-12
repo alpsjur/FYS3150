@@ -44,7 +44,7 @@ public:
   void solveEuler(double endtime, double dt);
   void solveVerlet(double endtime, double dt);
   Coordinate calculateAcc(int i, int j);
-  void velocityVerlet(int i, int j, double dt);
+  void velocityVerlet(int i, double dt);
   void forwardEuler(int i, int j, double dt);
   void writetoFile(string folder);
   void relativistic(string arg);
