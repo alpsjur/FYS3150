@@ -41,11 +41,9 @@ public:
   string getName(){return m_name;}
   int getNumberofPlanets(){return m_numberofPlanets;}
   void calculateCenterofMass();
-  void solveEuler(double endtime, double dt);
-  void solveVerlet(double endtime, double dt);
+  void solveForwardEuler(double endtime, double dt);
+  void solveVelocityVerlet(double endtime, double dt);
   Coordinate calculateAcc(int i, int j);
-  void velocityVerlet(int i, double dt);
-  void forwardEuler(int i, int j, double dt);
   void writetoFile(string folder);
   void relativistic(string arg);
   void setBeta(double beta){m_beta=beta;}

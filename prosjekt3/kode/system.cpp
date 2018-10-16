@@ -13,37 +13,53 @@ void System::calculateCenterofMass(){
   double totMass = 0;
   Coordinate sum(0,0,0);
   Coordinate planetMomentum(0,0,0);
-  for (int i = 0; i < m_numberofPlanets ; i++){
+  for (int i = 0; i < m_numberofPlanets ; ++i){
     totMass = totMass + m_planets[i].m_mass;
     sum = sum + m_planets[i].m_mass * m_planets[i].m_initPos;
     planetMomentum = planetMomentum + m_planets[i].m_mass * m_planets[i].m_initVel;
   }
   Coordinate centrum = sum/totMass;
   m_planets[0].m_initVel = m_planets[0].m_initVel-planetMomentum;
-  for (int i = 0; i < m_numberofPlanets; i++){
+  for (int i = 0; i < m_numberofPlanets; ++i){
     m_planets[i].m_initPos = m_planets[i].m_initPos - centrum;
   }
 
 }
 
 
-void System::solveEuler(double endtime, double dt){
+void System::solveForwardEuler(double endtime, double dt){
   m_integrationSteps = int(endtime/dt);
+  Coordinate acc;
+
   initPlanets();
   for (int i = 0; i < m_integrationSteps-1; ++i){
     //itererer over planetene
     for (int j = 0; j < m_numberofPlanets; ++j){
-        forwardEuler(i, j, dt);
+      acc = calculateAcc(i, j);
+      m_planets[j].m_pos[i+1] = m_planets[j].m_pos[i] + m_planets[j].m_vel[i]*dt;
+      m_planets[j].m_vel[i+1] = m_planets[j].m_vel[i] + acc*dt;
     }
   }
 }
 
-void System::solveVerlet(double endtime, double dt){
+void System::solveVelocityVerlet(double endtime, double dt){
   m_integrationSteps = int(endtime/dt);
+  double dt2 = dt/2.0;
+  double dtdt2 = dt*dt/2.0;
+  Coordinate acc[m_numberofPlanets];
+  Coordinate accNew;
+
   initPlanets();
   for (int i = 0; i < m_integrationSteps-1; ++i){
     //itererer over planetene
-        velocityVerlet(i, dt);
+        for (int j = 0; j < m_numberofPlanets; ++j){
+          acc[j] = calculateAcc(i, j);
+          m_planets[j].m_pos[i+1] = m_planets[j].m_pos[i] + dt*m_planets[j].m_vel[i] + dtdt2*acc[j];
+        }
+        for (int j = 0; j < m_numberofPlanets; ++j){
+          accNew = calculateAcc(i+1, j);
+          m_planets[j].m_vel[i+1] = m_planets[j].m_vel[i] + dt2*(acc[j] + accNew);
+        }
   }
 }
 
@@ -66,33 +82,14 @@ Coordinate System::calculateAcc(int i, int j){
   return force/m_planets[j].m_mass;
 }
 
-void System::velocityVerlet(int i, double dt){
-  double dt2 = dt/2.0;
-  double dtdt2 = dt*dt/2.0;
-  Coordinate acc[m_numberofPlanets];
-  Coordinate accNew;
-  for (int j = 0; j < m_numberofPlanets; j++){
-    acc[j] = calculateAcc(i, j);
-    m_planets[j].m_pos[i+1] = m_planets[j].m_pos[i] + dt*m_planets[j].m_vel[i] + dtdt2*acc[j];
-  }
-  for (int j = 0; j < m_numberofPlanets; j++){
-    accNew = calculateAcc(i+1, j);
-    m_planets[j].m_vel[i+1] = m_planets[j].m_vel[i] + dt2*(acc[j] + accNew);
-  }
-}
 
-void System::forwardEuler(int i, int j, double dt){
-  Coordinate acc = calculateAcc(i, j);
-  m_planets[j].m_pos[i+1] = m_planets[j].m_pos[i] + m_planets[j].m_vel[i]*dt;
-  m_planets[j].m_vel[i+1] = m_planets[j].m_vel[i] + acc*dt;
-}
 
 void System::writetoFile(string folder){
-  for (int i = 0; i < m_numberofPlanets; i++){
+  for (int i = 0; i < m_numberofPlanets; ++i){
     string name = m_planets[i].getName();
     ofstream file;
     file.open(folder+ "/" + name + ".dat");
-    for (int j = 0; j < m_integrationSteps; j++){
+    for (int j = 0; j < m_integrationSteps; ++j){
       file << m_planets[i].m_pos[j] << " " << m_planets[i].m_vel[j] << endl;
     }
     file.close();
