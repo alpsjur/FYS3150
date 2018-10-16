@@ -19,8 +19,9 @@ def plotSystem(ax, path):
     for filename in files:
         plotPlanet(ax, filename)
 
-
-os.makedirs("../figurer")
+directory = "../figurer/"
+if not os.path.exists(directory):
+    os.makedirs(directory)
 
 sns.set()
 sns.set_style("white")
