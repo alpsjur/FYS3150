@@ -4,6 +4,7 @@
 #include <string>
 #include <cmath>
 #include <fstream>
+#include <boost/filesystem.hpp>
 
 #include "planet.hpp"
 

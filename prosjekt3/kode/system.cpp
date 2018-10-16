@@ -85,29 +85,33 @@ Coordinate System::calculateAcc(int i, int j){
 
 
 void System::writetoFile(string folder){
-  for (int i = 0; i < m_numberofPlanets; ++i){
-    string name = m_planets[i].getName();
+  folder = "../data/" + folder;
+  boost::filesystem::create_directories(folder);
+
+  for (int j = 0; j < m_numberofPlanets; ++j){
+    string name = m_planets[j].getName();
     ofstream file;
     file.open(folder+ "/" + name + ".dat");
-    for (int j = 0; j < m_integrationSteps; ++j){
-      file << m_planets[i].m_pos[j] << " " << m_planets[i].m_vel[j] << endl;
+    for (int i = 0; i < m_integrationSteps; ++i){
+      file << m_planets[j].m_pos[i] << " " << m_planets[j].m_vel[i] << endl;
     }
     file.close();
-
-  }
+    }
 }
+
+
 
 void System::relativistic(string arg){
   if(arg == "on"){
     m_relativistic=1;
   }
-  if(arg=="off"){
+  if(arg == "off"){
     m_relativistic=0;
   }
 }
 
 void System::scalePlanetInitVel(double scale, int planet){
-  m_planets[planet].m_initVel=m_planets[planet].m_initVel*scale;
+  m_planets[planet].m_initVel = m_planets[planet].m_initVel*scale;
 }
 
 void System::scalePlanetMass(double scale, int planet){
