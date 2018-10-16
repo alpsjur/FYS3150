@@ -11,13 +11,16 @@
 
 using namespace std;
 
-void taskC(Planet *);
-void taskD(Planet *);
-void taskE(Planet *);
-void taskF(Planet *);
-void taskG(Planet *);
+void taskC(Planet *, double, double);
+void taskD(Planet *, double, double);
+void taskE(Planet *, double, double);
+void taskF(Planet *, double, double);
+void taskG(Planet *, double, double);
 
-int main(){
+int main(int argc, char* argv[]){
+
+  double endtime = atof(argv[1]);
+  double dt = atof(argv[2]);
   //data hentet fra NASA, posisjon og hastighet 05.10.18
   string filename = "../data/body051018.dat";
 
@@ -52,34 +55,15 @@ int main(){
   sunMercuryList[0] = sun;
   sunMercuryList[1] = mercury;
 
-<<<<<<< HEAD
-  //taskC(sunEarthList);
-  //taskD(sunEarthList);
-  //taskE(sunEarthJupiterList);
-  taskF(allplanets);
-  //taskG(sunMercuryList);
-
-
-=======
-  try {
-    //taskC(sunEarthList);
-    //taskD(sunEarthList);
-    taskE(sunEarthJupiterList);
-    //taskF(allplanets);
-    //taskG(sunMercuryList);
-  }
-  catch(bad_alloc) {
-    cout << "!FAILED TO ALLOCATE MEMORY FOR ARRAYS!" << '\n';
-  }
->>>>>>> 07f3b98035ff0d97acfee72655ea3463891b68f7
-
+  //taskC(sunEarthList, enditme, dt);
+  //taskD(sunEarthList, endtime, dt);
+  //taskE(sunEarthJupiterList, endtime, dt);
+  taskF(allplanets, endtime, dt);
+  //taskG(sunMercuryList, endtime, dt);
+  return 0;
 }
 
-void taskC(Planet *sunEarthList){
-
-  //FLAGG lese inn endtime og dt fra kommandolinja
-  double dt = 0.001;
-  double endtime = 10;
+void taskC(Planet *sunEarthList, double endtime, double dt){
 
   System sunEarth("Sun-Earth system", sunEarthList, 2);
 
@@ -102,13 +86,11 @@ void taskC(Planet *sunEarthList){
   cout << eulerTime << " " << verletTime << endl;
 }
 
-void taskD(Planet *sunEarthList){
+void taskD(Planet *sunEarthList, double endtime, double dt){
 
   //flagg lese skaleringene fra kommandolinja
   double velosityScale = 2;
-  double beta = 2.5;
-  double dt = 0.001;
-  double endtime = 2;
+  double beta = 3.0;
 
   System sunEarthScale("Sun-Earth system", sunEarthList, 2);
 
@@ -125,10 +107,7 @@ void taskD(Planet *sunEarthList){
   cout << scaledVelocity << endl;
 }
 
-void taskE(Planet *sunEarthJupiterList){
-  //FLAGG lese inn dt og endtime fra kommandolinja
-  double dt = 0.001;
-  double endtime = 3;
+void taskE(Planet *sunEarthJupiterList, double endtime, double dt){
 
   System sunEarthJupiter("Sun-Earth_jupiter system", sunEarthJupiterList, 3);
 
@@ -147,21 +126,15 @@ void taskE(Planet *sunEarthJupiterList){
   sunEarthJupiter.writetoFile("../data/sun_earth_jupiter/jupiter_mass_1000");
 }
 
-void taskF(Planet *allplanets){
-  //FLAGG lese inn dt og endtime fra kommandolinja
-  double dt = 0.001;
-  double endtime = 10;
+void taskF(Planet *allplanets, double endtime, double dt){
 
   System solarsystem("Solar system", allplanets, 9);
-  //solarsystem.calculateCenterofMass();
+  solarsystem.calculateCenterofMass();
   solarsystem.solveVerlet(endtime, dt);
   solarsystem.writetoFile("../data/solarsystem");
 }
 
-void taskG(Planet *sunMercuryList){
-  //Flagg lese inn dt fra kommandolinja?
-  double dt = 0.001;
-  double endtime = 100;
+void taskG(Planet *sunMercuryList, double endtime, double dt){
 
   System sunMercury("Sun-Mercury system", sunMercuryList, 2);
   sunMercury.solveVerlet(endtime,dt);
