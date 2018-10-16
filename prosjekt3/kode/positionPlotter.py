@@ -2,13 +2,10 @@ from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
+import os
 import glob
 import seaborn as sns
 
-sns.set()
-sns.set_style("white")
-sns.set_palette("husl")
-#plt.rc('text', usetex=True)
 
 def plotPlanet(ax, filename):
     data = np.loadtxt(filename)
@@ -23,6 +20,13 @@ def plotSystem(ax, path):
         plotPlanet(ax, filename)
 
 
+os.makedirs("../figurer")
+
+sns.set()
+sns.set_style("white")
+sns.set_palette("husl")
+#plt.rc('text', usetex=True)
+
 fig = plt.figure()
 ax = plt.axes(projection='3d')
 #ax = fig.add_subplot(1,1,1)
@@ -33,5 +37,5 @@ ax.legend()
 ax.grid(False)
 plt.axis('equal')
 #plt.axis('off')
-
+plt.savefig("../figurer/fig.pdf")
 plt.show()
