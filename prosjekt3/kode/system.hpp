@@ -4,6 +4,7 @@
 #include <string>
 #include <cmath>
 #include <fstream>
+#include <sstream>
 #include <boost/filesystem.hpp>
 
 #include "planet.hpp"
@@ -17,15 +18,20 @@ private:
   double m_pi = 3.14159265358979;
   double m_g = 4.0*m_pi*m_pi;
   double m_c = 63239.7263;
-  string m_name;
+  string m_name, m_directory;
   int m_numberofPlanets;
   int m_integrationSteps = 0;
   Planet *m_planets;
-  int m_relativistic = 0;
   double m_beta = 2;
+  bool m_write = false;
+  ofstream *m_files;
+  bool m_relativistic = false;
+
 
   void initPlanets();
-  const Planet& copy_planet() const {return *m_planets;}
+  const Planet& copyPlanet() const {return *m_planets;}
+  void openFiles();
+  void closeFiles();
 
 public:
   System(string name, Planet *planets, int numberofPlanets)
@@ -33,10 +39,10 @@ public:
       // bygger for å initialisere alle kameratparametrene
     }
   System(const System& rocks)
-  : m_planets(new Planet(rocks.copy_planet())){
+  : m_planets(new Planet(rocks.copyPlanet())){
     // kopi-bygger for å håndtere flere instanser av klassen
   }
-  ~System(){delete[] m_planets;} // ødelegger for å deallokere minne
+  ~System(){delete[] m_planets, m_files;} // ødelegger for å deallokere minne
   // offentlige funksjoner som kan bli brukt utenfor klassen
 
   string getName(){return m_name;}
@@ -46,11 +52,13 @@ public:
   void solveVelocityVerlet(double endtime, double dt);
   Coordinate calculateAcc(int i, int j);
   void writetoFile(string folder);
-  void relativistic(string arg);
+  void relativistic();
   void setBeta(double beta){m_beta=beta;}
   void scalePlanetInitVel(double scale, int planet);
   void scalePlanetMass(double scale, int planet);
   double getPlanetInitVel(int planet){return m_planets[planet].m_initVel.norm();}
+  double getEnergy();
+  double getMomentum();
 };
 
 #endif /* SYSTEM_HPP */

@@ -18,9 +18,9 @@ void taskF(Planet *, double, double);
 void taskG(Planet *, double, double);
 
 int main(int argc, char* argv[]){
-
-  double endtime = atof(argv[1]);
-  double dt = atof(argv[2]);
+  double scenario = atof(argv[1]);
+  double endtime = atof(argv[2]);
+  double dt = atof(argv[3]);
   //data hentet fra NASA, posisjon og hastighet 05.10.18
   string filename = "../data/body051018.dat";
 
@@ -54,12 +54,11 @@ int main(int argc, char* argv[]){
   Planet *sunMercuryList = new Planet[2];
   sunMercuryList[0] = sun;
   sunMercuryList[1] = mercury;
-
-  taskC(sunEarthList, endtime, dt);
-  taskD(sunEarthList, endtime, dt);
-  taskE(sunEarthJupiterList, endtime, dt);
-  taskF(allplanets, endtime, dt);
-  taskG(sunMercuryList, endtime, dt);
+  if(scenario == 0){taskC(sunEarthList, endtime, dt);}
+  if(scenario == 1){taskD(sunEarthList, endtime, dt);}
+  if(scenario == 2){taskE(sunEarthJupiterList, endtime, dt);}
+  if(scenario == 3){taskF(allplanets, endtime, dt);}
+  if(scenario == 4){taskG(sunMercuryList, endtime, dt);}
   return 0;
 }
 
@@ -70,7 +69,6 @@ void taskC(Planet *sunEarthList, double endtime, double dt){
   clock_t c_start = clock();
   sunEarth.solveForwardEuler(endtime, dt);
   clock_t c_end = clock();
-  sunEarth.writetoFile("euler_vs_verlet/euler");
 
   // Beregner CPU-tid i milisekunder
   double eulerTime = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
@@ -78,7 +76,6 @@ void taskC(Planet *sunEarthList, double endtime, double dt){
   c_start = clock();
   sunEarth.solveVelocityVerlet(endtime, dt);
   c_end = clock();
-  sunEarth.writetoFile("euler_vs_verlet/verlet");
 
   // Beregner CPU-tid i milisekunder
   double verletTime = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
@@ -95,13 +92,13 @@ void taskD(Planet *sunEarthList, double endtime, double dt){
   System sunEarthScale("Sun-Earth system", sunEarthList, 2);
 
   sunEarthScale.setBeta(beta);                               //endrer beta i kraftfunksjonen
-  sunEarthScale.solveVelocityVerlet(endtime, dt);
   sunEarthScale.writetoFile("change_beta");
+  sunEarthScale.solveVelocityVerlet(endtime, dt);
   sunEarthScale.setBeta(2);                                  //resetter beat til 2
 
   sunEarthScale.scalePlanetInitVel(velosityScale, 1);        //skalerer hastigheten til Jorda
-  sunEarthScale.solveVelocityVerlet(endtime, dt);
   sunEarthScale.writetoFile("escape_velocity");
+  sunEarthScale.solveVelocityVerlet(endtime, dt);
   double scaledVelocity = sunEarthScale.getPlanetInitVel(1); //henter skalert initsialhastighet
 
   cout << scaledVelocity << endl;
@@ -112,35 +109,35 @@ void taskE(Planet *sunEarthJupiterList, double endtime, double dt){
   System sunEarthJupiter("Sun-Earth_jupiter system", sunEarthJupiterList, 3);
 
   //løser for Jupiters masse skalert med 1
-  sunEarthJupiter.solveVelocityVerlet(endtime, dt);
   sunEarthJupiter.writetoFile("sun_earth_jupiter/jupiter_mass_1");
+  sunEarthJupiter.solveVelocityVerlet(endtime, dt);
 
   //løser for jupiters masse skalert med 10
   sunEarthJupiter.scalePlanetMass(10,2);
-  sunEarthJupiter.solveVelocityVerlet(endtime, dt);
   sunEarthJupiter.writetoFile("sun_earth_jupiter/jupiter_mass_10");
+  sunEarthJupiter.solveVelocityVerlet(endtime, dt);
 
   //løser for jupiters masse skalert med 1000 = 10*100
   sunEarthJupiter.scalePlanetMass(100,2);
-  sunEarthJupiter.solveVelocityVerlet(endtime, dt);
   sunEarthJupiter.writetoFile("sun_earth_jupiter/jupiter_mass_1000");
+  sunEarthJupiter.solveVelocityVerlet(endtime, dt);
 }
 
 void taskF(Planet *allplanets, double endtime, double dt){
 
   System solarsystem("Solar system", allplanets, 9);
   solarsystem.calculateCenterofMass();
-  solarsystem.solveVelocityVerlet(endtime, dt);
   solarsystem.writetoFile("solarsystem");
+  solarsystem.solveVelocityVerlet(endtime, dt);
 }
 
 void taskG(Planet *sunMercuryList, double endtime, double dt){
 
   System sunMercury("Sun-Mercury system", sunMercuryList, 2);
-  sunMercury.solveVelocityVerlet(endtime, dt);
   sunMercury.writetoFile("sun_mercury/classical");
-
-  sunMercury.relativistic("on");
   sunMercury.solveVelocityVerlet(endtime, dt);
+
+  sunMercury.relativistic();
   sunMercury.writetoFile("sun_mercury/relativistic");
+  sunMercury.solveVelocityVerlet(endtime, dt);
 }
