@@ -1,2 +1,55 @@
 \section{Methods}
 \label{sec:methods}
+
+\subsection{Algorithms for solving differential equations}
+Consider the function 
+\begin{equation}
+	y(t_i)=y_i,
+\end{equation}
+with known initial value $y_0$. We let
+\begin{equation}
+\left.\dv{y}{t}\right\rvert_{t_i}=f(t_i,y_i)=f_i.
+\end{equation}
+In the next two sections we will present two algorithms for approximating the values $y_{i}$, $i=1,2,\ldots,n$, when the derivatives of $y_i$ can be calculated. The step size is given as $dt=\frac{t_n-t_1}{n}$.
+\subsubsection{Forward Euler}
+\label{sec:fe}
+Eulers method, also known as forward Euler, is based on a first order Taylor expansion around the point $t_i$. The function $y$ can be written as
+\begin{equation}
+	y_t = y_i + (t-t_i)f_i+\mathcal{O}((t-t_i)^2)
+\end{equation}
+Inserting $t=t_{i+1} = t_i + dt$ we get
+\begin{equation}
+	y_{i+1}=y_i + dtf_i + \mathcal{O}(dt^2)
+\end{equation}  
+The algorithm then becomes 
+\begin{algorithm}[h!]
+	\SetAlgoLined
+	initialise $y_0,dt$\;
+	\For{$i=0,\ldots,n-1$ }{
+		compute $f_i$\;
+		compute $y_{i+1} = y_i+dt*f_i$\;
+	}
+\end{algorithm}
+
+\subsubsection{Velocity Verlet}
+\label{sec:vv}
+We now consider the second order Taylor expansion of $y$ and $f$ around the point $t_i$. We let 
+\begin{equation}
+	\left.\dv{f}{t}\right\rvert_{t_i} = g(t_i,y_i)=g_i.
+\end{equation}
+We can then write $y_{i+1}$ and $f_{i+1}$ as
+\begin{align}
+	y_{i+1}&=y_i + dtf_i + \frac{dt^2}{2}g_i  +\mathcal{O}(dt^3) \\
+	f_{i+1}&=f_i + dtg_i + \frac{dt^2}{2}\left.\dv{g}{t}\right\rvert_{t_i}  +\mathcal{O}(dt^3)
+\end{align}
+The derivative of $g$ can be approximated as 
+\begin{equation}
+	 dt\left.\dv{g}{t}\right\rvert_{t_i} \approx g_{i+1}-g_i
+\end{equation}
+which gives us the following expression for $f_{i+1}$
+\begin{equation}
+	f_{i+1}&=f_i + dtg_i + \frac{dt}{2}\left(g_{i+1} + g_i \right)  +\mathcal{O}(dt^3)
+\end{equation}
+
+\subsection{Testing the two methods}
+\label{sec:tests}
