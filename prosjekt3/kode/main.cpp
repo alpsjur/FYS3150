@@ -11,11 +11,12 @@
 
 using namespace std;
 
-void taskC(Planet *, double, double);
-void taskD(Planet *, double, double);
-void taskE(Planet *, double, double);
-void taskF(Planet *, double, double);
-void taskG(Planet *, double, double);
+void timeAlgorithms(Planet *, double, double);
+void compareEulerVerlet(Planet *, double, double);
+void varyVelocityBeta(Planet *, double, double, double, double);
+void solveEarthJupiter(Planet *, double, double);
+void solveSolarSystem(Planet *, double, double);
+void solveMercuryPrecession(Planet *, double, double);
 
 int main(int argc, char* argv[]){
   double scenario = atof(argv[1]);
@@ -54,15 +55,20 @@ int main(int argc, char* argv[]){
   Planet *sunMercuryList = new Planet[2];
   sunMercuryList[0] = sun;
   sunMercuryList[1] = mercury;
-  if(scenario == 0){taskC(sunEarthList, endtime, dt);}
-  if(scenario == 1){taskD(sunEarthList, endtime, dt);}
-  if(scenario == 2){taskE(sunEarthJupiterList, endtime, dt);}
-  if(scenario == 3){taskF(allplanets, endtime, dt);}
-  if(scenario == 4){taskG(sunMercuryList, endtime, dt);}
+  if(scenario == 0){timeAlgorithms(sunEarthList, endtime, dt);}
+  if(scenario == 1){compareEulerVerlet(sunEarthList, endtime, dt);}
+  if(scenario == 2){
+    double velocityscale = atof(argv[4]);
+    double beta = atof(argv[5]);
+    varyVelocityBeta(sunEarthList, endtime, dt, velocityscale, beta);
+  }
+  if(scenario == 3){solveEarthJupiter(sunEarthJupiterList, endtime, dt);}
+  if(scenario == 4){solveSolarSystem(allplanets, endtime, dt);}
+  if(scenario == 5){solveMercuryPrecession(sunMercuryList, endtime, dt);}
   return 0;
 }
 
-void taskC(Planet *sunEarthList, double endtime, double dt){
+void timeAlgorithms(Planet *sunEarthList, double endtime, double dt){
 
   System sunEarth("Sun-Earth system", sunEarthList, 2);
 
@@ -83,11 +89,17 @@ void taskC(Planet *sunEarthList, double endtime, double dt){
   cout << eulerTime << " " << verletTime << endl;
 }
 
-void taskD(Planet *sunEarthList, double endtime, double dt){
+void compareEulerVerlet(Planet *sunEarthList, double endtime, double dt){
+  System sunEarth("Sun-Earth system", sunEarthList, 2);
 
-  //flagg lese skaleringene fra kommandolinja
-  double velosityScale = 2;
-  double beta = 3.0;
+  sunEarth.writetoFile("euler_vs_verlet/euler");
+  sunEarth.solveForwardEuler(endtime, dt);
+
+  sunEarth.writetoFile("euler_vs_verlet/verlet");
+  sunEarth.solveVelocityVerlet(endtime, dt);
+}
+
+void varyVelocityBeta(Planet *sunEarthList, double endtime, double dt, double velocityScale, double beta){
 
   System sunEarthScale("Sun-Earth system", sunEarthList, 2);
 
@@ -96,7 +108,7 @@ void taskD(Planet *sunEarthList, double endtime, double dt){
   sunEarthScale.solveVelocityVerlet(endtime, dt);
   sunEarthScale.setBeta(2);                                  //resetter beat til 2
 
-  sunEarthScale.scalePlanetInitVel(velosityScale, 1);        //skalerer hastigheten til Jorda
+  sunEarthScale.scalePlanetInitVel(velocityScale, 1);        //skalerer hastigheten til Jorda
   sunEarthScale.writetoFile("escape_velocity");
   sunEarthScale.solveVelocityVerlet(endtime, dt);
   double scaledVelocity = sunEarthScale.getPlanetInitVel(1); //henter skalert initsialhastighet
@@ -104,7 +116,7 @@ void taskD(Planet *sunEarthList, double endtime, double dt){
   cout << scaledVelocity << endl;
 }
 
-void taskE(Planet *sunEarthJupiterList, double endtime, double dt){
+void solveEarthJupiter(Planet *sunEarthJupiterList, double endtime, double dt){
 
   System sunEarthJupiter("Sun-Earth_jupiter system", sunEarthJupiterList, 3);
 
@@ -123,7 +135,7 @@ void taskE(Planet *sunEarthJupiterList, double endtime, double dt){
   sunEarthJupiter.solveVelocityVerlet(endtime, dt);
 }
 
-void taskF(Planet *allplanets, double endtime, double dt){
+void solveSolarSystem(Planet *allplanets, double endtime, double dt){
 
   System solarsystem("Solar system", allplanets, 9);
   solarsystem.calculateCenterofMass();
@@ -131,7 +143,7 @@ void taskF(Planet *allplanets, double endtime, double dt){
   solarsystem.solveVelocityVerlet(endtime, dt);
 }
 
-void taskG(Planet *sunMercuryList, double endtime, double dt){
+void solveMercuryPrecession(Planet *sunMercuryList, double endtime, double dt){
 
   System sunMercury("Sun-Mercury system", sunMercuryList, 2);
   sunMercury.writetoFile("sun_mercury/classical");

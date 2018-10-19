@@ -32,19 +32,29 @@ void System::solveForwardEuler(double endtime, double dt){
   Coordinate acc;
 
   initPlanets();
-  if(m_write){openFiles();}
-  for (int i = 0; i < m_integrationSteps-1; ++i){
-    //itererer over planetene
-    for (int j = 0; j < m_numberofPlanets; ++j){
-      acc = calculateAcc(i, j);
-      m_planets[j].m_pos[i+1] = m_planets[j].m_pos[i] + m_planets[j].m_vel[i]*dt;
-      m_planets[j].m_vel[i+1] = m_planets[j].m_vel[i] + acc*dt;
-      if(m_write){
+  if(m_write){
+    openFiles();
+    for (int i = 0; i < m_integrationSteps-1; ++i){
+      //itererer over planetene
+      for (int j = 0; j < m_numberofPlanets; ++j){
+        acc = calculateAcc(i, j);
+        m_planets[j].m_pos[i+1] = m_planets[j].m_pos[i] + m_planets[j].m_vel[i]*dt;
+        m_planets[j].m_vel[i+1] = m_planets[j].m_vel[i] + acc*dt;
         m_files[j] << m_planets[j].m_pos[i+1] << " " << m_planets[j].m_vel[i+1] << endl;
       }
     }
+    closeFiles();
   }
-  if(m_write){closeFiles();}
+  else{
+    for (int i = 0; i < m_integrationSteps-1; ++i){
+      //itererer over planetene
+      for (int j = 0; j < m_numberofPlanets; ++j){
+        acc = calculateAcc(i, j);
+        m_planets[j].m_pos[i+1] = m_planets[j].m_pos[i] + m_planets[j].m_vel[i]*dt;
+        m_planets[j].m_vel[i+1] = m_planets[j].m_vel[i] + acc*dt;
+      }
+    }
+  }
 }
 
 void System::solveVelocityVerlet(double endtime, double dt){
@@ -55,22 +65,35 @@ void System::solveVelocityVerlet(double endtime, double dt){
   Coordinate accNew;
 
   initPlanets();
-  if(m_write){openFiles();}
-  for (int i = 0; i < m_integrationSteps-1; ++i){
-    //itererer over planetene
-        for (int j = 0; j < m_numberofPlanets; ++j){
-          acc[j] = calculateAcc(i, j);
-          m_planets[j].m_pos[i+1] = m_planets[j].m_pos[i] + dt*m_planets[j].m_vel[i] + dtdt2*acc[j];
-        }
-        for (int j = 0; j < m_numberofPlanets; ++j){
-          accNew = calculateAcc(i+1, j);
-          m_planets[j].m_vel[i+1] = m_planets[j].m_vel[i] + dt2*(acc[j] + accNew);
-          if(m_write){
-            m_files[j] << m_planets[j].m_pos[i+1] << " " << m_planets[j].m_vel[i+1] << endl;
-          }
-        }
+  if(m_write){
+    openFiles();
+    for (int i = 0; i < m_integrationSteps-1; ++i){
+      //itererer over planetene
+      for (int j = 0; j < m_numberofPlanets; ++j){
+        acc[j] = calculateAcc(i, j);
+        m_planets[j].m_pos[i+1] = m_planets[j].m_pos[i] + dt*m_planets[j].m_vel[i] + dtdt2*acc[j];
+      }
+      for (int j = 0; j < m_numberofPlanets; ++j){
+        accNew = calculateAcc(i+1, j);
+        m_planets[j].m_vel[i+1] = m_planets[j].m_vel[i] + dt2*(acc[j] + accNew);
+        m_files[j] << m_planets[j].m_pos[i+1] << " " << m_planets[j].m_vel[i+1] << endl;
+      }
+    }
+    closeFiles();
   }
-  if(m_write){closeFiles();}
+  else{
+    for (int i = 0; i < m_integrationSteps-1; ++i){
+      //itererer over planetene
+      for (int j = 0; j < m_numberofPlanets; ++j){
+        acc[j] = calculateAcc(i, j);
+        m_planets[j].m_pos[i+1] = m_planets[j].m_pos[i] + dt*m_planets[j].m_vel[i] + dtdt2*acc[j];
+      }
+      for (int j = 0; j < m_numberofPlanets; ++j){
+        accNew = calculateAcc(i+1, j);
+        m_planets[j].m_vel[i+1] = m_planets[j].m_vel[i] + dt2*(acc[j] + accNew);
+      }
+    }
+  }
 }
 
 Coordinate System::calculateAcc(int i, int j){
@@ -109,12 +132,14 @@ void System::writetoFile(string folder){
 */
 
 void System::openFiles(){
-  boost::filesystem::create_directories(m_directory);
+  if(boost::filesystem::exists(m_directory) == false){
+    boost::filesystem::create_directories(m_directory);
+  }
   m_files = new ofstream[m_numberofPlanets];
   for (int j = 0; j < m_numberofPlanets; ++j){
-    ostringstream filename;
-    filename << m_directory << "/" << m_planets[j].getName() << ".dat";
-    m_files[j].open(filename.str());
+    string filename;
+    filename = m_directory + "/" + m_planets[j].getName() + ".dat";
+    m_files[j].open(filename);
     m_files[j] << m_planets[j].getPos(0) << " " << m_planets[j].getVel(0) << endl;
   }
 }
