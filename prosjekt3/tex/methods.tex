@@ -1,55 +1,134 @@
 \section{Methods}
 \label{sec:methods}
 
-\subsection{Algorithms for solving differential equations}
+\subsection{Forces governing the motions in the solar system}
+In this model we will consider only the gravitational forces between the bodies in the system. Newton's law of gravitation states that the force $\mathbf{F}_{ij}$ on a body $b_i$ with mass $M_i$ due to a body $b_j$ with mass $M_j$ at a distance $r_{ij}$ is given as 
+\begin{equation}\label{eq: gravity}
+	\mathbf{F}_{ij} = \frac{GM_iM_j}{r_{ij}^2}\frac{\mathbf{r}_{ij}}{r_{ij}}.
+\end{equation}
+Here, $\mathbf{r}_{ij}$ is the vector between the centres of the bodies, pointing in the direction from $b_i$ towards $b_j$, and $G$ is the gravitational constant. Using Newton's second law we get the following differential equations for a system consisting of the bodies $b_1,b_2,\ldots,b_N$
+\begin{equation}\label{eq:diff}
+	\dv[2]{\mathbf{x}_i}{t} = \sum_j \frac{\mathbf{F}_{ij}}{M_i} = \sum_j \mathbf{a}_{ij}
+\end{equation}
+where $j = \{1,\ldots,N\}\setminus i$, and $\mathbf{x}_i$ is the position vector of body $b_i$. 
+
+Using astronomical units, and setting the mass of the sun to 1, we can, by approximating the orbit of Earth around the sun as a circle, find a value for G. Setting the size of $\mathbf{F}_{ij}$ in equation (\ref{eq: gravity}) equal to the size of the centripetal force, we get
+\begin{equation}\label{eq: centripetal}
+	\frac{GM}{r^2} = \frac{Mv^2}{r}.
+\end{equation} 
+ Here, $M$ and $v$ is the mass and speed of Earth, respectively, and $r$ is the distance from the sun to Earth. By manipulating equation (\ref{eq: centripetal}), we get that
+ \begin{equation}
+	 G = 4 \pi ^2 AU^3/yr^2.
+ \end{equation}
+ 
+ \subsection{The relativistic case}
+ 
+\subsection{Escape velocity}
+One of the properties of the system we will solve for numerically is the escape velocity $v_e$ of a planet. This is a problem that has an analytical solution, which makes it a good test case. The escape velocity of an object $b_i$ orbiting $b_j$ is the velocity when the sum of the kinetic and potential energy is zero. That is
+\begin{equation}
+	\frac{1}{2}M_iv_e^2 = \frac{GM_iM_j}{r_{ij}}
+\end{equation} 
+Letting $b_j$ be the sun, $r$ denote the distance of $b_i$ from the sun, and scaling the mass with $M_j$, we get
+\begin{equation}
+	v_e = \sqrt{\frac{2G}{r}}
+\end{equation} 
+\subsection{Algorithms for solving the differential equations}
 Consider the function 
 \begin{equation}
-	y(t_i)=y_i,
+	x(t_k)=x_k,
 \end{equation}
-with known initial value $y_0$. We let
+with known initial value $x_0$. We let
 \begin{equation}
-\left.\dv{y}{t}\right\rvert_{t_i}=f(t_i,y_i)=f_i.
+\left.\dv{x}{t}\right\rvert_{t_k}=v(t_k)=v_k.
 \end{equation}
-In the next two sections we will present two algorithms for approximating the values $y_{i}$, $i=1,2,\ldots,n$, when the derivatives of $y_i$ can be calculated. The step size is given as $dt=\frac{t_n-t_1}{n}$.
-\subsubsection{Forward Euler}
+and  
+\begin{equation}
+\left.\dv{v}{t}\right\rvert_{t_k} = a(t_k)=a_k.
+\end{equation}
+In the next two sections we will present two methods for approximating the values $x_{k}$, when the derivatives of $x$ or $v$ can be calculated. In Verlet's method both $x_k$ and $v_k$ are calculated using a known expression for the derivative of $v$, while in Euler's method the function $v$ must be known. We will however see that by using Euler's method twice, it is enough to have a known expression for $a$. The step size is given as $dt=\frac{t_n-t_1}{n}$.
+\subsubsection{Euler's method}
 \label{sec:fe}
-Eulers method, also known as forward Euler, is based on a first order Taylor expansion around the point $t_i$. The function $y$ can be written as
+Eulers method, also known as forward Euler, is based on a first order Taylor expansion around the point $t_k$. The function $x$ can then be written as 
 \begin{equation}
-	y_t = y_i + (t-t_i)f_i+\mathcal{O}((t-t_i)^2)
+	x(t) = x_k + (t-t_i)v_k+\mathcal{O}\left(\left( t-t_k\right) ^2\right) 
 \end{equation}
-Inserting $t=t_{i+1} = t_i + dt$ we get
+Inserting $t=t_{k+1} = t_k + dt$, we get
 \begin{equation}
-	y_{i+1}=y_i + dtf_i + \mathcal{O}(dt^2)
+	x_{k+1}=x_k + dtv_k + \mathcal{O}\left( dt^2\right) 
 \end{equation}  
 The algorithm then becomes 
 \begin{algorithm}[h!]
 	\SetAlgoLined
-	initialise $y_0,dt$\;
-	\For{$i=0,\ldots,n-1$ }{
-		compute $f_i$\;
-		compute $y_{i+1} = y_i+dt*f_i$\;
-	}
+		$x_{k+1} = x_k+dtv_k$\;
+\end{algorithm}
+
+In our case $a$ is the only known function. By using the algorithm above twice, we can first compute $v_k$ and then $x_k$. Our modified algorithm is
+\begin{algorithm}[h!]
+	\SetAlgoLined
+		compute $a_k$\;
+		$v_{k+1} = v_k+dta_k$\;
+		$x_{k+1} = x_k+dtv_k$\;
 \end{algorithm}
 
 \subsubsection{Velocity Verlet}
 \label{sec:vv}
-We now consider the second order Taylor expansion of $y$ and $f$ around the point $t_i$. We let 
-\begin{equation}
-	\left.\dv{f}{t}\right\rvert_{t_i} = g(t_i,y_i)=g_i.
-\end{equation}
-We can then write $y_{i+1}$ and $f_{i+1}$ as
-\begin{align}
-	y_{i+1}&=y_i + dtf_i + \frac{dt^2}{2}g_i  +\mathcal{O}(dt^3) \\
-	f_{i+1}&=f_i + dtg_i + \frac{dt^2}{2}\left.\dv{g}{t}\right\rvert_{t_i}  +\mathcal{O}(dt^3)
+We now consider the second order Taylor expansion of $x$ and $v$ around the point $t_k$. Then we can write $x_{k+1}$ and $v_{k+1}$ as
+\begin{align} \label{eq:vvy}
+	x_{k+1}&=x_k + dtv_k + \frac{dt^2}{2}a_k  +\mathcal{O}(dt^3) \\
+	v_{k+1}&=v_k + dta_k + \frac{dt^2}{2}\left.\dv{a}{t}\right\rvert_{t_k}  +\mathcal{O}(dt^3)
 \end{align}
-The derivative of $g$ can be approximated as 
+The derivative of $a$ can be approximated as 
 \begin{equation}
-	 dt\left.\dv{g}{t}\right\rvert_{t_i} \approx g_{i+1}-g_i
+	 \left.\dv{a}{t}\right\rvert_{t_k} \approx \frac{a_{k+1}-a_k}{dt}
 \end{equation}
-which gives us the following expression for $f_{i+1}$
-\begin{equation}
-	f_{i+1}&=f_i + \frac{dt}{2}\left(g_{i+1} + g_i \right)  +\mathcal{O}(dt^3)
+which gives us the following expression for $v_{k+1}$
+\begin{equation}\label{eq:vvf}
+	v_{k+1}=v_k + \frac{dt}{2}\left(a_{k+1} + a_k \right)  +\mathcal{O}(dt^3)
 \end{equation}
+Combining equation (\ref{eq:vvy}) and (\ref{eq:vvf}) gives us the following algorithm 
+\begin{algorithm}[h!]
+	\SetAlgoLined
+		compute $a_k$\;
+		$x_{k+1} = x_k+dtv_k+\frac{dt^2}{2}g_k$\;
+		compute $a_{k+1}$\;
+		$v_{k+1} = v_k + \frac{dt}{2}\left(a_{k+1}+a_k\right)$\;
+\end{algorithm}
 
-\subsection{Testing the two methods}
-\label{sec:tests}
+\subsubsection{Solving for all bodies}
+Let's again look at equation (\ref{eq:diff}). We let 
+\begin{equation}
+\mathbf{x}_i(t_k)=\mathbf{x}_{i}^k
+\end{equation}
+and
+\begin{equation}
+\left.\dv[2]{\mathbf{x}_i}{t}\right\rvert_{t_k} = \mathbf{a}_i(t_k)=\mathbf{a}_{i}^k
+\end{equation}
+where $k=1,2,\ldots,n$. The algorithm for computing the orbits of all the bodies in the system can be written as
+\begin{algorithm}[h!]
+	\SetAlgoLined
+	\For{$k=1,\ldots,n$ }{
+		\For{$i=1,\ldots,N$}{
+			set $\mathbf{a}_{i}^k=0$\;
+			\For{$j=1,\ldots,N$}{
+				\If{$i\neq j$}{
+					$\mathbf{a}_{i}^k \mathrel{+}= \mathbf{a}_{ij}$\; 
+				}
+			}
+			compute $\mathbf{x}_{i}^k$\;
+		}
+	}
+\end{algorithm}
+where $\mathbf{x}_{i}^k$ is computed using either Euler's method or Verlet's method. 
+\subsection{Testing the two methods} \label{sec:tests}
+In order to determine which of the two methods best suits our case, we check whether certain physical principles are obeyed or not. In our model for the solar system, both angular momentum and mechanic energy should be preserved. Forklar hvorfor dette bør være bevart. 
+
+Another simple test is to time the two algorithms in order to determine which is the most efficient. When timing the algorithms we run both algorithms with the same input parameters X times, and record the mean time and standard deviation. 
+
+\subsection{Obtaining initial values}
+
+\subsection{Programming technicalities}
+\label{sec:progtech}
+
+All our programs are written in C++, using python3.6 to produce figures and tables.
+All our code can be found in
+a github repository "FYS3150" by janadr\footnote{https://github.com/janadr/FYS3150/tree/master/prosjekt3}.
