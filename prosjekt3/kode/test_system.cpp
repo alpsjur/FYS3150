@@ -7,7 +7,7 @@
 #include "extractData.hpp"
 
 
-TEST_CASE("MOMENERGY CONSERVATION"){
+TEST_CASE("ENERGY AND MOMENTUM CONSERVATION"){
   double endtime = 10;
   double dt = 0.001;
 
@@ -26,6 +26,7 @@ TEST_CASE("MOMENERGY CONSERVATION"){
   sunEarthList[1] = earth;
 
   System sunEarth("Sun-Earth system", sunEarthList, 2);
+  sunEarth.calculateCenterofMass();
   sunEarth.solveVelocityVerlet(endtime, dt);
   double E = sunEarth.getEnergy();
   double L = sunEarth.getMomentum();
