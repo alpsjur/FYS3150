@@ -23,7 +23,6 @@ void System::calculateCenterofMass(){
   for (int i = 0; i < m_numberofPlanets; ++i){
     m_planets[i].m_initPos = m_planets[i].m_initPos - centrum;
   }
-
 }
 
 
@@ -33,7 +32,7 @@ void System::solveForwardEuler(double endtime, double dt){
 
   initPlanets();
   if(m_write){
-    openFiles();
+    initFiles();
     for (int i = 0; i < m_integrationSteps-1; ++i){
       //itererer over planetene
       for (int j = 0; j < m_numberofPlanets; ++j){
@@ -66,7 +65,7 @@ void System::solveVelocityVerlet(double endtime, double dt){
 
   initPlanets();
   if(m_write){
-    openFiles();
+    initFiles();
     for (int i = 0; i < m_integrationSteps-1; ++i){
       //itererer over planetene
       for (int j = 0; j < m_numberofPlanets; ++j){
@@ -115,30 +114,15 @@ Coordinate System::calculateAcc(int i, int j){
   return force/m_planets[j].m_mass;
 }
 
-
-/*
-void System::writetoFile(string folder){
-
-  for (int j = 0; j < m_numberofPlanets; ++j){
-    string name = m_planets[j].getName();
-    ofstream file;
-    file.open(m_directory + "/" + name + ".dat");
-    for (int i = 0; i < m_integrationSteps; ++i){
-      file << m_planets[j].m_pos[i] << " " << m_planets[j].m_vel[i] << endl;
-    }
-    file.close();
-    }
-}
-*/
-
-void System::openFiles(){
+void System::initFiles(){
   if(boost::filesystem::exists(m_directory) == false){
     boost::filesystem::create_directories(m_directory);
   }
+  string nstring = "_n" +  boost::lexical_cast<string>(m_integrationSteps);
   m_files = new ofstream[m_numberofPlanets];
   for (int j = 0; j < m_numberofPlanets; ++j){
     string filename;
-    filename = m_directory + "/" + m_planets[j].getName() + ".dat";
+    filename = m_directory + "/" + m_planets[j].getName() + nstring + ".dat";
     m_files[j].open(filename);
     m_files[j] << m_planets[j].getPos(0) << " " << m_planets[j].getVel(0) << endl;
   }
