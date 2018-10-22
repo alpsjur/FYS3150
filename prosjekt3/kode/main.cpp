@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void timeAlgorithms(Planet *, double, double);
+void timeAlgorithms(Planet *, double, double); 
 void compareEulerVerlet(Planet *, double, double);
 void varyVelocityBeta(Planet *, double, double, double, double);
 void solveEarthJupiter(Planet *, double, double);
@@ -67,7 +67,7 @@ int main(int argc, char* argv[]){
   if(scenario == 5){solveMercuryPrecession(sunMercuryList, endtime, dt);}
 
   delete[] sunEarthList, sunEarthJupiterList, allplanets, sunMercuryList;
-  return 0; 
+  return 0;
 }
 
 void timeAlgorithms(Planet *sunEarthList, double endtime, double dt){

@@ -2,11 +2,31 @@
 \label{sec:introduction}
 
 In physics we often encounter many-body systems such as particles around a nucleus,
-molecules flowing as a liquid and planets bound by the Sun's gravitational field.
+molecules flowing as a liquid, or planets bound by the Sun's gravitational field.
 What is common for all such systems is that the bodies themselves, such as
 electrons, $H_2 O$, and Earth and Jupiter, often have the same general properties.
 These properties, such as charge and mass, have fields such as the electromagnetic field
 and the gravitational field which will affect other charges and masses. From this,
 we have motion which is decribed by field equations, such as Maxwell's field equations
-and Newtons law of gravitation. In general then, what we have are properties and a
-corresponding law relating the effect
+and Newton's law of gravitation. In general then, what we would like to solve is
+the field equation corresponding to a certain property for n such bodies. From
+the superposition principle, the complete description of the system is given by
+summing all potentials (or forces) affecting the bodies as well as the interaction
+between the bodies themselves. Such systems are often unsolvable analytically, but are
+numerically trivial (in theory), and involves reusing a lot of code. This generality,
+as well as the necessity of reusing code, makes many-body problems a prime target
+for object-orientation, as we will be able to solve many different systems with
+a differing amount of bodies without much change to the code itself.
+
+In this report then, we will develop an object-oriented program to simulate the
+solar system. Beginning with the methods section, we present Newton's law of gravitation (NLG)
+for n bodies, as well as the relativistic correction and the concept of escape velocity.
+We end this section by deducing two algorithms for solving ordinary differential equations (ODE's);
+the forward Euler (FE) and the velocity verlet (VV). Moving to the results section, we start out
+by presenting an analysis of the efficiency and error of both algorithms. Further,
+we study the effects on the Sun-Earth system by changing the proportionality of $r$ in NLG,
+as well as finding the escape velocity of the Earth. Jupiter affects Earth by it's strong gravitational field,
+and we will look closer at the three-body problem of the Sun, Jupiter and Earth. For completeness,
+we will also present the entire solar system, and ending this section, we will
+look at the precession of Mercury around the sun, which is caused by a relativistic correction
+to the NLG. Finally, in the discussion section, we will ...

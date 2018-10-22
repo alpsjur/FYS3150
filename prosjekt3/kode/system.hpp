@@ -5,7 +5,6 @@
 #include <cmath>
 #include <fstream>
 #include <boost/filesystem.hpp>
-#include <boost/lexical_cast.hpp>
 
 #include "planet.hpp"
 
@@ -43,15 +42,14 @@ public:
   : m_name(name), m_planets(planets), m_numberofPlanets(numberofPlanets) {
       // bygger for å initialisere alle kameratparametrene
     }
-  System(const System& rocks)
-  : m_planets(new Planet(rocks.copyPlanet())){
+  System(const System& other)
+  : m_planets(new Planet(other.copyPlanet())) {
     // kopi-bygger for å håndtere flere instanser av klassen
   }
   ~System(){
     delete[] m_planets, m_files;
   } // ødelegger for å deallokere minne
   // offentlige funksjoner som kan bli brukt utenfor klassen
-
   string getName(){return m_name;}
   int getNumberofPlanets(){return m_numberofPlanets;}
   void calculateCenterofMass();

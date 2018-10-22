@@ -2,7 +2,6 @@
 
 
 void System::initPlanets(){
-  delete[] m_planets;
   for(int planet = 0; planet < m_numberofPlanets; ++planet){
     m_planets[planet].initArrays(m_integrationSteps);
     m_planets[planet].initPos();
@@ -119,11 +118,10 @@ void System::initFiles(){
   if(boost::filesystem::exists(m_directory) == false){
     boost::filesystem::create_directories(m_directory);
   }
-  string nstring = "_n" +  boost::lexical_cast<string>(m_integrationSteps);
   m_files = new ofstream[m_numberofPlanets];
   for (int j = 0; j < m_numberofPlanets; ++j){
     string filename;
-    filename = m_directory + "/" + m_planets[j].getName() + nstring + ".dat";
+    filename = m_directory + "/" + m_planets[j].getName() + ".dat";
     m_files[j].open(filename);
     m_files[j] << m_planets[j].getPos(0) << " " << m_planets[j].getVel(0) << endl;
   }
@@ -133,6 +131,7 @@ void System::closeFiles(){
   for(int j = 0; j < m_numberofPlanets; ++j){
     m_files[j].close();
   }
+  delete[] m_files;
 }
 
 void System::writetoFile(string folder){

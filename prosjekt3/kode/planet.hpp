@@ -32,18 +32,16 @@ private:
 
 public:
   Planet()
-  : m_name("Planet X"), m_mass(1.0), m_initPos(Coordinate()), m_initVel(Coordinate()),
-  m_pos(new Coordinate), m_vel(new Coordinate) {
+  : m_name("Planet X"), m_mass(1.0), m_initPos(Coordinate()), m_initVel(Coordinate()) {
     // standard initialisering
   }
   Planet(string name, double mass, Coordinate initPos, Coordinate initVel)
-    : m_name(name), m_mass(mass), m_initPos(initPos), m_initVel(initVel),
-      m_pos(new Coordinate), m_vel(new Coordinate){
+    : m_name(name), m_mass(mass), m_initPos(initPos), m_initVel(initVel) {
     // initialiserer alle kameratene og legger vekk minne for pos og vel
   }
-  Planet(const Planet& rock)
-  : m_pos(new Coordinate(rock.copy_coords(m_pos))),
-    m_vel(new Coordinate(rock.copy_coords(m_vel))){
+  Planet(const Planet& other)
+  : m_pos(new Coordinate(other.copy_coords(m_pos))),
+    m_vel(new Coordinate(other.copy_coords(m_vel))){
     // kopi-bygger for å håndtere flere planeter om gangen
   }
   ~Planet(){delete[] m_pos, m_vel;}  // ødelegger for å deallokere minne
