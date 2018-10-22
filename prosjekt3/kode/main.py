@@ -1,6 +1,8 @@
 import os
 import sys
+import glob
 import matplotlib.pyplot as plt
+from mpl_toolkits import mplot3d
 import numpy as np
 import seaborn as sns
 
@@ -13,8 +15,17 @@ def create_directory(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
+def emptyax(fig):
+    ax = fig.add_subplot(1, 1, 1)
+    ax.spines['top'].set_color('none')
+    ax.spines['bottom'].set_color('none')
+    ax.spines['left'].set_color('none')
+    ax.spines['right'].set_color('none')
+    ax.tick_params(labelcolor='w', top=False, bottom=False, left=False, right=False)
+    return ax
 
-def run_maincpp(n, scenario, endtime, dt, *args):
+
+def run_maincpp(scenario, endtime, dt, *args, n=1):
     if scenario == 2:
         velocityScale = args[0]
         beta = args[1]
@@ -24,18 +35,48 @@ def run_maincpp(n, scenario, endtime, dt, *args):
         for i in range(n):
             os.system("./main.exe {} {} {}".format(scenario, endtime, dt))
 
-def plotPlanet(ax, filename, d3=False):
+def plotPlanet(ax, filename, d3=False, label=True):
     data = np.loadtxt(filename)
-    name = filename.split("/")[-1][:-4]
     x = data[:, 0]; y = data[:, 1]; z = data[:, 2]
+    if label:
+        name = filename.split("/")[-1][:-4]
+    else:
+        name = None
     if d3:
         ax.plot3D(x, y, z, label=name)
     else:
         ax.plot(x, y, label=name)
 
-def plotSystem(ax, path, d3=False):
+def plotSystem(ax, path, d3=False, label=True):
+    path = "../data/" + path
     files = glob.glob(path+"/*.dat")
     for filename in files:
-        plotPlanet(ax, filename, d3)
+        plotPlanet(ax, filename, d3=d3, label=label)
 
-def generatePlots(n, endtime, dt)
+
+if __name__ == "__main__":
+    # sammenligne Euler og Verlet
+    pathEuler = "euler_vs_verlet/euler"
+    pathVerlet = "euler_vs_verlet/verlet"
+
+    tlist = [1, 5, 10]
+    n = len(tlist)
+    fig = plt.figure()
+    bigax = emptyax(fig)
+    bigax.set_xlabel("x [AU]")
+    bigax.set_ylabel("y [AU]")
+
+    labelcounter = 0
+    label = True
+    for i, t in zip(range(3), tlist):
+        if labelcounter > 0:
+            label = False
+        run_maincpp(1, t, 0.001)
+        ax = fig.add_subplot(n, 1, i+1)
+        plotSystem(ax, pathEuler, label=label)
+        plotSystem(ax, pathVerlet, label=label)
+        ax.set_xlim(-1.6, 1.6)
+        #plt.axis("equal")
+        labelcounter += 1
+    fig.legend(fontsize=14)
+    plt.show()

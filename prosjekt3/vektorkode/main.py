@@ -13,8 +13,17 @@ def create_directory(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
+def emptyax(fig):
+    ax = fig.add_subplot(1, 1, 1)
+    ax.spines['top'].set_color('none')
+    ax.spines['bottom'].set_color('none')
+    ax.spines['left'].set_color('none')
+    ax.spines['right'].set_color('none')
+    ax.tick_params(labelcolor='w', top=False, bottom=False, left=False, right=False)
+    return ax
 
-def run_maincpp(n, scenario, endtime, dt, *args):
+
+def run_maincpp(scenario, endtime, dt, *args, n=1):
     if scenario == 2:
         velocityScale = args[0]
         beta = args[1]
@@ -38,4 +47,23 @@ def plotSystem(ax, path, d3=False):
     for filename in files:
         plotPlanet(ax, filename, d3)
 
-def generatePlots(n, endtime, dt)
+
+if __name__ == "__main__":
+    # sammenligne Euler og Verlet
+    path = "../data/euler_vs_verlet"
+    fig = plt.figure()
+    ax = fig.add_subplot(3, 1, 1)
+
+    run_maincpp(1, 1, 0.001)
+    plotSystem(ax, path)
+    run_maincpp(1, 5, 0.001)
+    ax = fig.add_subplot(3, 1, 2)
+    plotSystem(ax, path)
+    run_maincpp(1, 10, 0.001)
+    ax = fig.add_subplot(3, 1, 3)
+    plotSystem(ax, path)
+
+    ax = emptyax(fig)
+    ax.set_xlabel("x [AU]")
+    ax.set_ylabel("y [AU]")
+    plt.show()
