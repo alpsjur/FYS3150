@@ -1,2 +1,41 @@
 \section{Discussion}
 \label{sec:discussion}
+
+\subsection{Comparing Euler's and Verlet's method}
+
+\subsection{Earth's escape velocity}
+Consider then a planet which begins at a
+distance of 1 AU from the sun. Find out by trial and error what the initial
+velocity must be in order for the planet to escape from the sun. Can you find an
+exact answer? How does that match your numerical results?
+Try also to change the gravitional force, by replacing
+
+where you let beta in [2, 3]. What happens to the earth-sun system when beta creeps
+towards 3? Comment your results.
+
+
+\subsection{Stability when changing the mass of Jupiter}
+Fra oppgaveteksten: Set up the algorithm and plot the positions of
+the Earth and Jupiter using the velocity Verlet algorithm. Discuss the stability
+of the solutions using your Verlet solver.
+Repeat the calculations by increasing the mass of Jupiter by a factor of 10
+and 1000 and plot the position of the Earth. Study again the stability of the
+Verlet solver.
+
+\subsection{Setting the centre of mass as the origin}
+Finally,
+using our Verlet solver, we carry out a real three-body calculation where all
+three systems, the Earth, Jupiter and the Sun are in motion. To do this, choose
+the center-of-mass position of the three-body system as the origin rather than
+the position of the sun. Give the Sun an initial velocity which makes the total
+momentum of the system exactly zero (the center-of-mass will remain fixed).
+Compare these results with those from the previous exercise and comment your
+results.
+
+\subsection{Final model of the solar system}
+Extend your program to include all planets in the solar system (if you
+have time, you can also include the various moons, but it is not required) and
+discuss your results.
+
+
+\subsection{The perihelion precession of Mercury}
