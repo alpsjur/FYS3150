@@ -65,7 +65,9 @@ int main(int argc, char* argv[]){
   if(scenario == 3){solveEarthJupiter(sunEarthJupiterList, endtime, dt);}
   if(scenario == 4){solveSolarSystem(allplanets, endtime, dt);}
   if(scenario == 5){solveMercuryPrecession(sunMercuryList, endtime, dt);}
-  return 0;
+
+  delete[] sunEarthList, sunEarthJupiterList, allplanets, sunMercuryList;
+  return 0; 
 }
 
 void timeAlgorithms(Planet *sunEarthList, double endtime, double dt){

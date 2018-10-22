@@ -31,6 +31,8 @@ TEST_CASE("ENERGY AND MOMENTUM CONSERVATION"){
   double E = sunEarth.getEnergy();
   double L = sunEarth.getMomentum();
 
+  delete[] sunEarthList;
+
   REQUIRE(E == Approx(0).epsilon(0.0001));
   REQUIRE(L == Approx(0).epsilon(0.0001));
 }

@@ -32,8 +32,13 @@ private:
   const Planet& copyPlanet() const {return *m_planets;}
   void initFiles();
   void closeFiles();
+  Coordinate calculateAcc(int i, int j);
 
 public:
+  System()
+  : m_name("Sol"), m_planets(nullptr), m_numberofPlanets(0) {
+    // standard bygger
+  }
   System(string name, Planet *planets, int numberofPlanets)
   : m_name(name), m_planets(planets), m_numberofPlanets(numberofPlanets) {
       // bygger for å initialisere alle kameratparametrene
@@ -52,7 +57,6 @@ public:
   void calculateCenterofMass();
   void solveForwardEuler(double endtime, double dt);
   void solveVelocityVerlet(double endtime, double dt);
-  Coordinate calculateAcc(int i, int j);
   void writetoFile(string folder);
   void relativistic();
   void setBeta(double beta){m_beta=beta;}

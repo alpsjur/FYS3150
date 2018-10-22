@@ -2,6 +2,7 @@
 
 
 void System::initPlanets(){
+  delete[] m_planets;
   for(int planet = 0; planet < m_numberofPlanets; ++planet){
     m_planets[planet].initArrays(m_integrationSteps);
     m_planets[planet].initPos();
