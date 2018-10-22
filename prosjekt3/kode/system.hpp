@@ -5,6 +5,7 @@
 #include <cmath>
 #include <fstream>
 #include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include "planet.hpp"
 
@@ -29,7 +30,7 @@ private:
 
   void initPlanets();
   const Planet& copyPlanet() const {return *m_planets;}
-  void openFiles();
+  void initFiles();
   void closeFiles();
 
 public:
@@ -41,7 +42,9 @@ public:
   : m_planets(new Planet(rocks.copyPlanet())){
     // kopi-bygger for å håndtere flere instanser av klassen
   }
-  ~System(){delete[] m_planets, m_files;} // ødelegger for å deallokere minne
+  ~System(){
+    delete[] m_planets, m_files;
+  } // ødelegger for å deallokere minne
   // offentlige funksjoner som kan bli brukt utenfor klassen
 
   string getName(){return m_name;}
