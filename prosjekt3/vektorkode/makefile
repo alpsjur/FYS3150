@@ -1,7 +1,7 @@
 # Comment lines
 # General makefile for c++ - choose PROG =   name of given program
 # Here we define compiler option, libraries and the  target
-CPPflags = c++ -std=c++0x -O3
+CPPflags = c++ -std=c++0x #-O3
 # Here we define the library functions we nee
 #LIB = -larmadillo -llapack -lblas
 LIB = -lboost_system -lboost_filesystem
@@ -21,13 +21,13 @@ ${TEST_PROG} : tests_main.o test_system.o test_coordinate.o system.o planet.o co
 	${CPPflags} tests_main.o test_system.o test_coordinate.o system.o planet.o coordinate.o extractData.o ${LIB} -o ${TEST_PROG}
 
 main.o : main.cpp
-	${CPPflags} -c main.cpp
+	${CPPflags} -c -g main.cpp
 
 coordinate.o : coordinate.cpp
 	${CPPflags} -c coordinate.cpp
 
 planet.o : planet.cpp
-	${CPPflags} -c planet.cpp
+	${CPPflags} -c -g planet.cpp
 
 system.o : system.cpp
 	${CPPflags} -c system.cpp

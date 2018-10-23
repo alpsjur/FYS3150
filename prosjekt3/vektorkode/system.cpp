@@ -119,7 +119,7 @@ void System::initFiles(){
   if(boost::filesystem::exists(m_directory) == false){
     boost::filesystem::create_directories(m_directory);
   }
-  m_files.reserve(m_numberofPlanets);
+  m_files.resize(m_numberofPlanets);
   for (int j = 0; j < m_numberofPlanets; ++j){
     string filename;
     filename = m_directory + "/" + m_planets[j].getName() + ".dat";

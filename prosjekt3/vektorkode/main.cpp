@@ -9,6 +9,7 @@
 #include "system.hpp"
 #include "extractData.hpp"
 
+
 using namespace std;
 
 void timeAlgorithms(vector<Planet>&, double, double);
@@ -32,37 +33,32 @@ int main(int argc, char* argv[]){
   Coordinate initVelSun(0, 0, 0);
   Planet sun(nameSun, massSun, initPosSun, initVelSun);
 
+
   Planet earth = extract(filename, 2);
   Planet jupiter = extract(filename, 4);
   Planet mercury = extract(filename, 0);
 
   //initsialiserer planetlistene
-  vector<Planet> allplanets;
-  allplanets.reserve(9);
+  vector<Planet> allplanets(9);
   allplanets[0] = sun;
   for(int i = 0; i<8; ++i){
     allplanets[i+1] = extract(filename, i);
   }
-  
 
 
-  vector<Planet> sunEarthList;
-  sunEarthList.reserve(2);
+  vector<Planet> sunEarthList(2);
   sunEarthList[0] = sun;
   sunEarthList[1] = earth;
 
-  vector<Planet> sunEarthJupiterList;
-  sunEarthJupiterList.reserve(3);
+  vector<Planet> sunEarthJupiterList(3);
   sunEarthJupiterList[0] = sun;
   sunEarthJupiterList[1] = earth;
   sunEarthJupiterList[2] = jupiter;
 
-  vector<Planet> sunMercuryList;
-  sunMercuryList.reserve(2);
+  vector<Planet> sunMercuryList(2);
   sunMercuryList[0] = sun;
   sunMercuryList[1] = mercury;
 
-  cout << "Hei" << endl;
   if(scenario == 0){timeAlgorithms(sunEarthList, endtime, dt);}
   if(scenario == 1){compareEulerVerlet(sunEarthList, endtime, dt);}
   if(scenario == 2){
