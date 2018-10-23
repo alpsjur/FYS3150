@@ -60,7 +60,8 @@ void System::solveVelocityVerlet(double endtime, double dt){
   m_integrationSteps = int(endtime/dt);
   double dt2 = dt/2.0;
   double dtdt2 = dt*dt/2.0;
-  Coordinate acc[m_numberofPlanets];
+  vector<Coordinate> acc;
+  acc.reserve(m_numberofPlanets);
   Coordinate accNew;
 
   initPlanets();
@@ -118,12 +119,12 @@ void System::initFiles(){
   if(boost::filesystem::exists(m_directory) == false){
     boost::filesystem::create_directories(m_directory);
   }
-  m_files = new ofstream[m_numberofPlanets];
+  m_files.resize(m_numberofPlanets);
   for (int j = 0; j < m_numberofPlanets; ++j){
     string filename;
     filename = m_directory + "/" + m_planets[j].getName() + ".dat";
     m_files[j].open(filename);
-    m_files[j] << m_planets[j].getPos(0) << " " << m_planets[j].getVel(0) << endl;
+    m_files[j] << m_planets[j].m_pos[0] << " " << m_planets[j].m_vel[0] << endl;
   }
 }
 
@@ -131,7 +132,6 @@ void System::closeFiles(){
   for(int j = 0; j < m_numberofPlanets; ++j){
     m_files[j].close();
   }
-  delete[] m_files;
 }
 
 void System::writetoFile(string folder){
@@ -140,20 +140,20 @@ void System::writetoFile(string folder){
 }
 
 double System::getEnergy(){
-  double E, U, T;
-
+  double E = 0;
+  double U = 0;
+  double T = 0;
   double r, v2, m;
-  for(int j = 1; j < m_numberofPlanets; ++j){
-    U = 0;
-    T = 0;
+
+  for(int j = 0; j < m_numberofPlanets; ++j){
     for(int i = 0; i < m_integrationSteps; ++i){
       r = m_planets[j].m_pos[i].norm();
       v2 = m_planets[j].m_vel[i]*m_planets[j].m_vel[i];
       m = m_planets[j].getMass();
-      U += -m_g*m/r;
-      T += 0.5*m*v2;
+      U = -m_g*m/r;
+      T = 0.5*m*v2;
+      E = U + T;
     }
-    E += U + T;
   }
   return E;
 }

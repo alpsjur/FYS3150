@@ -1,6 +1,7 @@
 #ifndef SYSTEM_HPP
 #define	SYSTEM_HPP
 
+#include <vector>
 #include <string>
 #include <cmath>
 #include <fstream>
@@ -20,34 +21,27 @@ private:
   string m_name, m_directory;
   int m_numberofPlanets;
   int m_integrationSteps = 0;
-  Planet *m_planets = nullptr;
+  vector<Planet> m_planets;
   double m_beta = 2;
   bool m_write = false;
-  ofstream *m_files = nullptr;
+  vector<ofstream> m_files;
   bool m_relativistic = false;
 
 
   void initPlanets();
-  const Planet& copyPlanet() const {return *m_planets;}
   void initFiles();
   void closeFiles();
   Coordinate calculateAcc(int i, int j);
 
 public:
   System()
-  : m_name("Sol"), m_planets(nullptr), m_numberofPlanets(0) {
+  : m_name("Sol"), m_planets(vector<Planet>()), m_numberofPlanets(0) {
     // standard bygger
   }
-  System(string name, Planet *planets, int numberofPlanets)
-  : m_name(name), m_planets(planets), m_numberofPlanets(numberofPlanets),
-    m_files(new ofstream) {
+  System(string name, vector<Planet>& planets)
+  : m_name(name), m_planets(planets), m_numberofPlanets(planets.size()) {
       // bygger for å initialisere alle kameratparametrene
     }
-  System(const System& other)
-  : m_planets(new Planet(other.copyPlanet())) {
-    // kopi-bygger for å håndtere flere instanser av klassen
-  }
-  ~System(){delete[] m_planets, m_files;} // ødelegger for å deallokere minne
   // offentlige funksjoner som kan bli brukt utenfor klassen
   string getName(){return m_name;}
   int getNumberofPlanets(){return m_numberofPlanets;}
