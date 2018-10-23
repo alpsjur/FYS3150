@@ -112,7 +112,7 @@ if __name__ == "__main__":
     scenario = 3
     endtime = [10,60]
     dt = 0.001
-    beta = [2, 2.5, 2.9, 2.99,2.999, 3]
+    beta = [2, 2.5, 2.9, 2.99, 2.999, 3]
     filename= "../data/change_beta/Earth.dat"
 
     fig, ax = plt.subplots(2,1,sharex=True)
