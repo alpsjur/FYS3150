@@ -155,8 +155,9 @@ if __name__ == "__main__":
     endtime = 200
     dt = 0.001
     #run_maincpp(scenario, endtime, dt)
-
     sns.set_palette(sns.color_palette("husl", 9))
+
+    '''
     fig = plt.figure()
     ax = plt.axes(projection='3d')
     plotSystem(ax, "../data/solarsystem", d3=True)
@@ -165,7 +166,18 @@ if __name__ == "__main__":
     ax.set_xlabel('x [AU]')
     ax.set_ylabel('y [AU]')
     ax.set_zlabel('z [AU]')
-    plt.savefig(figdir+"solarsystem3d.pdf")
+    #plt.savefig(figdir+"solarsystem3d.pdf")
+    '''
+
+    fig, ax = plt.subplots()
+    plotSystem(ax, "../data/solarsystem")
+    ax.legend(loc='upper center',bbox_to_anchor=(0.5, 1.2),
+                  ncol=3,fontsize=12)
+    ax.axis('equal')
+    ax.set_xlabel('x [AU]')
+    ax.set_ylabel('y [AU]')
+    plt.savefig(figdir+"solarsystem2d.pdf")
+
     plt.show()
 
     '''
