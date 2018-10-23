@@ -108,7 +108,7 @@ if __name__ == "__main__":
     '''
     #endrer gravitasjonskraften
     scenario = 3
-    endtime = [10,60]
+    endtime = [10, 60]
     dt = 0.001
     beta = [2, 2.5, 2.9, 2.99, 2.999, 3]
     filename= "../data/change_beta/Earth.dat"
@@ -120,7 +120,7 @@ if __name__ == "__main__":
     fig, ax = plt.subplots(2,1)
     plotPosVel(ax, dt, endtime[1], filename, beta)
     ax[1].set_ylim(-1,10)
-    plt.savefig(figdir+"change_beta_60yr.pdf")
+    #plt.savefig(figdir+"change_beta_60yr.pdf")
 
     plt.show()
 

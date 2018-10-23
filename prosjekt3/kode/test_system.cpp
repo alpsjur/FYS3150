@@ -8,7 +8,7 @@
 
 
 TEST_CASE("ENERGY AND MOMENTUM CONSERVATION"){
-  double endtime = 10;
+  double endtime = 100;
   double dt = 0.001;
 
   string filename = "../data/body051018.dat";
@@ -31,7 +31,7 @@ TEST_CASE("ENERGY AND MOMENTUM CONSERVATION"){
   double E = sunEarth.getEnergyTotal();
   double L = sunEarth.getAngularMomentumTotal();
 
-  REQUIRE(E == Approx(0).epsilon(0.00000000001));
-  REQUIRE(L == Approx(0).epsilon(0.0001));
+  REQUIRE(E == Approx(0).epsilon(0.0000001));
+  REQUIRE(L == Approx(0).epsilon(0.00000000000001));
 
 }
