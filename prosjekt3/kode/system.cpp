@@ -142,6 +142,7 @@ void System::writetoFile(string folder){
 double System::getEnergyTotal(){
   // denne funksjonen er bare korrekt for to legemer akkurat nå
   double dE, E0, E1;
+  dE = 0;
   double U0, U1;
   double T0, T1;
   // vi anser ikke den totale energien til sola
@@ -162,7 +163,7 @@ double System::getEnergyTotal(){
 double System::getAngularMomentumTotal(){
   // denne funksjonen funker også bare for to legemer
   Coordinate L0, L1;
-  double dL;
+  double dL = 0;
 
   for(int j = 1; j < m_numberofPlanets; ++j){
     for(int i = 0; i < m_integrationSteps; ++i){

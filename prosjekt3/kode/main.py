@@ -101,27 +101,71 @@ if __name__ == "__main__":
     ax[1,1].legend(loc='upper center', bbox_to_anchor=(0.5, 2),fontsize=14)
     ax[0,1].axis('off')
 
-    fig.text(0.5, 0.04, 'x [AU]',  ha='center',fontsize=14)
-    fig.text(0.03, 0.5, 'y [AU]',  va='center', rotation='vertical',fontsize=14)
+    fig.text(0.5, 0.03, 'x [AU]',  ha='center',fontsize=14)
+    fig.text(0.02, 0.5, 'y [AU]',  va='center', rotation='vertical',fontsize=14)
 
     #plt.savefig(figdir+"jupiter_mass.pdf")
-    '''
+
+
+
     #endrer gravitasjonskraften
     scenario = 3
     endtime = [10,60]
     dt = 0.001
     beta = [2, 2.5, 2.9, 2.99,2.999, 3]
     filename= "../data/change_beta/Earth.dat"
-    fig, ax = plt.subplots(2,1)
 
+    fig, ax = plt.subplots(2,1,sharex=True)
     plotPosVel(ax, dt, endtime[0], filename, beta)
-    plt.savefig(figdir+"change_beta_10yr.pdf")
+    #plt.savefig(figdir+"change_beta_10yr.pdf")
 
-    fig, ax = plt.subplots(2,1)
+    fig, ax = plt.subplots(2,1,sharex=True)
     plotPosVel(ax, dt, endtime[1], filename, beta)
     ax[1].set_ylim(-1,10)
-    plt.savefig(figdir+"change_beta_60yr.pdf")
+    #plt.savefig(figdir+"change_beta_60yr.pdf")
 
+    #massesenter
+    scenario = 5
+    endtime = 30
+    dt = 0.001
+    #run_maincpp(scenario, endtime, dt)
+
+    fig, ax = plt.subplots(2,2)
+    plotSystem(ax[0,1], "../data/sun_earth_jupiter/sun_origo")
+    plotSystem(ax[0,0], "../data/sun_earth_jupiter/mass_origo")
+    plotSystem(ax[1,1], "../data/sun_earth_jupiter/sun_origo")
+    plotSystem(ax[1,0], "../data/sun_earth_jupiter/mass_origo")
+    ax[0,0].axis('equal')
+    ax[0,1].axis('equal')
+    ax[1,0].axis('equal')
+    ax[1,1].axis('equal')
+    ax[1,1].axis([-0.01,0.07,-0.05,0.003])
+    ax[1,0].axis([-0.007,0.007,-0.006,0.006])
+
+    fig.text(0.5, 0.03, 'x [AU]',  ha='center',fontsize=14)
+    fig.text(0.02, 0.5, 'y [AU]',  va='center', rotation='vertical',fontsize=14)
+    ax[0,0].legend(ncol=3,loc='upper center', bbox_to_anchor=(1, 1.3),fontsize=14)
+    #fig.tight_layout()
+
+    #plt.savefig(figdir+"center_of_mass.pdf")
+
+    '''
+    #hele solsystemet
+    scenario = 6
+    endtime = 200
+    dt = 0.001
+    #run_maincpp(scenario, endtime, dt)
+
+    sns.set_palette(sns.color_palette("husl", 9))
+    fig = plt.figure()
+    ax = plt.axes(projection='3d')
+    plotSystem(ax, "../data/solarsystem", d3=True)
+    ax.legend(loc='upper center',bbox_to_anchor=(0.5, 1.15),
+                  ncol=3,fontsize=12)
+    ax.set_xlabel('x [AU]')
+    ax.set_ylabel('y [AU]')
+    ax.set_zlabel('z [AU]')
+    plt.savefig(figdir+"solarsystem3d.pdf")
     plt.show()
 
     '''

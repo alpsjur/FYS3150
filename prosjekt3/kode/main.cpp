@@ -17,6 +17,7 @@ void compareEulerVerlet(vector<Planet>&, double, double);
 void varyVelocity(vector<Planet>&, double, double, double);
 void varyBeta(vector<Planet>&, double, double, double);
 void solveEarthJupiter(vector<Planet>&, double, double);
+void solveCentercfMass(vector<Planet>&, double, double);
 void solveSolarSystem(vector<Planet>&, double, double);
 void solveMercuryPrecession(vector<Planet>&, double, double);
 
@@ -71,8 +72,9 @@ int main(int argc, char* argv[]){
     varyBeta(sunEarthList, endtime, dt, beta);
   }
   if(scenario == 4){solveEarthJupiter(sunEarthJupiterList, endtime, dt);}
-  if(scenario == 5){solveSolarSystem(allplanets, endtime, dt);}
-  if(scenario == 6){solveMercuryPrecession(sunMercuryList, endtime, dt);}
+  if(scenario == 5){solveCentercfMass(sunEarthJupiterList, endtime, dt);}
+  if(scenario == 6){solveSolarSystem(allplanets, endtime, dt);}
+  if(scenario == 7){solveMercuryPrecession(sunMercuryList, endtime, dt);}
 
   return 0;
 }
@@ -135,6 +137,7 @@ void solveEarthJupiter(vector<Planet> &sunEarthJupiterList, double endtime, doub
 
   System sunEarthJupiter("Sun-Earth_jupiter system", sunEarthJupiterList);
 
+
   //løser for Jupiters masse skalert med 1
   sunEarthJupiter.writetoFile("sun_earth_jupiter/jupiter_mass_1");
   sunEarthJupiter.solveVelocityVerlet(endtime, dt);
@@ -147,6 +150,19 @@ void solveEarthJupiter(vector<Planet> &sunEarthJupiterList, double endtime, doub
   //løser for jupiters masse skalert med 1000 = 10*100
   sunEarthJupiter.scalePlanetMass(100,2);
   sunEarthJupiter.writetoFile("sun_earth_jupiter/jupiter_mass_1000");
+  sunEarthJupiter.solveVelocityVerlet(endtime, dt);
+}
+
+void solveCentercfMass(vector<Planet> &sunEarthJupiterList, double endtime, double dt){
+  System sunEarthJupiter("Sun-Earth-jupiter system", sunEarthJupiterList);
+
+  //løser uten å sette massesenteret som origo
+  sunEarthJupiter.writetoFile("sun_earth_jupiter/sun_origo");
+  sunEarthJupiter.solveVelocityVerlet(endtime, dt);
+
+  //løser etter å ha satt massesenteret som origo og gitt sola initsialhastighet
+  sunEarthJupiter.calculateCenterofMass();
+  sunEarthJupiter.writetoFile("sun_earth_jupiter/mass_origo");
   sunEarthJupiter.solveVelocityVerlet(endtime, dt);
 }
 
