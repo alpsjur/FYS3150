@@ -10,6 +10,7 @@ using namespace std;
 
 
 class Coordinate{
+  // klasse for å håndtere vektor aritmetikk. += -= operatorene osv. er ikke implementert enda!
   friend class Planet;
   // kamerat deklareringer
 private:

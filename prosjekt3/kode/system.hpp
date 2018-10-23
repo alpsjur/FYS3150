@@ -54,8 +54,8 @@ public:
   void scalePlanetInitVel(double scale, int planet);
   void scalePlanetMass(double scale, int planet);
   double getPlanetInitVel(int planet){return m_planets[planet].m_initVel.norm();}
-  double getEnergy();
-  double getMomentum();
+  double getEnergyTotal();
+  double getAngularMomentumTotal();
 };
 
 #endif /* SYSTEM_HPP */

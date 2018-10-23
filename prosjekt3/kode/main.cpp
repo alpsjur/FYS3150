@@ -40,26 +40,18 @@ int main(int argc, char* argv[]){
 
   //initsialiserer planetlistene
   vector<Planet> allplanets(9);
-  allplanets[0] = sun;
+  allplanets[0] = sun; 
   for(int i = 0; i<8; ++i){
     allplanets[i+1] = extract(filename, i);
   }
-<<<<<<< HEAD
-
-=======
->>>>>>> 1ea7c97a27201578262a9d8fb80b0526b01149f5
 
 
   vector<Planet> sunEarthList(2);
   sunEarthList[0] = sun;
   sunEarthList[1] = earth;
 
-<<<<<<< HEAD
-  vector<Planet> sunEarthJupiterList; 
-  sunEarthJupiterList.reserve(3);
-=======
   vector<Planet> sunEarthJupiterList(3);
->>>>>>> 1ea7c97a27201578262a9d8fb80b0526b01149f5
+
   sunEarthJupiterList[0] = sun;
   sunEarthJupiterList[1] = earth;
   sunEarthJupiterList[2] = jupiter;
