@@ -141,18 +141,18 @@ void System::writetoFile(string folder){
 
 double System::getEnergyTotal(){
   // denne funksjonen er bare korrekt for to legemer akkurat nå
-  double dE, E0, E1;
-  dE = 0;
+  double dE = 0;
+  double E0, E1;
   double U0, U1;
   double T0, T1;
   // vi anser ikke den totale energien til sola
   for(int j = 1; j < m_numberofPlanets; ++j){
+    U0 = -m_g*m_planets[j].getMass()/m_planets[j].m_pos[0].norm();
+    T0 = 0.5*m_planets[j].getMass()*m_planets[j].m_vel[0]*m_planets[j].m_vel[0];
+    E0 = U0 + T0;
     for(int i = 0; i < m_integrationSteps-1; ++i){
-      U0 = -m_g*m_planets[j].getMass()/m_planets[j].m_pos[i].norm();
       U1 = -m_g*m_planets[j].getMass()/m_planets[j].m_pos[i+1].norm();
-      T0 = 0.5*m_planets[j].getMass()*m_planets[j].m_vel[i]*m_planets[j].m_vel[i];
       T1 = 0.5*m_planets[j].getMass()*m_planets[j].m_vel[i+1]*m_planets[j].m_vel[i+1];
-      E0 = U0 + T0;
       E1 = U1 + T1;
       dE += E1 - E0;
     }
@@ -162,17 +162,16 @@ double System::getEnergyTotal(){
 
 double System::getAngularMomentumTotal(){
   // denne funksjonen funker også bare for to legemer
-  Coordinate L0, L1;
-  double dL = 0;
+  Coordinate dL, L0, L1;
 
   for(int j = 1; j < m_numberofPlanets; ++j){
-    for(int i = 0; i < m_integrationSteps; ++i){
-      L0 = m_planets[j].m_pos[i]^m_planets[j].getMass()*m_planets[j].m_vel[i];
+    L0 = m_planets[j].m_pos[0]^m_planets[j].getMass()*m_planets[j].m_vel[0];
+    for(int i = 0; i < m_integrationSteps-1; ++i){
       L1 = m_planets[j].m_pos[i+1]^m_planets[j].getMass()*m_planets[j].m_vel[i+1];
-      dL += (L1 - L0).norm();
+      dL = dL + (L1 - L0);
     }
   }
-  return dL;
+  return dL.norm();
 }
 
 
