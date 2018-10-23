@@ -70,7 +70,7 @@ def plotPosVel(ax, dt, endtime, filename, beta):
         run_maincpp(scenario, endtime, dt, b)
     ax[0].legend(loc='upper center', bbox_to_anchor=(0.5, 1.35),
                   ncol=3,fontsize=12)
-    fig.text(0.5, 0.04, 't [yr]',  ha='center',fontsize=14)
+    fig.text(0.5, 0.035, 't [yr]',  ha='center',fontsize=14)
     ax[0].set_ylabel('r [AU]')
     ax[1].set_ylabel('v [AU/yr]')
 
@@ -119,6 +119,7 @@ if __name__ == "__main__":
 
     fig, ax = plt.subplots(2,1)
     plotPosVel(ax, dt, endtime[1], filename, beta)
+    ax[1].set_ylim(-1,10)
     plt.savefig(figdir+"change_beta_60yr.pdf")
 
     plt.show()
