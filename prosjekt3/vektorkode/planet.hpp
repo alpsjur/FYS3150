@@ -39,10 +39,12 @@ public:
   }
   // offentlige funksjoner for bruk utenfor klassen
   Planet& operator = (const Planet& other){
+    if(this == &other){return *this;}
     m_name = other.m_name;
     m_mass = other.m_mass;
-    m_pos = other.m_pos;
-    m_vel = other.m_vel;
+    m_initPos = other.m_initPos;
+    m_initVel = other.m_initVel;
+    return *this;
   }
   string getName(){return m_name;}
   double getMass(){return m_mass;}

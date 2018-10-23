@@ -140,20 +140,20 @@ void System::writetoFile(string folder){
 }
 
 double System::getEnergy(){
-  double E = 0;
-  double U = 0;
-  double T = 0;
-  double r, v2, m;
+  double E, U, T;
 
-  for(int j = 0; j < m_numberofPlanets; ++j){
+  double r, v2, m;
+  for(int j = 1; j < m_numberofPlanets; ++j){
+    U = 0;
+    T = 0;
     for(int i = 0; i < m_integrationSteps; ++i){
       r = m_planets[j].m_pos[i].norm();
       v2 = m_planets[j].m_vel[i]*m_planets[j].m_vel[i];
       m = m_planets[j].getMass();
-      U = -m_g*m/r;
-      T = 0.5*m*v2;
-      E = U + T;
+      U += -m_g*m/r;
+      T += 0.5*m*v2;
     }
+    E += U + T;
   }
   return E;
 }

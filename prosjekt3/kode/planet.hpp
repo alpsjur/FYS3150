@@ -32,11 +32,12 @@ private:
 
 public:
   Planet()
-  : m_name("Planet X"), m_mass(1.0), m_initPos(Coordinate()), m_initVel(Coordinate()) {
+  : m_name("Planet X"), m_mass(1.0), m_initPos(Coordinate()), m_initVel(Coordinate()){
     // standard initialisering
   }
   Planet(string name, double mass, Coordinate initPos, Coordinate initVel)
-    : m_name(name), m_mass(mass), m_initPos(initPos), m_initVel(initVel) {
+    : m_name(name), m_mass(mass), m_initPos(initPos), m_initVel(initVel),
+      m_pos(new Coordinate), m_vel(new Coordinate) {
     // initialiserer alle kameratene og legger vekk minne for pos og vel
   }
   Planet(const Planet& other)
@@ -46,6 +47,15 @@ public:
   }
   ~Planet(){delete[] m_pos, m_vel;}  // ødelegger for å deallokere minne
   // offentlige funksjoner for bruk utenfor klassen
+  Planet& operator = (const Planet &other){
+    if(this == &other){return *this;}
+    m_name = other.m_name;
+    m_mass = other.m_mass;
+    m_initPos = other.m_initPos;
+    m_initVel = other.m_initVel;
+
+    return *this;
+  }
   string getName(){return m_name;}
   double getMass(){return m_mass;}
   Coordinate getPos(int i){return m_pos[i];}

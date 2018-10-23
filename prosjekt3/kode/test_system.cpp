@@ -26,12 +26,12 @@ TEST_CASE("ENERGY AND MOMENTUM CONSERVATION"){
   sunEarthList[1] = earth;
 
   System sunEarth("Sun-Earth system", sunEarthList, 2);
-  sunEarth.calculateCenterofMass();
+  delete[] sunEarthList;
+  //sunEarth.calculateCenterofMass();
   sunEarth.solveVelocityVerlet(endtime, dt);
   double E = sunEarth.getEnergy();
   double L = sunEarth.getMomentum();
 
-  delete[] sunEarthList;
 
   REQUIRE(E == Approx(0).epsilon(0.0001));
   REQUIRE(L == Approx(0).epsilon(0.0001));

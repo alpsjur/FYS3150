@@ -42,4 +42,4 @@ test_coordinate.o : test_coordinate.cpp
 	${CPPflags} -c test_coordinate.cpp
 
 test_system.o : test_system.cpp
-	${CPPflags} -c test_system.cpp
+	${CPPflags} -c -g test_system.cpp

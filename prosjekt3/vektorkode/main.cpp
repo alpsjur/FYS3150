@@ -43,7 +43,7 @@ int main(int argc, char* argv[]){
   for(int i = 0; i<8; ++i){
     allplanets[i+1] = extract(filename, i);
   }
-  
+
 
 
   vector<Planet> sunEarthList;
@@ -51,7 +51,7 @@ int main(int argc, char* argv[]){
   sunEarthList[0] = sun;
   sunEarthList[1] = earth;
 
-  vector<Planet> sunEarthJupiterList;
+  vector<Planet> sunEarthJupiterList; 
   sunEarthJupiterList.reserve(3);
   sunEarthJupiterList[0] = sun;
   sunEarthJupiterList[1] = earth;

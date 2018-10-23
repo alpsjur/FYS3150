@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void timeAlgorithms(Planet *, double, double); 
+void timeAlgorithms(Planet *, double, double);
 void compareEulerVerlet(Planet *, double, double);
 void varyVelocityBeta(Planet *, double, double, double, double);
 void solveEarthJupiter(Planet *, double, double);
@@ -106,12 +106,12 @@ void varyVelocityBeta(Planet *sunEarthList, double endtime, double dt, double ve
   System sunEarthScale("Sun-Earth system", sunEarthList, 2);
 
   sunEarthScale.setBeta(beta);                               //endrer beta i kraftfunksjonen
-  sunEarthScale.writetoFile("change_beta/beta" + to_string(beta));
+  sunEarthScale.writetoFile("change_beta");
   sunEarthScale.solveVelocityVerlet(endtime, dt);
   sunEarthScale.setBeta(2);                                  //resetter beta til 2
 
   sunEarthScale.scalePlanetInitVel(velocityScale, 1);        //skalerer hastigheten til Jorda
-  sunEarthScale.writetoFile("escape_velocity/velocityScale" + to_string(velocityScale));
+  sunEarthScale.writetoFile("escape_velocity");
   sunEarthScale.solveVelocityVerlet(endtime, dt);
   double scaledVelocity = sunEarthScale.getPlanetInitVel(1); //henter skalert initsialhastighet
 

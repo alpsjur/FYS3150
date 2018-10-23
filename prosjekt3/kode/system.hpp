@@ -20,10 +20,10 @@ private:
   string m_name, m_directory;
   int m_numberofPlanets;
   int m_integrationSteps = 0;
-  Planet *m_planets;
+  Planet *m_planets = nullptr;
   double m_beta = 2;
   bool m_write = false;
-  ofstream *m_files;
+  ofstream *m_files = nullptr;
   bool m_relativistic = false;
 
 
@@ -39,16 +39,15 @@ public:
     // standard bygger
   }
   System(string name, Planet *planets, int numberofPlanets)
-  : m_name(name), m_planets(planets), m_numberofPlanets(numberofPlanets) {
+  : m_name(name), m_planets(planets), m_numberofPlanets(numberofPlanets),
+    m_files(new ofstream) {
       // bygger for å initialisere alle kameratparametrene
     }
   System(const System& other)
   : m_planets(new Planet(other.copyPlanet())) {
     // kopi-bygger for å håndtere flere instanser av klassen
   }
-  ~System(){
-    delete[] m_planets, m_files;
-  } // ødelegger for å deallokere minne
+  ~System(){delete[] m_planets, m_files;} // ødelegger for å deallokere minne
   // offentlige funksjoner som kan bli brukt utenfor klassen
   string getName(){return m_name;}
   int getNumberofPlanets(){return m_numberofPlanets;}
