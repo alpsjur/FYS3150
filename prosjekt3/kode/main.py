@@ -26,11 +26,10 @@ def emptyax(fig):
 
 
 def run_maincpp(scenario, endtime, dt, *args, n=1):
-    if scenario == 2:
-        velocityScale = args[0]
-        beta = args[1]
+    if scenario == 2 or scenario == 3:
+        velocity_beta = args[0]
         for i in range(n):
-            os.system("./main.exe {} {} {} {} {}".format(scenario, endtime, dt, velocityScale, beta))
+            os.system("./main.exe {} {} {} {}".format(scenario, endtime, dt, velocity_beta))
     else:
         for i in range(n):
             os.system("./main.exe {} {} {}".format(scenario, endtime, dt))
@@ -53,8 +52,78 @@ def plotSystem(ax, path, d3=False, label=True):
     for filename in files:
         plotPlanet(ax, filename, d3=d3, label=label)
 
+def plotAbs(ax, dt, endtime, filename, var, label=None):
+    data = np.loadtxt(filename)
+    if var == 'pos':
+        x = data[:, 0]; y = data[:, 1]; z = data[:, 2]
+    if var == 'vel':
+        x = data[:, 3]; y = data[:, 4]; z = data[:, 5]
+    absVal = np.sqrt(x*x+y*y+z*z)
+    t = np.arange(0,endtime,dt)
+    ax.plot(t, absVal, label=label)
+
+def plotPosVel(ax, dt, endtime, filename, beta):
+    for b in beta:
+        run_maincpp(scenario, endtime, dt, b)
+        plotAbs(ax[0], dt, endtime, filename, 'pos', label=r"$\beta={}$".format(b))
+        plotAbs(ax[1], dt, endtime, filename, 'vel')
+        run_maincpp(scenario, endtime, dt, b)
+    ax[0].legend(loc='upper center', bbox_to_anchor=(0.5, 1.35),
+                  ncol=3,fontsize=12)
+    fig.text(0.5, 0.04, 't [yr]',  ha='center',fontsize=14)
+    ax[0].set_ylabel('r [AU]')
+    ax[1].set_ylabel('v [AU/yr]')
+
 
 if __name__ == "__main__":
+
+    sns.set()
+    sns.set_style("whitegrid")
+    sns.set_palette("husl")
+    plt.rc('text', usetex=True)
+    figdir = "../figurer/"
+
+    '''
+    # endrer massen til jupiter
+    scenario = 3
+    endtime = 20
+    dt = 0.001
+    masses = [1,10,1000]
+
+    #run_maincpp(scenario, endtime, dt)
+    fig, ax = plt.subplots(2, 2)
+    sub = [0,2,3]
+    for i in range(3):
+        plotSystem(ax.flatten()[sub[i]], "sun_earth_jupiter/jupiter_mass_{}".format(masses[i]))
+        ax.flatten()[sub[i]].axis('equal')
+        i += 1
+    ax[1,1].axis([-4, 23, -19, 2])
+    ax[1,1].legend(loc='upper center', bbox_to_anchor=(0.5, 2),fontsize=14)
+    ax[0,1].axis('off')
+
+    fig.text(0.5, 0.04, 'x [AU]',  ha='center',fontsize=14)
+    fig.text(0.03, 0.5, 'y [AU]',  va='center', rotation='vertical',fontsize=14)
+
+    #plt.savefig(figdir+"jupiter_mass.pdf")
+    '''
+    #endrer gravitasjonskraften
+    scenario = 3
+    endtime = [10,60]
+    dt = 0.001
+    beta = [2, 2.5, 2.9, 2.99,2.999, 3]
+    filename= "../data/change_beta/Earth.dat"
+    fig, ax = plt.subplots(2,1)
+
+    plotPosVel(ax, dt, endtime[0], filename, beta)
+    plt.savefig(figdir+"change_beta_10yr.pdf")
+
+    fig, ax = plt.subplots(2,1)
+    plotPosVel(ax, dt, endtime[1], filename, beta)
+    plt.savefig(figdir+"change_beta_60yr.pdf")
+
+    plt.show()
+
+    '''
     # sammenligne Euler og Verlet
     figdir = "../figurer/"
     pathEuler = "euler_vs_verlet/euler"
@@ -118,3 +187,4 @@ if __name__ == "__main__":
     vfig.legend(fontsize=14)
     betafig.legend(fontsize=14)
     plt.show()
+    '''

@@ -1,11 +1,7 @@
 # Comment lines
 # General makefile for c++ - choose PROG =   name of given program
 # Here we define compiler option, libraries and the  target
-<<<<<<< HEAD
-CPPflags = c++ -std=c++0x
-=======
-CPPflags = c++ -std=c++0x #-O3
->>>>>>> 1ea7c97a27201578262a9d8fb80b0526b01149f5
+CPPflags = c++ -std=c++0x -O3
 # Here we define the library functions we nee
 #LIB = -larmadillo -llapack -lblas
 LIB = -lboost_system -lboost_filesystem

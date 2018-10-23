@@ -14,7 +14,8 @@ using namespace std;
 
 void timeAlgorithms(vector<Planet>&, double, double);
 void compareEulerVerlet(vector<Planet>&, double, double);
-void varyVelocityBeta(vector<Planet>&, double, double, double, double);
+void varyVelocity(vector<Planet>&, double, double, double);
+void varyBeta(vector<Planet>&, double, double, double);
 void solveEarthJupiter(vector<Planet>&, double, double);
 void solveSolarSystem(vector<Planet>&, double, double);
 void solveMercuryPrecession(vector<Planet>&, double, double);
@@ -44,22 +45,13 @@ int main(int argc, char* argv[]){
   for(int i = 0; i<8; ++i){
     allplanets[i+1] = extract(filename, i);
   }
-<<<<<<< HEAD
-
-=======
->>>>>>> 1ea7c97a27201578262a9d8fb80b0526b01149f5
-
 
   vector<Planet> sunEarthList(2);
   sunEarthList[0] = sun;
   sunEarthList[1] = earth;
 
-<<<<<<< HEAD
-  vector<Planet> sunEarthJupiterList; 
-  sunEarthJupiterList.reserve(3);
-=======
+
   vector<Planet> sunEarthJupiterList(3);
->>>>>>> 1ea7c97a27201578262a9d8fb80b0526b01149f5
   sunEarthJupiterList[0] = sun;
   sunEarthJupiterList[1] = earth;
   sunEarthJupiterList[2] = jupiter;
@@ -72,12 +64,15 @@ int main(int argc, char* argv[]){
   if(scenario == 1){compareEulerVerlet(sunEarthList, endtime, dt);}
   if(scenario == 2){
     double velocityscale = atof(argv[4]);
-    double beta = atof(argv[5]);
-    varyVelocityBeta(sunEarthList, endtime, dt, velocityscale, beta);
+    varyVelocity(sunEarthList, endtime, dt, velocityscale);
   }
-  if(scenario == 3){solveEarthJupiter(sunEarthJupiterList, endtime, dt);}
-  if(scenario == 4){solveSolarSystem(allplanets, endtime, dt);}
-  if(scenario == 5){solveMercuryPrecession(sunMercuryList, endtime, dt);}
+  if(scenario == 3){
+    double beta = atof(argv[4]);
+    varyBeta(sunEarthList, endtime, dt, beta);
+  }
+  if(scenario == 4){solveEarthJupiter(sunEarthJupiterList, endtime, dt);}
+  if(scenario == 5){solveSolarSystem(allplanets, endtime, dt);}
+  if(scenario == 6){solveMercuryPrecession(sunMercuryList, endtime, dt);}
 
   return 0;
 }
@@ -113,17 +108,23 @@ void compareEulerVerlet(vector<Planet>& sunEarthList, double endtime, double dt)
   sunEarth.solveVelocityVerlet(endtime, dt);
 }
 
-void varyVelocityBeta(vector<Planet>& sunEarthList, double endtime, double dt, double velocityScale, double beta){
+void varyBeta(vector<Planet>& sunEarthList, double endtime, double dt, double beta){
 
   System sunEarthScale("Sun-Earth system", sunEarthList);
 
   sunEarthScale.setBeta(beta);                               //endrer beta i kraftfunksjonen
-  sunEarthScale.writetoFile("change_beta/beta" + to_string(beta));
+  sunEarthScale.writetoFile("change_beta");
   sunEarthScale.solveVelocityVerlet(endtime, dt);
-  sunEarthScale.setBeta(2);                                  //resetter beta til 2
+
+}
+
+
+void varyVelocity(vector<Planet>& sunEarthList, double endtime, double dt, double velocityScale){
+
+  System sunEarthScale("Sun-Earth system", sunEarthList);
 
   sunEarthScale.scalePlanetInitVel(velocityScale, 1);        //skalerer hastigheten til Jorda
-  sunEarthScale.writetoFile("escape_velocity/velocityScale" + to_string(velocityScale));
+  sunEarthScale.writetoFile("escape_velocity");
   sunEarthScale.solveVelocityVerlet(endtime, dt);
   double scaledVelocity = sunEarthScale.getPlanetInitVel(1); //henter skalert initsialhastighet
 
