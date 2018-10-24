@@ -96,6 +96,29 @@ if __name__ == "__main__":
     plt.rc('text', usetex=True)
     figdir = "../figurer/"
 
+    #unnslipningsfart
+    scenario = 2
+    endtime = 5
+    dt = 0.001
+    escape = np.sqrt(8)*np.pi/6.28353
+    scale =  [escape*0.9,escape]
+    path = "../data/escape_velocity"
+
+    fig, ax = plt.subplots()
+    ax.axis("equal")
+    for s in scale:
+        run_maincpp(scenario, endtime, dt, s)
+        plotSystem(ax, path, centersun=True)
+    handles = ax.get_legend_handles_labels()
+    handle1 = handles[0][1]
+    handle2 = handles[0][3]
+    ax.legend([handle1,handle2],[r"$0.9 v_e$",r"$v_e$"],fontsize=14)
+    ax.set_xlabel("x [AU]",fontsize=14)
+    ax.set_ylabel("y [AU]",fontsize=14)
+    plt.savefig(figdir+"escape.pdf")
+
+
+
     '''
     #timer algoritmene
     scenario = 0
@@ -122,8 +145,7 @@ if __name__ == "__main__":
         error = (np.std(timeFE[i])/np.mean(timeFE[i]) + np.std(timeVV[i])/np.mean(timeVV[i]))*relation
         f.write("{} {:.2E} {:.2E} \n".format(endtime[i],relation,error))
 
-    '''
-    '''
+
     # endrer massen til jupiter
     scenario = 4
     endtime = 20
@@ -166,11 +188,8 @@ if __name__ == "__main__":
     ax[1].set_ylim(-1,10)
     #plt.savefig(figdir+"change_beta_60yr.pdf")
 
-    plt.show()
     '''
 
-    plt.show()
-    '''
     '''
     #massesenter
     scenario = 5
@@ -229,7 +248,7 @@ if __name__ == "__main__":
 
     plt.show()
 
-    '''
+
     #hele solsystemet
     scenario = 6
     endtime = 200
@@ -258,8 +277,8 @@ if __name__ == "__main__":
     ax.set_ylabel('y [AU]')
     #plt.savefig(figdir+"solarsystem2d.pdf")
 
-    '''
-    '''
+
+
     #The perihelion precession of Mercury
     scenario = 7
     endtime = 100
@@ -309,11 +328,8 @@ if __name__ == "__main__":
     ax.set_ylabel("perihelion precession [arc seconds]",fontsize=14)
 
     plt.savefig(figdir+"perihelion.pdf")
-    """
 
 
-    '''
-    '''
     # sammenligne Euler og Verlet
     figdir = "../figurer/"
     pathEuler = "euler_vs_verlet/euler"

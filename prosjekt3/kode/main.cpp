@@ -130,7 +130,7 @@ void varyBeta(vector<Planet>& sunEarthList, double endtime, double dt, double be
 void varyVelocity(vector<Planet>& sunEarthList, double endtime, double dt, double velocityScale){
 
   System sunEarthScale("Sun-Earth system", sunEarthList);
-
+  sunEarthScale.writeForEach(10);
   sunEarthScale.scalePlanetInitVel(velocityScale, 1);        //skalerer hastigheten til Jorda
   sunEarthScale.writetoFile("escape_velocity");
   sunEarthScale.solveVelocityVerlet(endtime, dt);
