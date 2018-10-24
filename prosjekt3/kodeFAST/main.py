@@ -34,23 +34,28 @@ def run_maincpp(scenario, endtime, dt, *args, n=1):
         for i in range(n):
             os.system("./main.exe {} {} {}".format(scenario, endtime, dt))
 
-def plotPlanet(ax, filename, d3=False, label=True):
+def plotPlanet(ax, filename, path=None, d3=False, label=True, centersun=False):
     data = np.loadtxt(filename)
     x = data[:, 0]; y = data[:, 1]; z = data[:, 2]
+    if centersun:
+        dataS = np.loadtxt(path+"/Sun.dat")
+        xS = dataS[:, 0]; yS = dataS[:, 1]; zS = dataS[:, 2]
+    else:
+        xS = 0; yS=0; zS=0;
     if label:
         name = filename.split("/")[-1][:-4]
     else:
         name = None
     if d3:
-        ax.plot3D(x, y, z, label=name)
+        ax.plot3D(x-xS, y-yS, z-yS, label=name)
     else:
-        ax.plot(x, y, label=name)
+        ax.plot(x-xS, y-yS, label=name)
 
-def plotSystem(ax, path, d3=False, label=True):
+def plotSystem(ax, path, d3=False, label=True, centersun=False):
     path = "../data/" + path
     files = glob.glob(path+"/*.dat")
     for filename in files:
-        plotPlanet(ax, filename, d3=d3, label=label)
+        plotPlanet(ax, filename, path=path, d3=d3, label=label, centersun = centersun)
 
 def plotAbs(ax, dt, endtime, filename, var, label=None):
     data = np.loadtxt(filename)
@@ -59,7 +64,7 @@ def plotAbs(ax, dt, endtime, filename, var, label=None):
     if var == 'vel':
         x = data[:, 3]; y = data[:, 4]; z = data[:, 5]
     absVal = np.sqrt(x*x+y*y+z*z)
-    t = np.arange(0,endtime,dt*100)
+    t = np.arange(0,endtime,dt)
     ax.plot(t, absVal, label=label)
 
 def plotPosVel(ax, dt, endtime, filename, beta):
@@ -81,6 +86,7 @@ def plotPerihelion(ax, dt, file):
     theta = np.arctan(y/x)*radToArc
     ax.plot(i*dt,theta)
 
+
 if __name__ == "__main__":
 
     sns.set()
@@ -88,31 +94,31 @@ if __name__ == "__main__":
     sns.set_palette("husl")
     plt.rc('text', usetex=True)
     figdir = "../figurer/"
+    '''
 
-    """
     # endrer massen til jupiter
     scenario = 4
     endtime = 20
     dt = 0.001
     masses = [1,10,1000]
 
-    run_maincpp(scenario, endtime, dt)
+    #run_maincpp(scenario, endtime, dt)
     fig, ax = plt.subplots(2, 2)
     sub = [0,2,3]
     for i in range(3):
-        plotSystem(ax.flatten()[sub[i]], "sun_earth_jupiter/jupiter_mass_{}".format(masses[i]))
+        plotSystem(ax.flatten()[sub[i]], "sun_earth_jupiter/jupiter_mass_{}".format(masses[i]),centersun=True)
         ax.flatten()[sub[i]].axis('equal')
         i += 1
-    ax[1,1].axis([-4, 23, -19, 2])
+    ax[1,1].axis([-6, 6, -6, 6])
     ax[1,1].legend(loc='upper center', bbox_to_anchor=(0.5, 2),fontsize=14, frameon=False)
     ax[0,1].axis('off')
 
     fig.text(0.5, 0.03, 'x [AU]',  ha='center',fontsize=14)
     fig.text(0.02, 0.5, 'y [AU]',  va='center', rotation='vertical',fontsize=14)
 
-    plt.savefig(figdir+"jupiter_mass.pdf")
+    #plt.savefig(figdir+"jupiter_mass.pdf")
 
-
+    plt.show()
 
     #endrer gravitasjonskraften
     scenario = 3
@@ -123,52 +129,70 @@ if __name__ == "__main__":
 
     fig, ax = plt.subplots(2,1,sharex=True)
     plotPosVel(ax, dt, endtime[0], filename, beta)
-    plt.savefig(figdir+"change_beta_10yr.pdf")
+    #plt.savefig(figdir+"change_beta_10yr.pdf")
 
     fig, ax = plt.subplots(2,1,sharex=True)
     plotPosVel(ax, dt, endtime[1], filename, beta)
     ax[1].set_ylim(-1,10)
-    plt.savefig(figdir+"change_beta_60yr.pdf")
+    #plt.savefig(figdir+"change_beta_60yr.pdf")
 
+    plt.show()
+    '''
     #massesenter
     scenario = 5
     endtime = 30
     dt = 0.001
-    run_maincpp(scenario, endtime, dt)
+    #run_maincpp(scenario, endtime, dt)
 
-    fig, ax = plt.subplots(2,2)
-    plotSystem(ax[0,1], "sun_earth_jupiter/sun_origo")
-    plotSystem(ax[0,0], "sun_earth_jupiter/mass_origo")
-    plotSystem(ax[1,1], "sun_earth_jupiter/sun_origo")
-    plotSystem(ax[1,0], "sun_earth_jupiter/mass_origo")
-    ax[0,0].axis('equal')
-    ax[0,1].axis('equal')
-    ax[1,0].axis('equal')
-    ax[1,1].axis('equal')
-    ax[1,1].axis([-0.01,0.07,-0.05,0.003])
-    ax[1,0].axis([-0.007,0.007,-0.006,0.006])
+    fig, ax = plt.subplots(2,1)
+    plotPlanet(ax[0], "../data/sun_earth_jupiter/mass_origo/Sun.dat")
+    ax[0].axis('equal')
+    ax[0].set_xlabel("x [AU]")
+    ax[0].set_ylabel("y [AU]")
 
-    fig.text(0.5, 0.03, 'x [AU]',  ha='center',fontsize=14)
-    fig.text(0.02, 0.5, 'y [AU]',  va='center', rotation='vertical', fontsize=14)
-    ax[0,0].legend(ncol=3,loc='upper center', bbox_to_anchor=(1, 1.3), fontsize=14,
-                    frameon=False)
-    #fig.tight_layout()
+    dataS = np.loadtxt("../data/sun_earth_jupiter/sun_origo/Sun.dat")
+    xS = dataS[:, 0]; yS = dataS[:, 1]; zS = dataS[:, 2]
 
-    #plt.savefig(figdir+"center_of_mass.pdf")
+    dataE = np.loadtxt("../data/sun_earth_jupiter/sun_origo/Earth.dat")
+    xE = dataE[:, 0]; yE = dataE[:, 1]; zE = dataE[:, 2]
 
+    dataJ = np.loadtxt("../data/sun_earth_jupiter/sun_origo/Jupiter.dat")
+    xJ = dataJ[:, 0]; yJ = dataJ[:, 1]; zJ = dataJ[:, 2]
 
+    rE = np.sqrt((xE-xS)**2+ (yE-yS)**2 +(zE-yS)**2)
+    rJ = np.sqrt((xJ-xS)**2+ (yJ-yS)**2 +(zJ-yS)**2)
 
+    dataEc = np.loadtxt("../data/sun_earth_jupiter/mass_origo/Earth.dat")
+    rEc = np.sqrt(dataEc[:, 0]**2+ dataEc[:, 1]**2 + dataEc[:, 2]**2)
+    dataJc = np.loadtxt("../data/sun_earth_jupiter/mass_origo/Jupiter.dat")
+    rJc = np.sqrt(dataJc[:, 0]**2+ dataJc[:, 1]**2 + dataJc[:, 2]**2)
+
+    t = np.arange(0,endtime,dt)
+
+    ax[1].plot(t,rE-rEc,label="Earth")
+    ax[1].plot(t,rJ-rJc,label="Jupiter")
+
+    ax[1].set_xlabel("t [yr]")
+    ax[1].set_ylabel(r"r$_{sun}$-r$_{mass}$")
+
+    ax[1].legend()
+
+    plt.savefig(figdir+"center_of_mass.pdf")
+
+    plt.show()
+
+    '''
     #hele solsystemet
     scenario = 6
     endtime = 200
     dt = 0.001
-    run_maincpp(scenario, endtime, dt)
+    #run_maincpp(scenario, endtime, dt)
     sns.set_palette(sns.color_palette("husl", 9))
 
 
     fig = plt.figure()
     ax = plt.axes(projection='3d')
-    plotSystem(ax, "../data/solarsystem", d3=True)
+    plotSystem(ax, "../data/solarsystem", d3=True, centersun=True)
     ax.legend(loc='upper center',bbox_to_anchor=(0.5, 1.15),
                   ncol=3,fontsize=12, frameon=False)
     ax.set_xlabel('x [AU]')
@@ -178,7 +202,7 @@ if __name__ == "__main__":
 
 
     fig, ax = plt.subplots()
-    plotSystem(ax, "../data/solarsystem")
+    plotSystem(ax, "../data/solarsystem", centersun=True)
     ax.legend(loc='upper center',bbox_to_anchor=(0.5, 1.2),
                   ncol=3,fontsize=12, frameon=False)
     ax.axis('equal')
@@ -186,24 +210,22 @@ if __name__ == "__main__":
     ax.set_ylabel('y [AU]')
     #plt.savefig(figdir+"solarsystem2d.pdf")
 
-    plt.show()
 
-    """
     #The perihelion precession of Mercury
     scenario = 7
     endtime = 100
     dt = 0.0000001
-    run_maincpp(scenario, endtime, dt)
-    
-    fig, ax = plt.subplots()
-    for year in range(0, endtime, 1):
+    #run_maincpp(scenario, endtime, dt)
 
-    plotPerihelion(ax, dt, "../data/sun_mercury/classical/MercuryPelihelon.dat")
-    plotPerihelion(ax, dt, "../data/sun_mercury/relativistic/MercuryPelihelon.dat")
+    fig, ax = plt.subplots()
+
+    plotPerihelion(ax, dt, "../data/sun_mercury/classical/MercuryPerihelion.dat")
+    plotPerihelion(ax, dt, "../data/sun_mercury/relativistic/MercuryPerihelion.dat")
+
     plt.show()
 
-
-    """
+    '''
+    '''
     # sammenligne Euler og Verlet
     figdir = "../figurer/"
     pathEuler = "euler_vs_verlet/euler"
@@ -267,4 +289,4 @@ if __name__ == "__main__":
     vfig.legend(fontsize=14, frameon=False)
     betafig.legend(fontsize=14, frameon=False)
     plt.show()
-    """
+    '''
