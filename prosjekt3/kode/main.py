@@ -93,7 +93,7 @@ if __name__ == "__main__":
     plt.rc('text', usetex=True)
     figdir = "../figurer/"
 
-    '''
+
     # endrer massen til jupiter
     scenario = 4
     endtime = 20
@@ -120,7 +120,7 @@ if __name__ == "__main__":
 
     #endrer gravitasjonskraften
     scenario = 3
-    endtime = [10,60]
+    endtime = [10, 60]
     dt = 0.001
     beta = [2, 2.5, 2.9, 2.99, 2.999, 3]
     filename= "../data/change_beta/Earth.dat"
@@ -158,7 +158,7 @@ if __name__ == "__main__":
                     frameon=False)
     #fig.tight_layout()
 
-    plt.savefig(figdir+"center_of_mass.pdf")
+    #plt.savefig(figdir+"center_of_mass.pdf")
 
 
 
@@ -192,7 +192,7 @@ if __name__ == "__main__":
 
     plt.show()
 
-    '''
+    """
     #The perihelion precession of Mercury
     scenario = 7
     endtime = 1
@@ -203,9 +203,9 @@ if __name__ == "__main__":
     plotPerihelion(ax[0], dt, "../data/sun_mercury/classical/MercuryPelihelon.dat")
     plotPerihelion(ax[1], dt, "../data/sun_mercury/relativistic/MercuryPelihelon.dat")
     plt.show()
+    """
 
-
-    '''
+    """
     # sammenligne Euler og Verlet
     figdir = "../figurer/"
     pathEuler = "euler_vs_verlet/euler"
