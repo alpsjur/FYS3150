@@ -69,7 +69,7 @@ def plotPosVel(ax, dt, endtime, filename, beta):
         plotAbs(ax[1], dt, endtime, filename, 'vel')
         run_maincpp(scenario, endtime, dt, b)
     ax[0].legend(loc='upper center', bbox_to_anchor=(0.5, 1.35),
-                  ncol=3,fontsize=12)
+                  ncol=3,fontsize=12, frameon=False)
     fig.text(0.5, 0.035, 't [yr]',  ha='center',fontsize=14)
     ax[0].set_ylabel('r [AU]')
     ax[1].set_ylabel('v [AU/yr]')
@@ -83,9 +83,9 @@ if __name__ == "__main__":
     plt.rc('text', usetex=True)
     figdir = "../figurer/"
 
-    '''
+
     # endrer massen til jupiter
-    scenario = 3
+    scenario = 4
     endtime = 20
     dt = 0.001
     masses = [1,10,1000]
@@ -98,13 +98,13 @@ if __name__ == "__main__":
         ax.flatten()[sub[i]].axis('equal')
         i += 1
     ax[1,1].axis([-4, 23, -19, 2])
-    ax[1,1].legend(loc='upper center', bbox_to_anchor=(0.5, 2),fontsize=14)
+    ax[1,1].legend(loc='upper center', bbox_to_anchor=(0.5, 2),fontsize=14, frameon=False)
     ax[0,1].axis('off')
 
     fig.text(0.5, 0.03, 'x [AU]',  ha='center',fontsize=14)
     fig.text(0.02, 0.5, 'y [AU]',  va='center', rotation='vertical',fontsize=14)
 
-    #plt.savefig(figdir+"jupiter_mass.pdf")
+    plt.savefig(figdir+"jupiter_mass.pdf")
 
 
 
@@ -117,24 +117,24 @@ if __name__ == "__main__":
 
     fig, ax = plt.subplots(2,1,sharex=True)
     plotPosVel(ax, dt, endtime[0], filename, beta)
-    #plt.savefig(figdir+"change_beta_10yr.pdf")
+    plt.savefig(figdir+"change_beta_10yr.pdf")
 
     fig, ax = plt.subplots(2,1,sharex=True)
     plotPosVel(ax, dt, endtime[1], filename, beta)
     ax[1].set_ylim(-1,10)
-    #plt.savefig(figdir+"change_beta_60yr.pdf")
+    plt.savefig(figdir+"change_beta_60yr.pdf")
 
     #massesenter
     scenario = 5
     endtime = 30
     dt = 0.001
-    #run_maincpp(scenario, endtime, dt)
+    run_maincpp(scenario, endtime, dt)
 
     fig, ax = plt.subplots(2,2)
-    plotSystem(ax[0,1], "../data/sun_earth_jupiter/sun_origo")
-    plotSystem(ax[0,0], "../data/sun_earth_jupiter/mass_origo")
-    plotSystem(ax[1,1], "../data/sun_earth_jupiter/sun_origo")
-    plotSystem(ax[1,0], "../data/sun_earth_jupiter/mass_origo")
+    plotSystem(ax[0,1], "sun_earth_jupiter/sun_origo")
+    plotSystem(ax[0,0], "sun_earth_jupiter/mass_origo")
+    plotSystem(ax[1,1], "sun_earth_jupiter/sun_origo")
+    plotSystem(ax[1,0], "sun_earth_jupiter/mass_origo")
     ax[0,0].axis('equal')
     ax[0,1].axis('equal')
     ax[1,0].axis('equal')
@@ -143,36 +143,37 @@ if __name__ == "__main__":
     ax[1,0].axis([-0.007,0.007,-0.006,0.006])
 
     fig.text(0.5, 0.03, 'x [AU]',  ha='center',fontsize=14)
-    fig.text(0.02, 0.5, 'y [AU]',  va='center', rotation='vertical',fontsize=14)
-    ax[0,0].legend(ncol=3,loc='upper center', bbox_to_anchor=(1, 1.3),fontsize=14)
+    fig.text(0.02, 0.5, 'y [AU]',  va='center', rotation='vertical', fontsize=14)
+    ax[0,0].legend(ncol=3,loc='upper center', bbox_to_anchor=(1, 1.3), fontsize=14,
+                    frameon=False)
     #fig.tight_layout()
 
-    #plt.savefig(figdir+"center_of_mass.pdf")
+    plt.savefig(figdir+"center_of_mass.pdf")
 
-    '''
+
     #hele solsystemet
     scenario = 6
     endtime = 200
     dt = 0.001
-    #run_maincpp(scenario, endtime, dt)
+    run_maincpp(scenario, endtime, dt)
     sns.set_palette(sns.color_palette("husl", 9))
 
-    '''
+
     fig = plt.figure()
     ax = plt.axes(projection='3d')
     plotSystem(ax, "../data/solarsystem", d3=True)
     ax.legend(loc='upper center',bbox_to_anchor=(0.5, 1.15),
-                  ncol=3,fontsize=12)
+                  ncol=3,fontsize=12, frameon=False)
     ax.set_xlabel('x [AU]')
     ax.set_ylabel('y [AU]')
     ax.set_zlabel('z [AU]')
-    #plt.savefig(figdir+"solarsystem3d.pdf")
-    '''
+    plt.savefig(figdir+"solarsystem3d.pdf")
+
 
     fig, ax = plt.subplots()
     plotSystem(ax, "../data/solarsystem")
     ax.legend(loc='upper center',bbox_to_anchor=(0.5, 1.2),
-                  ncol=3,fontsize=12)
+                  ncol=3,fontsize=12, frameon=False)
     ax.axis('equal')
     ax.set_xlabel('x [AU]')
     ax.set_ylabel('y [AU]')
@@ -180,7 +181,7 @@ if __name__ == "__main__":
 
     plt.show()
 
-    '''
+    """
     # sammenligne Euler og Verlet
     figdir = "../figurer/"
     pathEuler = "euler_vs_verlet/euler"
@@ -205,7 +206,7 @@ if __name__ == "__main__":
         ax.set_xlim(-1.6, 1.6)
         #plt.axis("equal")
         labelcounter += 1
-    fig.legend(fontsize=14)
+    fig.legend(fontsize=14, frameon=False)
     plt.savefig(figdir + "eulerVerlet.pdf")
 
 
@@ -241,7 +242,7 @@ if __name__ == "__main__":
         ax = betafig.add_subplot(n, 1, i)
         plotSystem(ax, pathBeta, label=label)
         labelcounter += 1
-    vfig.legend(fontsize=14)
-    betafig.legend(fontsize=14)
+    vfig.legend(fontsize=14, frameon=False)
+    betafig.legend(fontsize=14, frameon=False)
     plt.show()
-    '''
+    """
