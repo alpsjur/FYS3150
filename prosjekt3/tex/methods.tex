@@ -113,7 +113,7 @@ In our case $a$ is the only known function. By using the algorithm above twice, 
 		$v_{k+1} = v_k+dta_k$\;
 		$x_{k+1} = x_k+dtv_k$\;
 \end{algorithm}
-This algorithm has a total of 8 FLOPS.
+This algorithm has a total of 8 FLOPS, not counting the computation of $a_k$.
 
 \subsubsection{Velocity Verlet}
 \label{sec:vv}
@@ -138,6 +138,7 @@ Combining equation (\ref{eq:vvy}) and (\ref{eq:vvf}) gives us the following algo
 		compute $a_{k+1}$\;
 		$v_{k+1} = v_k + \frac{dt}{2}\left(a_{k+1}+a_k\right)$\;
 \end{algorithm}
+This algorithm has a total of 14 FLOPS, not counting the computation of $a_k$. 
 
 \subsubsection{Solving for all bodies}
 Let's again look at equation (\ref{eq:diff}). We let
