@@ -95,6 +95,30 @@ if __name__ == "__main__":
     plt.rc('text', usetex=True)
     figdir = "../figurer/"
 
+    #timer algoritmene
+    scenario = 0
+    endtime = [1,10,100]
+    dt = 0.001
+    n = 10
+    timeFE = []
+    timeVV = []
+
+    for t in endtime:
+        if os.path.exists("time{}.log".format(t)):
+            os.system("rm time{}.log".format(t))
+
+    for t in endtime:
+        for i in range(n):
+            os.system("./main.exe {} {} {} >> time{}.log".format(scenario, t, dt, t))
+
+
+    f = open("../data/timing.dat", "w")
+    for i in range(len(endtime)):
+        timeFE.append(np.loadtxt("time{}.log".format(endtime[i]))[:,0])
+        timeVV.append(np.loadtxt("time{}.log".format(endtime[i]))[:,1])
+        f.write("{} {:.2E} {:.2E} {:.2E} {:.2E} \n".format(endtime[i],np.mean(timeFE[i]),np.std(timeFE[i]),np.mean(timeVV[i]),np.std(timeVV[i])))
+
+
     '''
     # endrer massen til jupiter
     scenario = 4
@@ -214,6 +238,7 @@ if __name__ == "__main__":
     #plt.savefig(figdir+"solarsystem2d.pdf")
 
     '''
+    '''
     #The perihelion precession of Mercury
     scenario = 7
     endtime = 100
@@ -231,7 +256,7 @@ if __name__ == "__main__":
     plt.savefig(figdir+"perihelion.pdf")
 
 
-
+    '''
     '''
     # sammenligne Euler og Verlet
     figdir = "../figurer/"
