@@ -94,8 +94,8 @@ if __name__ == "__main__":
     sns.set_palette("husl")
     plt.rc('text', usetex=True)
     figdir = "../figurer/"
-    '''
 
+    '''
     # endrer massen til jupiter
     scenario = 4
     endtime = 20
@@ -109,17 +109,19 @@ if __name__ == "__main__":
         plotSystem(ax.flatten()[sub[i]], "sun_earth_jupiter/jupiter_mass_{}".format(masses[i]),centersun=True)
         ax.flatten()[sub[i]].axis('equal')
         i += 1
-    ax[1,1].axis([-6, 6, -6, 6])
+    ax[1,1].set_xlim(ax[0,0].get_xlim())
+    ax[1,1].set_ylim(ax[0,0].get_ylim())
     ax[1,1].legend(loc='upper center', bbox_to_anchor=(0.5, 2),fontsize=14, frameon=False)
     ax[0,1].axis('off')
 
     fig.text(0.5, 0.03, 'x [AU]',  ha='center',fontsize=14)
     fig.text(0.02, 0.5, 'y [AU]',  va='center', rotation='vertical',fontsize=14)
 
-    #plt.savefig(figdir+"jupiter_mass.pdf")
+    plt.savefig(figdir+"jupiter_mass.pdf")
 
     plt.show()
-
+    '''
+    '''
     #endrer gravitasjonskraften
     scenario = 3
     endtime = [10,60]
@@ -137,6 +139,7 @@ if __name__ == "__main__":
     #plt.savefig(figdir+"change_beta_60yr.pdf")
 
     plt.show()
+    '''
     '''
     #massesenter
     scenario = 5
@@ -172,15 +175,15 @@ if __name__ == "__main__":
     ax[1].plot(t,rE-rEc,label="Earth")
     ax[1].plot(t,rJ-rJc,label="Jupiter")
 
-    ax[1].set_xlabel("t [yr]")
-    ax[1].set_ylabel(r"r$_{sun}$-r$_{mass}$")
+    #ax[1].set_xlabel("t [yr]")
+    #ax[1].set_ylabel(r"r$_{sun}$-r$_{mass}$")
 
-    ax[1].legend()
+    #ax[1].legend()
 
     plt.savefig(figdir+"center_of_mass.pdf")
 
     plt.show()
-
+    '''
     '''
     #hele solsystemet
     scenario = 6
@@ -210,7 +213,7 @@ if __name__ == "__main__":
     ax.set_ylabel('y [AU]')
     #plt.savefig(figdir+"solarsystem2d.pdf")
 
-
+    '''
     #The perihelion precession of Mercury
     scenario = 7
     endtime = 100
@@ -222,9 +225,13 @@ if __name__ == "__main__":
     plotPerihelion(ax, dt, "../data/sun_mercury/classical/MercuryPerihelion.dat")
     plotPerihelion(ax, dt, "../data/sun_mercury/relativistic/MercuryPerihelion.dat")
 
-    plt.show()
+    ax.set_xlabel("t [yr]",fontsize=14)
+    ax.set_ylabel("perihelion precession [arc seconds]",fontsize=14)
 
-    '''
+    plt.savefig(figdir+"perihelion.pdf")
+
+
+
     '''
     # sammenligne Euler og Verlet
     figdir = "../figurer/"
