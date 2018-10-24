@@ -169,6 +169,9 @@ if __name__ == "__main__":
     plt.show()
     '''
 
+    plt.show()
+    '''
+    '''
     #massesenter
     scenario = 5
     endtime = 30
@@ -219,6 +222,8 @@ if __name__ == "__main__":
 
     fig.tight_layout()
 
+    rE = np.sqrt((xE-xS)**2+ (yE-yS)**2 +(zE-yS)**2)
+    rJ = np.sqrt((xJ-xS)**2+ (yJ-yS)**2 +(zJ-yS)**2)
 
     plt.savefig(figdir+"center_of_mass.pdf")
 
