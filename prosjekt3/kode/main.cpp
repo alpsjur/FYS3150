@@ -17,7 +17,7 @@ void compareEulerVerlet(vector<Planet>&, double, double);
 void varyVelocity(vector<Planet>&, double, double, double);
 void varyBeta(vector<Planet>&, double, double, double);
 void solveEarthJupiter(vector<Planet>&, double, double);
-void solveCentercfMass(vector<Planet>&, double, double);
+void solveCenterofMass(vector<Planet>&, double, double);
 void solveSolarSystem(vector<Planet>&, double, double);
 void solveMercuryPrecession(vector<Planet>&, double, double);
 
@@ -76,7 +76,7 @@ int main(int argc, char* argv[]){
     varyBeta(sunEarthList, endtime, dt, beta);
   }
   if(scenario == 4){solveEarthJupiter(sunEarthJupiterList, endtime, dt);}
-  if(scenario == 5){solveCentercfMass(sunEarthJupiterList, endtime, dt);}
+  if(scenario == 5){solveCenterofMass(sunEarthJupiterList, endtime, dt);}
   if(scenario == 6){solveSolarSystem(allplanets, endtime, dt);}
   if(scenario == 7){solveMercuryPrecession(sunMercuryList, endtime, dt);}
 
@@ -157,7 +157,7 @@ void solveEarthJupiter(vector<Planet> &sunEarthJupiterList, double endtime, doub
   sunEarthJupiter.solveVelocityVerlet(endtime, dt);
 }
 
-void solveCentercfMass(vector<Planet> &sunEarthJupiterList, double endtime, double dt){
+void solveCenterofMass(vector<Planet> &sunEarthJupiterList, double endtime, double dt){
   System sunEarthJupiter("Sun-Earth-jupiter system", sunEarthJupiterList);
 
   //løser uten å sette massesenteret som origo

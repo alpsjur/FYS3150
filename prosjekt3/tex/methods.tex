@@ -12,26 +12,70 @@ Here, $\mathbf{r}_{ij}$ is the vector between the centres of the bodies, pointin
 \end{equation}
 where $j = \{1,\ldots,N\}\setminus i$, and $\mathbf{x}_i$ is the position vector of body $b_i$.
 
-Using astronomical units, and setting the mass of the sun to 1, we can, by approximating the orbit of Earth around the sun as a circle, find a value for G. Setting the size of $\mathbf{F}_{ij}$ in equation (\ref{eq: gravity}) equal to the size of the centripetal force, we get
+Using astronomical units and years, we can, by approximating the orbit of Earth around the sun as a circle, find a scaled value for G. Setting $\mathbf{F}_{ij}$ in equation (\ref{eq: gravity}) equal to the centripetal force, we get
 \begin{equation}\label{eq: centripetal}
 	\frac{GM}{r^2} = \frac{Mv^2}{r}.
 \end{equation}
- Here, $M$ and $v$ is the mass and speed of Earth, respectively, and $r$ is the distance from the sun to Earth. By manipulating equation (\ref{eq: centripetal}), we get that
+Here, $M$ and $v$ are the mass and speed of Earth, respectively, and $r$ is the distance from the sun to Earth. By inserting the circular velocity into equation (\ref{eq: centripetal}), we get that
+ \begin{align}
+	 \frac{GM}{r} &= M\qty(\frac{2\pi r}{T})^2 = M\frac{4 \pi^2 r^2}{T^2} \\
+	 G &= \frac{4 \pi^2 r^3}{T^2},
+ \end{align}
+where we set $r$ to be an AU and $T$ to be a year and get
  \begin{equation}
 	 G = 4 \pi ^2 AU^3/yr^2.
  \end{equation}
 
- \subsection{The relativistic case}
+\subsection{Numerical experiments}
+\label{sec:numex}
+In this section we outline the various numerical experiments we will perform on our
+model solar system. One of them is looking at Jupiter's effect on Earth's orbit around the sun.
+We will therefore see what happens if Jupiter's mass were to suddenly increase. The rest
+of the experiments require a more careful description, and therefore get their own sections.
+\subsubsection{Effects of the inverse square law}
+\label{sec:beta}
+	To understand how the form of NLG affects the motion of the planets, we will
+	experiment by increasing the exponent of $r$. Naming this new exponent $\beta$,
+	we have that a inverse beta law is given by
+	\begin{equation}
+		\label{eq:beta}
+			F_G \propto \frac{1}{r^\beta}
+	\end{equation}
 
-\subsection{Escape velocity}
+\subsubsection{Escape velocity}
+\label{sec:escvel}
 One of the properties of the system we will solve for numerically is the escape velocity $v_e$ of a planet. This is a problem that has an analytical solution, which makes it a good test case. The escape velocity of an object $b_i$ orbiting $b_j$ is the velocity when the sum of the kinetic and potential energy is zero. That is
 \begin{equation}
 	\frac{1}{2}M_iv_e^2 = \frac{GM_iM_j}{r_{ij}}
 \end{equation}
 Letting $b_j$ be the sun, $r$ denote the distance of $b_i$ from the sun, and scaling the mass with $M_j$, we get
 \begin{equation}
+	\label{eq:esc}
 	v_e = \sqrt{\frac{2G}{r}}
 \end{equation}
+
+\subsubsection{The relativistic case}
+\label{sec:rel}
+Newton's law of gravitation is not completely correct, and considered an approximation
+to the theory of general relativity. This becomes especially apparent in the orbit of
+Mercury, which is observed to precess around the sun. Specifically, the perihelion, the point where Mercury is furthest from the sun, precesses around the sun at around $575''$, where around $43''$ is
+contributed from a general relativistic correction (see \cite{precession}, in particular table 3).
+The correction to NGL is given by \ref{eq:relcor}
+	\begin{equation}
+		\label{eq:relcor}
+		F_G = \frac{GM_{\text{sun}}m_{\text{mercury}}}{r^2}\qty(1 + \frac{3l^2}{r^2c^2}),
+	\end{equation}
+where $r$ is the distance between Mercury and the sun, $l$ is the angular momentum of
+Mercury, and $c$ is the speed of light in vacuum. To study the effects of this
+correction, we use the concept of a perihelion angle
+	\begin{equation}
+		\label{eq:perangle}
+		\tan{\theta_p} = \frac{y_p}{x_y},
+	\end{equation}
+where $x_p$ and $y_p$ are the cartesian coordinates of Mercury at its perihelion.
+Furthermore, we assume a perihelion speed and distance of $12.44\,$AU/yr and $0.3075\,$AU
+respectively.
+
 \subsection{Algorithms for solving the differential equations}
 Consider the function
 \begin{equation}
@@ -133,17 +177,24 @@ a vector of Planet objects, and solving for their motion in a gravitational fiel
 class will be our solver paradigm. In this solver, we implement both the Forward Euler and
 Velocity Verlet algorithm, as well as methods for getting the total energy and angular
 momentum, as well as varying different parameters like r dependence of NGL and initial velocity.
-We also allow for a general relativistic correction to NGL, as decribed in Section 
+We also allow for a general relativistic correction to NGL, as decribed in Section \ref{sec:rel}
 
 All our code can be found in
 a github repository "FYS3150" by janadr\footnote{https://github.com/janadr/FYS3150/tree/master/prosjekt3}.
-\subsubsection{Unit tests} \label{sec:tests}
+\subsubsection{Comparing methods and unit testing} \label{sec:tests}
 In our model of the solar system, both angular momentum and mechanical energy should be conserved, as there
 are no external forces or torques acting on the system. This means that at any point in time, the total energy or
-angular momentum of the system should be the same as initially. We use this to unit test
-the VV algorithm, as we expect this method to conserve these quantities.
+angular momentum of the system should be the same as initially. An ideal method should conserve these methods,
+and therefore we test both algorithms for energy and angular momentum conservation.
+Furthermore, we implement this as a unit test for the VV algorithm, as we expect this method to conserve these quantities.
 
-Another simple test is to time the two algorithms in order to determine which is the most efficient. When timing the algorithms we run both algorithms with the same input parameters X times, and record the mean time and standard deviation.
+Another simple comparison is to time the two algorithms in order to determine which is the most efficient. When timing the algorithms we run both algorithms with the same input parameters X times, and record the mean time and standard deviation.
+We also check if Earth escapes its orbit if we set its initial velocity to be the analytical
+escape velocity given by \ref{eq:esc}.
+One more test that could be implemented, but which we will not, is comparing Venus' 2D orbit with a circle
+with radius the mean distance of Venus from the sun. As we expect this orbit to be
+almost circular due to its low eccentricity \cite{planetaryfactsheet}. This would then
+be a way to quantify our error, which we could use to compare the algorithms.
 
-\subsection{Obtaining initial values}
+\subsubsection{Obtaining initial values}
 The initial velocities and positions for the planets, together with the masses, were collected from NASA's web-based interface to JPL's HORIZONS system. For further references, see \cite{horizon}. October 5th 2018 was used as the initial time.
