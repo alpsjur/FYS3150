@@ -59,7 +59,7 @@ def plotAbs(ax, dt, endtime, filename, var, label=None):
     if var == 'vel':
         x = data[:, 3]; y = data[:, 4]; z = data[:, 5]
     absVal = np.sqrt(x*x+y*y+z*z)
-    t = np.arange(0,endtime,dt)
+    t = np.arange(0,endtime,dt*100)
     ax.plot(t, absVal, label=label)
 
 def plotPosVel(ax, dt, endtime, filename, beta):
@@ -89,14 +89,14 @@ if __name__ == "__main__":
     plt.rc('text', usetex=True)
     figdir = "../figurer/"
 
-    '''
+    """
     # endrer massen til jupiter
     scenario = 4
     endtime = 20
     dt = 0.001
     masses = [1,10,1000]
 
-    #run_maincpp(scenario, endtime, dt)
+    run_maincpp(scenario, endtime, dt)
     fig, ax = plt.subplots(2, 2)
     sub = [0,2,3]
     for i in range(3):
@@ -154,7 +154,7 @@ if __name__ == "__main__":
                     frameon=False)
     #fig.tight_layout()
 
-    plt.savefig(figdir+"center_of_mass.pdf")
+    #plt.savefig(figdir+"center_of_mass.pdf")
 
 
 
@@ -184,25 +184,26 @@ if __name__ == "__main__":
     ax.axis('equal')
     ax.set_xlabel('x [AU]')
     ax.set_ylabel('y [AU]')
-    plt.savefig(figdir+"solarsystem2d.pdf")
+    #plt.savefig(figdir+"solarsystem2d.pdf")
 
     plt.show()
 
-    '''
+    """
     #The perihelion precession of Mercury
     scenario = 7
     endtime = 100
     dt = 0.0000001
     run_maincpp(scenario, endtime, dt)
-
+    
     fig, ax = plt.subplots()
+    for year in range(0, endtime, 1):
 
     plotPerihelion(ax, dt, "../data/sun_mercury/classical/MercuryPelihelon.dat")
     plotPerihelion(ax, dt, "../data/sun_mercury/relativistic/MercuryPelihelon.dat")
     plt.show()
 
 
-    '''
+    """
     # sammenligne Euler og Verlet
     figdir = "../figurer/"
     pathEuler = "euler_vs_verlet/euler"
@@ -266,4 +267,4 @@ if __name__ == "__main__":
     vfig.legend(fontsize=14, frameon=False)
     betafig.legend(fontsize=14, frameon=False)
     plt.show()
-    '''
+    """

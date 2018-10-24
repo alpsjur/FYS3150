@@ -179,20 +179,37 @@ void solveSolarSystem(vector<Planet> &allplanets, double endtime, double dt){
 }
 
 void solveMercuryPrecession(vector<Planet> &sunMercuryList, double endtime, double dt){
+  System sunMercuryClassical("Sun-Mercury classical system", sunMercuryList);
+  System sunMercuryRelativistic("Sun-Mercury relativistic system", sunMercuryList);
+
+  sunMercuryClassical.calculateCenterofMass();
+  sunMercuryClassical.writeForEach(10000)
+  sunMercuryClassical.writetoFile("sun_mercury/classical")
+
+  sunMercuryRelativistic.calculateCenterofMass();
+  sunMercuryRelativistic.relativistic();
+  sunMercuryRelativistic.writeForEach(10000)
+  sunMercuryRelativistic.writetoFile("sun_mercury/relativistic");
+  sunMercuryRelativistic.solveVelocityVerlet(endtime, dt);
+}
+
+/*
+void solveMercuryPrecession(vector<Planet> &sunMercuryList, double endtime, double dt){
 
   System sunMercuryClassical("Sun-Mercury classical system", sunMercuryList);
   System sunMercuryRelativistic("Sun-Mercury relativistic system", sunMercuryList);
 
   sunMercuryClassical.calculateCenterofMass();
-  sunMercuryClassical.writePelihelion("sun_mercury/classical");
+  sunMercuryClassical.writePerihelion("sun_mercury/classical");
   cout << 1 << endl;
   sunMercuryClassical.solveVelocityVerlet(endtime, dt);
   cout << 2 << endl;
 
   sunMercuryRelativistic.calculateCenterofMass();
   sunMercuryRelativistic.relativistic();
-  sunMercuryRelativistic.writePelihelion("sun_mercury/relativistic");
+  sunMercuryRelativistic.writePerihelion("sun_mercury/relativistic");
   cout << 3 << endl;
   sunMercuryRelativistic.solveVelocityVerlet(endtime, dt);
   cout << 4 << endl;
 }
+*/
