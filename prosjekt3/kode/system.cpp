@@ -3,7 +3,6 @@
 
 void System::initPlanets(){
   for(int planet = 0; planet < m_numberofPlanets; ++planet){
-    m_planets[planet].initArrays(m_integrationSteps);
     m_planets[planet].initPos();
     m_planets[planet].initVel();
   }
@@ -37,9 +36,11 @@ void System::solveForwardEuler(double endtime, double dt){
       //itererer over planetene
       for (int j = 0; j < m_numberofPlanets; ++j){
         acc = calculateAcc(i, j);
-        m_planets[j].m_pos[i+1] = m_planets[j].m_pos[i] + m_planets[j].m_vel[i]*dt;
-        m_planets[j].m_vel[i+1] = m_planets[j].m_vel[i] + acc*dt;
-        m_files[j] << m_planets[j].m_pos[i+1] << " " << m_planets[j].m_vel[i+1] << endl;
+        m_planets[j].m_pos = m_planets[j].m_pos + m_planets[j].m_vel*dt;
+        m_planets[j].m_vel = m_planets[j].m_vel + acc*dt;
+        if((i+1)/m_writeParameter == int((i+1)/m_writeParameter)){
+          m_files[j] << m_planets[j].m_pos << " " << m_planets[j].m_vel << endl;
+        }
       }
     }
     closeFiles();
@@ -49,8 +50,8 @@ void System::solveForwardEuler(double endtime, double dt){
       //itererer over planetene
       for (int j = 0; j < m_numberofPlanets; ++j){
         acc = calculateAcc(i, j);
-        m_planets[j].m_pos[i+1] = m_planets[j].m_pos[i] + m_planets[j].m_vel[i]*dt;
-        m_planets[j].m_vel[i+1] = m_planets[j].m_vel[i] + acc*dt;
+        m_planets[j].m_pos = m_planets[j].m_pos + m_planets[j].m_vel*dt;
+        m_planets[j].m_vel = m_planets[j].m_vel + acc*dt;
       }
     }
   }
@@ -60,10 +61,8 @@ void System::solveVelocityVerlet(double endtime, double dt){
   m_integrationSteps = int(endtime/dt);
   double dt2 = dt/2.0;
   double dtdt2 = dt*dt/2.0;
-  vector<Coordinate> acc;
-  acc.reserve(m_numberofPlanets);
+  vector<Coordinate> acc(m_numberofPlanets);
   Coordinate accNew;
-
   initPlanets();
   if(m_write){
     initFiles();
@@ -71,26 +70,55 @@ void System::solveVelocityVerlet(double endtime, double dt){
       //itererer over planetene
       for (int j = 0; j < m_numberofPlanets; ++j){
         acc[j] = calculateAcc(i, j);
-        m_planets[j].m_pos[i+1] = m_planets[j].m_pos[i] + dt*m_planets[j].m_vel[i] + dtdt2*acc[j];
+        m_planets[j].m_pos = m_planets[j].m_pos + dt*m_planets[j].m_vel + dtdt2*acc[j];
       }
       for (int j = 0; j < m_numberofPlanets; ++j){
         accNew = calculateAcc(i+1, j);
-        m_planets[j].m_vel[i+1] = m_planets[j].m_vel[i] + dt2*(acc[j] + accNew);
-        m_files[j] << m_planets[j].m_pos[i+1] << " " << m_planets[j].m_vel[i+1] << endl;
+        m_planets[j].m_vel = m_planets[j].m_vel + dt2*(acc[j] + accNew);
+        if((i+1)/m_writeParameter == int((i+1)/m_writeParameter)){
+          m_files[j] << m_planets[j].m_pos << " " << m_planets[j].m_vel << endl;
+        }
       }
     }
     closeFiles();
   }
+  else if(m_writePerihelion){
+    double r;
+    vector<double> rp(m_numberofPlanets-1);
+    vector<double> rpp(m_numberofPlanets-1);
+    initFiles();
+    for (int i = 0; i < m_integrationSteps-1; ++i){
+      //itererer over planetene
+      for (int j = 0; j < m_numberofPlanets; ++j){
+        if(j!=0){
+          Coordinate r0j = m_planets[j].m_pos - m_planets[0].m_pos;
+          r = r0j.norm();
+          if((r>rp[j-1]) && (rpp[j-1]>rp[j-1])){
+            m_files[j-1] << m_planets[j].m_pos << " " << i << endl;
+          }
+          rpp[j-1] = rp[j-1]; rp[j-1] = r;
+        }
+        acc[j] = calculateAcc(i, j);
+        m_planets[j].m_pos = m_planets[j].m_pos + dt*m_planets[j].m_vel + dtdt2*acc[j];
+      }
+      for (int j = 0; j < m_numberofPlanets; ++j){
+        accNew = calculateAcc(i+1, j);
+        m_planets[j].m_vel = m_planets[j].m_vel + dt2*(acc[j] + accNew);
+      }
+    }
+    closeFiles();
+  }
+
   else{
     for (int i = 0; i < m_integrationSteps-1; ++i){
       //itererer over planetene
       for (int j = 0; j < m_numberofPlanets; ++j){
         acc[j] = calculateAcc(i, j);
-        m_planets[j].m_pos[i+1] = m_planets[j].m_pos[i] + dt*m_planets[j].m_vel[i] + dtdt2*acc[j];
+        m_planets[j].m_pos = m_planets[j].m_pos + dt*m_planets[j].m_vel + dtdt2*acc[j];
       }
       for (int j = 0; j < m_numberofPlanets; ++j){
         accNew = calculateAcc(i+1, j);
-        m_planets[j].m_vel[i+1] = m_planets[j].m_vel[i] + dt2*(acc[j] + accNew);
+        m_planets[j].m_vel = m_planets[j].m_vel + dt2*(acc[j] + accNew);
       }
     }
   }
@@ -102,10 +130,10 @@ Coordinate System::calculateAcc(int i, int j){
   double correction = 1;
   for (int k = 0; k < m_numberofPlanets; ++k){
     if (j != k){
-      Coordinate rjk = m_planets[k].m_pos[i] - m_planets[j].m_pos[i];
+      Coordinate rjk = m_planets[k].m_pos - m_planets[j].m_pos;
       forcejk =  m_g*m_planets[j].m_mass*m_planets[k].m_mass*rjk/pow(rjk.norm(),m_beta+1);
       if (m_relativistic){
-        double l = (rjk^m_planets[j].m_vel[i]).norm();
+        double l = (rjk^m_planets[j].m_vel).norm();
         double r = rjk.norm();
         correction = 1 + 3*l*l/pow(r*m_c,2);
       }
@@ -119,18 +147,36 @@ void System::initFiles(){
   if(boost::filesystem::exists(m_directory) == false){
     boost::filesystem::create_directories(m_directory);
   }
-  m_files.resize(m_numberofPlanets);
-  for (int j = 0; j < m_numberofPlanets; ++j){
-    string filename;
-    filename = m_directory + "/" + m_planets[j].getName() + ".dat";
-    m_files[j].open(filename);
-    m_files[j] << m_planets[j].m_pos[0] << " " << m_planets[j].m_vel[0] << endl;
+  if(m_writePerihelion){
+    m_files.resize(m_numberofPlanets-1);
+    for (int j = 0; j < m_numberofPlanets-1; ++j){
+      string filename;
+      filename = m_directory + "/" + m_planets[j+1].getName() + "Perihelion.dat";
+      m_files[j].open(filename);
+    }
   }
+  else{
+    m_files.resize(m_numberofPlanets);
+    for (int j = 0; j < m_numberofPlanets; ++j){
+      string filename;
+      filename = m_directory + "/" + m_planets[j].getName() + ".dat";
+      m_files[j].open(filename);
+      m_files[j] << m_planets[j].m_initPos << " " << m_planets[j].m_initVel << endl;
+    }
+  }
+
 }
 
 void System::closeFiles(){
-  for(int j = 0; j < m_numberofPlanets; ++j){
-    m_files[j].close();
+  if(m_writePerihelion){
+    for(int j = 0; j < m_numberofPlanets-1; ++j){
+      m_files[j].close();
+    }
+  }
+  else{
+    for(int j = 0; j < m_numberofPlanets; ++j){
+      m_files[j].close();
+    }
   }
 }
 
@@ -147,15 +193,13 @@ double System::getEnergyTotal(){
   double T0, T1;
   // vi anser ikke den totale energien til sola
   for(int j = 1; j < m_numberofPlanets; ++j){
-    U0 = -m_g*m_planets[j].getMass()/m_planets[j].m_pos[0].norm();
-    T0 = 0.5*m_planets[j].getMass()*m_planets[j].m_vel[0]*m_planets[j].m_vel[0];
+    U0 = -m_g*m_planets[j].getMass()/m_planets[j].m_initPos.norm();
+    T0 = 0.5*m_planets[j].getMass()*m_planets[j].m_initVel*m_planets[j].m_initVel;
     E0 = U0 + T0;
-    for(int i = 0; i < m_integrationSteps-1; ++i){
-      U1 = -m_g*m_planets[j].getMass()/m_planets[j].m_pos[i+1].norm();
-      T1 = 0.5*m_planets[j].getMass()*m_planets[j].m_vel[i+1]*m_planets[j].m_vel[i+1];
-      E1 = U1 + T1;
-      dE += E1 - E0;
-    }
+    U1 = -m_g*m_planets[j].getMass()/m_planets[j].m_pos.norm();
+    T1 = 0.5*m_planets[j].getMass()*m_planets[j].m_vel*m_planets[j].m_vel;
+    E1 = U1 + T1;
+    dE += E1 - E0;
   }
   return dE;
 }
@@ -163,13 +207,10 @@ double System::getEnergyTotal(){
 double System::getAngularMomentumTotal(){
   // denne funksjonen funker også bare for to legemer
   Coordinate dL, L0, L1;
-
   for(int j = 1; j < m_numberofPlanets; ++j){
-    L0 = m_planets[j].m_pos[0]^m_planets[j].getMass()*m_planets[j].m_vel[0];
-    for(int i = 0; i < m_integrationSteps-1; ++i){
-      L1 = m_planets[j].m_pos[i+1]^m_planets[j].getMass()*m_planets[j].m_vel[i+1];
-      dL = dL + (L1 - L0);
-    }
+    L0 = m_planets[j].m_initPos^m_planets[j].getMass()*m_planets[j].m_initVel;
+    L1 = m_planets[j].m_pos^m_planets[j].getMass()*m_planets[j].m_vel;
+    dL = dL + (L1 - L0);
   }
   return dL.norm();
 }
@@ -187,39 +228,8 @@ void System::scalePlanetMass(double scale, int planet){
   m_planets[planet].m_mass = m_planets[planet].m_mass*scale;
 }
 
-void System::calculatePelihelion(){
-  double r;
-  double rp = 1e10;
-  double rpp = 1e10;
-  if(m_writePelihelion){
-    if(boost::filesystem::exists(m_directory) == false){
-      boost::filesystem::create_directories(m_directory);
-    }
-  }
-  ofstream file;
-  for (int j=1; j < m_numberofPlanets; j++){
-    if(m_writePelihelion){
-      string filename;
-      filename = m_directory + "/" + m_planets[j].getName() + "Pelihelon.dat";
-      file.open(filename);
-    }
-    for (int i=0; i < m_integrationSteps; i++){
-      Coordinate r0j = m_planets[j].m_pos[i] - m_planets[0].m_pos[i];
-      r = r0j.norm();
-      if((r>rp)&&(rpp>rp)){
-        if(m_writePelihelion){
-          file <<m_planets[j].m_pos[i-1] << " " << i-1 << endl;
-        }
-      }
-      rpp = rp; rp = r;
-    }
-    if(m_writePelihelion){
-      file.close();
-    }
-  }
-}
-
-void System::writePelihelion(string folder){
-  m_writePelihelion = true;
+void System::writePerihelion(string folder){
+  m_writePerihelion = true;
+  m_write = false;
   m_directory = "../data/" + folder;
 }

@@ -21,13 +21,13 @@ ${TEST_PROG} : tests_main.o test_system.o test_coordinate.o system.o planet.o co
 	${CPPflags} tests_main.o test_system.o test_coordinate.o system.o planet.o coordinate.o extractData.o ${LIB} -o ${TEST_PROG}
 
 main.o : main.cpp
-	${CPPflags} -c -g main.cpp
+	${CPPflags} -c main.cpp
 
 coordinate.o : coordinate.cpp
 	${CPPflags} -c coordinate.cpp
 
 planet.o : planet.cpp
-	${CPPflags} -c -g planet.cpp
+	${CPPflags} -c planet.cpp
 
 system.o : system.cpp
 	${CPPflags} -c system.cpp

@@ -26,7 +26,8 @@ private:
   bool m_write = false;
   vector<ofstream> m_files;
   bool m_relativistic = false;
-  bool m_writePelihelion = false;
+  bool m_writePerihelion = false;
+  double m_writeParameter = 100;
 
 
   void initPlanets();
@@ -57,8 +58,8 @@ public:
   double getPlanetInitVel(int planet){return m_planets[planet].m_initVel.norm();}
   double getEnergyTotal();
   double getAngularMomentumTotal();
-  void calculatePelihelion();
-  void writePelihelion(string folder);
+  void writePerihelion(string folder);
+  void writeForEach(double writeParameter){m_writeParameter = writeParameter;}
 };
 
 #endif /* SYSTEM_HPP */
