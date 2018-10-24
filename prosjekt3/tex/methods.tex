@@ -113,6 +113,7 @@ In our case $a$ is the only known function. By using the algorithm above twice, 
 		$v_{k+1} = v_k+dta_k$\;
 		$x_{k+1} = x_k+dtv_k$\;
 \end{algorithm}
+This algorithm has a total of 8 FLOPS.
 
 \subsubsection{Velocity Verlet}
 \label{sec:vv}
@@ -147,7 +148,7 @@ and
 \begin{equation}
 \left.\dv[2]{\mathbf{x}_i}{t}\right\rvert_{t_k} = \mathbf{a}_i(t_k)=\mathbf{a}_{i}^k
 \end{equation}
-where $k=1,2,\ldots,n$. The algorithm for computing the orbits of all the bodies in the system can be written as
+where $k=1,2,\ldots,n$. The algorithm for computing the orbits of all the bodies in the system can be written as follows, where $\mathbf{x}_{i}^k$ is computed using either Euler's method or Verlet's method.
 \begin{algorithm}[h!]
 	\SetAlgoLined
 	\For{$k=1,\ldots,n$ }{
@@ -162,7 +163,6 @@ where $k=1,2,\ldots,n$. The algorithm for computing the orbits of all the bodies
 		}
 	}
 \end{algorithm}
-where $\mathbf{x}_{i}^k$ is computed using either Euler's method or Verlet's method.
 
 \subsection{Implementation}
 All our programs are written in C++, using python3.6 to produce figures and tables.

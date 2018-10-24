@@ -96,6 +96,7 @@ if __name__ == "__main__":
     plt.rc('text', usetex=True)
     figdir = "../figurer/"
 
+    '''
     #unnslipningsfart
     scenario = 2
     endtime = 5
@@ -119,7 +120,7 @@ if __name__ == "__main__":
 
 
 
-    '''
+
     #timer algoritmene
     scenario = 0
     endtime = [1,10,100,500]
@@ -277,59 +278,29 @@ if __name__ == "__main__":
     ax.set_ylabel('y [AU]')
     #plt.savefig(figdir+"solarsystem2d.pdf")
 
-
+    '''
 
     #The perihelion precession of Mercury
     scenario = 7
     endtime = 100
     dt = 0.0000001
-    n = int(endtime/dt) + (endtime % dt > 0)
-    n = int(n/1000) + (n % 1000 > 0)
+
 
     #run_maincpp(scenario, endtime, dt)
-    dataclass = np.loadtxt("../data/sun_mercury/classical/Mercury.dat")
-    xclass = dataclass[:, 0]; yclass = dataclass[:, 1]; rclass = np.sqrt(xclass**2 + yclass**2)
-
-    datarel = np.loadtxt("../data/sun_mercury/relativistic/Mercury.dat")
-    xrel = datarel[:, 0]; yrel = datarel[:, 1]; rrel = np.sqrt(xrel**2 + yrel**2)
 
     fig, ax = plt.subplots()
     radToArc = 206264.8062
-
-    sortId = np.argsort(xrel)
-    xrel = xrel[sortId]
-    yrel = yrel[sortId]
-
-    sortId = np.argsort(xclass)
-    xclass = xclass[sortId]
-    yclass = yclass[sortId]
-
-    minrelx = argrelextrema(xrel, np.less)
-    minrely = argrelextrema(yrel, np.less)
-
-    minclassx = argrelextrema(xclass, np.less)
-    minclassy = argrelextrema(yclass, np.less)
-
-    tanlistrel = []
-    tanlistclass = []
-    timelist = []
-    for indexrelx, indexrely, indexclassx, indexclassy in zip(minrelx, minrely, minclassx, minclassy):
-        tanlistrel.append(np.arctan(yrel[indexrely]/xrel[indexrelx])*radToArc)
-        tanlistclass.append(np.arctan(yclass[indexclassy]/xclass[indexclassx])*radToArc)
-        #timelist.append(*indexrel)
-
-    print(tanlistrel)
-    plt.plot(tanlistrel[0])
-    plt.plot(tanlistclass[0])
-    #plotPerihelion(ax, dt, "../data/sun_mercury/classical/MercuryPerihelion.dat")
-    #plotPerihelion(ax, dt, "../data/sun_mercury/relativistic/MercuryPerihelion.dat")
+    plotPerihelion(ax, dt, "../data/sun_mercury/classical/MercuryPerihelion.dat")
+    plotPerihelion(ax, dt, "../data/sun_mercury/relativistic/MercuryPerihelion.dat")
 
     ax.set_xlabel("t [yr]",fontsize=14)
     ax.set_ylabel("perihelion precession [arc seconds]",fontsize=14)
+    ax.legend(["Classical", "Relativistic"],fontsize=14)
 
     plt.savefig(figdir+"perihelion.pdf")
+    #plt.show()
 
-
+    '''
     # sammenligne Euler og Verlet
     figdir = "../figurer/"
     pathEuler = "euler_vs_verlet/euler"

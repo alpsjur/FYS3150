@@ -1,6 +1,8 @@
 \section{Results}
 \label{sec:results}
 
+Table \ref{table:time} shows the ratio between the CPU-time for the Velocity Verlet and the Forward Euler algorithm. We see that for all end times T Forward Euler is about twice as efficient. 
+
 \begin{table}[htbp]
 	\centering
 	\begin{tabular}{lrr}
@@ -14,7 +16,7 @@
 	\end{tabular} \caption{The ratio between the CPU time for the VV and the FE algorithm for different end times T. The mean and standard deviation ($\sigma$) of 10 runs is recorded.}\label{table:time}
 \end{table}
 
-Considering first Figure \ref{fig:compare euler verlet}, we see
+Considering Figure \ref{fig:compare euler verlet}, we see that the Earth's orbit is not regular over time when Euler's method is used. The Velocity Verlet method gives a non-changing orbit over time. 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{eulerVerlet.pdf}
@@ -23,15 +25,15 @@ Considering first Figure \ref{fig:compare euler verlet}, we see
 \end{figure}
 
 
-In Figure \ref{fig:earth escape} we see that
+In Figure \ref{fig:earth escape} we see that Earth escapes from the gravitational field of the sun when the velocity is set to the value calculated from equation (\ref{eq:esc}). Earth does not escape for a velocity set to 90\% of the escape velocity.  
 \begin{figure}[htbp]
 	\centering
-%	\includegraphics[width=0.5\textwidth]{filnavn.pdf}
-	\caption{The trajectory of Earth when setting the initial velocity to the escape velocity.}
+	\includegraphics[width=0.5\textwidth]{escape.pdf}
+	\caption{The trajectory of Earth when setting the initial velocity to the escape velocity, and to 90\% of the velocity. The origin is set to the sun.}
 	\label{fig:earth escape}
 \end{figure}
 
-In Figure \ref{fig:changing beta} we show the speed of the Earth and the distance of the Earth from the sun, and the effects of increasing the exponent in the $\frac{1}{r^2}\,$-proportionality of NLG as described in Section \ref{sec:beta}. We see that for the case where $\beta=2.5$ the phase of the distance and velocity seem to shift toward the right, with perhaps a slight increase in amplitude for both values. Increasing $\beta$ to the $[2.9, 3]$ range we see an increase in amplitude for $\beta = 2.9$ and a greater wavelength for both values. As $\beta \rightarrow 3\,$, the speed rapidly increases while the distance decreases.
+In Figure \ref{fig:changing beta} we show the speed of the Earth and the distance of the Earth from the sun, and how these values are affected by increasing the exponent in the $\frac{1}{r^2}\,$-proportionality of NLG as described in Section \ref{sec:beta}. We see that for the case where $\beta=2.5$ the phase of the distance and velocity seem to shift toward the right, with perhaps a slight increase in amplitude for both values. Increasing $\beta$ to the $[2.9, 3]$ range we see an increase in amplitude for $\beta = 2.9$ and a greater wavelength for both values. As $\beta \rightarrow 3\,$, the speed rapidly increases while the distance decreases. Then, after about 3 yr for $\beta = 2.9$ and 6 yr for $\beta = 3$, the distance increases while the speed decreases. The distance continue to increase, as can be seen in Figure \ref{fig:changing beta60} in the appendix.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{change_beta_10yr.pdf}
