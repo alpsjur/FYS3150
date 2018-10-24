@@ -2,48 +2,36 @@
 \label{sec:discussion}
 
 \subsection{Comparing Euler's and Verlet's method}
+Comparing both efficiency and accuracy as described in the methods section, we see from Figure \ref{fig:compare euler verlet}
+that the Forward Euler algorithm decreases in accuracy quite rapidly compared to the Velocity Verlet algorithm. This is most likely because VV conserves energy and angular momentum, as shown from our unit testing, where it remained conserved even for 200 years. From \ref{table:time} we see that FE is around twice as fast in all cases, which is to be expected owed to its less FLOPS. If we consider efficiency to be determined by the fastest runtime, it is clearly the most efficient. However, FE is so inaccurate that in the perspective that efficiency is accuracy per time, VV is the most efficient.
+
+\subsection{Changing Newton's law of gravitation}
+In Figure \ref{fig:beta} we see that decreasing the gravitational force between Earth and the Sun makes the system become unstable as $\beta \rightarrow 3$. Our perspective is that Earth in the true universe where $\beta = 2$ has a velocity that is comparable to the escape velocity in a universe where $\beta = 3$. We can see this as Earth's velocity seem to stabilise around zero after a while, corresponding to the definition of escape velocity, where the gravitational force approaches zero as does the velocity.
+
 
 \subsection{Earth's escape velocity}
-Consider then a planet which begins at a
-distance of 1 AU from the sun. Find out by trial and error what the initial
-velocity must be in order for the planet to escape from the sun. Can you find an
-exact answer? How does that match your numerical results?
-Try also to change the gravitional force, by replacing
-
-where you let beta in [2, 3]. What happens to the earth-sun system when beta creeps
-towards 3? Comment your results.
+Experimentally changing Earth's velocity to find the escape velocity yields a result corresponding with our analytical expression described in \ref{sec:escvel} to a great degree. This then is an affirmation that our simple model behaves correctly.
 
 
 \subsection{Stability when changing the mass of Jupiter}
 
-From Figure \ref{fig:jupiter mass} we see that Earth's orbit remains stable for a
+Looking at Figure \ref{fig:jupiter mass} we see that Earth's orbit remains stable for a
 ten-fold increase in Jupiter's mass. Increasing its mass a thousand-fold we see
 that the Earth is evicted from its orbit around the sun, this is expected due to
 Jupiter's already significant effect on Earth's orbit. This also implies that in a hypothetical universe where Jupiter had this mass, a "Earth"-orbit wouldn't be stable due to Jupiter's influence, which could further imply that no planets could stay within the Goldilocks zone. In this solar system then, life would be far less likely based on current knowledge.
 
 \subsection{Setting the centre of mass as the origin}
-From Figure \ref{fig:centre of mass} we see that when setting the centre of mass as the origin, the radius of the orbit of the sun is about $5\cdot 10^{-3}$ AU. In comparison the radius of the sun is about $4.6\cdot 10^-3{}$ AU. Considering that we model the astronomical objects as point masses, when in reality they have a volume, setting the sun as
-Finally,
-using our Verlet solver, we carry out a real three-body calculation where all
-three systems, the Earth, Jupiter and the Sun are in motion. To do this, choose
-the center-of-mass position of the three-body system as the origin rather than
-the position of the sun. Give the Sun an initial velocity which makes the total
-momentum of the system exactly zero (the center-of-mass will remain fixed).
-Compare these results with those from the previous exercise and comment your
-results.
-
-Considering again Figure \ref{fig:centre of mass}, we see that the Sun's orbit around
-the centre of mass has a mean radius of much less than the radius of the Sun itself.
-This implies that the centre of mass correction is very miniscule, and that our assumption
-that the Sun is stationary seems to hold water for most practical purposes. We must be careful however, and distinguish between observing from the reference frame of the sun, and making the planets orbit the Sun. In the first case, the Sun is in the origin, but the planets orbit the centre of mass, while in the latter case the planets orbit the Sun and we don't consider the effect of a centre of mass. For extreme cases then, if we let the planets orbit the sun, we won't capture any possible effects on the Sun by changing planet parameters.
+From Figure \ref{fig:centre of mass} we see that when setting the centre of mass as the origin, the radius of the orbit of the sun is about $5\cdot 10^{-3}$ AU. In comparison the radius of the sun is about $4.6\cdot 10^-3{}$ AU. Considering that we model the astronomical objects as point masses, when in reality they have a volume, setting the sun as stationary at the origin is negligible. We must be careful however, and distinguish between observing from the reference frame of the sun, and making the planets orbit the Sun. In the first case, the Sun is in the origin, but the planets orbit the centre of mass, while in the latter case the planets orbit the Sun and we don't consider the effect of a centre of mass. For extreme cases then, if we let the planets orbit the sun, we won't capture any possible effects on the Sun by changing planet parameters.
 
 \subsection{Final model of the solar system}
 As seen in Figure \ref{fig:solar system}, we see that the solar system has a rich
-three dimensional structure, especially for the outer planets. Its configuration is determined by its
-initial conditions way back then.
+three dimensional structure, especially for the outer planets. Explaining this structure is outside the scope of this article, and would require a careful study of initial conditions of the solar system.
 
 
 \subsection{The perihelion precession of Mercury}
 Looking back at Figure \ref{fig:perihelion}, we can confirm that $43''$ of Mercury's perihelion
 precession is accounted for by the general theory of relativity. Furthermore, the fact that without the correction, there
 appears to be no precession. This is not the case in reality, as most of the precession is due to classical effects (see \ref{sec:rel}). In our model however, we only consider the Sun-Mercury system, and most of the classical precession effects are caused by interactions with other planets. It is therefore reasonable that we find the precession to be around zero for the classical case. The cause of this large effect from the theory of general relativity might be due to Mercury's proximity to the sun as it is more affected by the Sun's space-time curvature.
+
+\subsection{Conclusion}
+In conclusion, we find that object-oriented programming is very suitable for many-body systems as we were able to perform many different numerical experiments on a variety of planetary systems. As for our model, we obtain a lot of interesting results, from extreme cases like altering a law of nature to confirming our assumptions of a stationary sun. We find that substantially altering a parameter of the solar system can lead to its destabilisation. Newton's law of gravitation is not the whole story however, and using a general relativistic correction for Mercury's orbit around the Sun, we study the precession of its perihelion over a century, and find that our calculated $43''$ corresponds well with the reported anomaly from purely classical models.
