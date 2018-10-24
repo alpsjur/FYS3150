@@ -184,17 +184,15 @@ void solveMercuryPrecession(vector<Planet> &sunMercuryList, double endtime, doub
   System sunMercuryRelativistic("Sun-Mercury relativistic system", sunMercuryList);
 
   sunMercuryClassical.calculateCenterofMass();
-  sunMercuryClassical.solveVelocityVerlet(endtime, dt);
-  cout << 1 << endl;
   sunMercuryClassical.writePelihelion("sun_mercury/classical");
-  sunMercuryClassical.calculatePelihelion();
+  cout << 1 << endl;
+  sunMercuryClassical.solveVelocityVerlet(endtime, dt);
   cout << 2 << endl;
 
   sunMercuryRelativistic.calculateCenterofMass();
   sunMercuryRelativistic.relativistic();
-  sunMercuryRelativistic.solveVelocityVerlet(endtime, dt);
-  cout << 3 << endl;
   sunMercuryRelativistic.writePelihelion("sun_mercury/relativistic");
-  sunMercuryRelativistic.calculatePelihelion();
+  cout << 3 << endl;
+  sunMercuryRelativistic.solveVelocityVerlet(endtime, dt);
   cout << 4 << endl;
 }

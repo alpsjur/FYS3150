@@ -34,28 +34,23 @@ def run_maincpp(scenario, endtime, dt, *args, n=1):
         for i in range(n):
             os.system("./main.exe {} {} {}".format(scenario, endtime, dt))
 
-def plotPlanet(ax, filename, path=None, d3=False, label=True, centersun=False):
+def plotPlanet(ax, filename, d3=False, label=True):
     data = np.loadtxt(filename)
     x = data[:, 0]; y = data[:, 1]; z = data[:, 2]
-    if centersun:
-        dataS = np.loadtxt(path+"/Sun.dat")
-        xS = dataS[:, 0]; yS = dataS[:, 1]; zS = dataS[:, 2]
-    else:
-        xS = 0; yS=0; zS=0;
     if label:
         name = filename.split("/")[-1][:-4]
     else:
         name = None
     if d3:
-        ax.plot3D(x-xS, y-yS, z-yS, label=name)
+        ax.plot3D(x, y, z, label=name)
     else:
-        ax.plot(x-xS, y-yS, label=name)
+        ax.plot(x, y, label=name)
 
-def plotSystem(ax, path, d3=False, label=True, sentersun=False):
+def plotSystem(ax, path, d3=False, label=True):
     path = "../data/" + path
     files = glob.glob(path+"/*.dat")
     for filename in files:
-        plotPlanet(ax, filename, path=path, d3=d3, label=label, centersun = centersun)
+        plotPlanet(ax, filename, d3=d3, label=label)
 
 def plotAbs(ax, dt, endtime, filename, var, label=None):
     data = np.loadtxt(filename)
@@ -80,9 +75,10 @@ def plotPosVel(ax, dt, endtime, filename, beta):
     ax[1].set_ylabel('v [AU/yr]')
 
 def plotPerihelion(ax, dt, file):
+    radToArc = 206264.8062
     data = np.loadtxt(file)
     x = data[:, 0]; y = data[:, 1]; i = data[:, 3]
-    theta = np.arctan(y/x)
+    theta = np.arctan(y/x)*radToArc
     ax.plot(i*dt,theta)
 
 if __name__ == "__main__":
@@ -195,13 +191,14 @@ if __name__ == "__main__":
     '''
     #The perihelion precession of Mercury
     scenario = 7
-    endtime = 1
+    endtime = 100
     dt = 0.0000001
+    run_maincpp(scenario, endtime, dt)
 
-    fig, ax = plt.subplots(1,2)
+    fig, ax = plt.subplots()
 
-    plotPerihelion(ax[0], dt, "../data/sun_mercury/classical/MercuryPelihelon.dat")
-    plotPerihelion(ax[1], dt, "../data/sun_mercury/relativistic/MercuryPelihelon.dat")
+    plotPerihelion(ax, dt, "../data/sun_mercury/classical/MercuryPelihelon.dat")
+    plotPerihelion(ax, dt, "../data/sun_mercury/relativistic/MercuryPelihelon.dat")
     plt.show()
 
 
