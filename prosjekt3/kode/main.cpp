@@ -35,10 +35,14 @@ int main(int argc, char* argv[]){
   Coordinate initVelSun(0, 0, 0);
   Planet sun(nameSun, massSun, initPosSun, initVelSun);
 
+  string nameMercury = "Mercury";
+  double massMercury = 3.3E23/2E30;
+  Coordinate initPosMercury(0.3075, 0, 0);
+  Coordinate initVelMercury(0, 12.44, 0);
+  Planet mercury(nameMercury, massMercury, initPosMercury, initVelMercury);
 
   Planet earth = extract(filename, 2);
   Planet jupiter = extract(filename, 4);
-  Planet mercury = extract(filename, 0);
 
   //initsialiserer planetlistene
   vector<Planet> allplanets(9);
@@ -176,11 +180,17 @@ void solveSolarSystem(vector<Planet> &allplanets, double endtime, double dt){
 
 void solveMercuryPrecession(vector<Planet> &sunMercuryList, double endtime, double dt){
 
-  System sunMercury("Sun-Mercury system", sunMercuryList);
-  sunMercury.writetoFile("sun_mercury/classical");
-  sunMercury.solveVelocityVerlet(endtime, dt);
+  System sunMercuryClassical("Sun-Mercury classical system", sunMercuryList);
+  System sunMercuryRelativistic("Sun-Mercury relativistic system", sunMercuryList);
 
-  sunMercury.relativistic();
-  sunMercury.writetoFile("sun_mercury/relativistic");
-  sunMercury.solveVelocityVerlet(endtime, dt);
+  sunMercuryClassical.calculateCenterofMass();
+  sunMercuryClassical.solveVelocityVerlet(endtime, dt);
+  sunMercuryClassical.writePelihelion("sun_mercury/classical");
+  sunMercuryClassical.calculatePelihelion();
+
+  sunMercuryRelativistic.calculateCenterofMass();
+  sunMercuryRelativistic.relativistic();
+  sunMercuryRelativistic.solveVelocityVerlet(endtime, dt);
+  sunMercuryRelativistic.writePelihelion("sun_mercury/relativistic");
+  sunMercuryRelativistic.calculatePelihelion();
 }

@@ -186,3 +186,40 @@ void System::scalePlanetInitVel(double scale, int planet){
 void System::scalePlanetMass(double scale, int planet){
   m_planets[planet].m_mass = m_planets[planet].m_mass*scale;
 }
+
+void System::calculatePelihelion(){
+  double r;
+  double rp = 1e10;
+  double rpp = 1e10;
+  if(m_writePelihelion){
+    if(boost::filesystem::exists(m_directory) == false){
+      boost::filesystem::create_directories(m_directory);
+    }
+  }
+  ofstream file;
+  for (int j=1; j < m_numberofPlanets; j++){
+    if(m_writePelihelion){
+      string filename;
+      filename = m_directory + "/" + m_planets[j].getName() + "Pelihelon.dat";
+      file.open(filename);
+    }
+    for (int i=0; i < m_integrationSteps; i++){
+      Coordinate r0j = m_planets[j].m_pos[i] - m_planets[0].m_pos[i];
+      r = r0j.norm();
+      if((r>rp)&&(rpp>rp)){
+        if(m_writePelihelion){
+          file <<m_planets[j].m_pos[i-1] << " " << i-1 << endl;
+        }
+      }
+      rpp = rp; rp = r;
+    }
+    if(m_writePelihelion){
+      file.close();
+    }
+  }
+}
+
+void System::writePelihelion(string folder){
+  m_writePelihelion = true;
+  m_directory = "../data/" + folder;
+}

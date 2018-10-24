@@ -30,7 +30,7 @@ private:
 
 public:
   Planet()
-  : m_name("Planet X"), m_mass(1.0), m_initPos(Coordinate(1,1,1)), m_initVel(Coordinate()) {
+  : m_name("Planet X"), m_mass(1.0), m_initPos(Coordinate()), m_initVel(Coordinate()) {
     // standard initialisering
   }
   Planet(string name, double mass, Coordinate initPos, Coordinate initVel)

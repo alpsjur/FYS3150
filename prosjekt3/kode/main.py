@@ -4,6 +4,7 @@ import glob
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 import numpy as np
+from scipy.signal import argrelextrema
 import seaborn as sns
 
 
@@ -74,6 +75,17 @@ def plotPosVel(ax, dt, endtime, filename, beta):
     ax[0].set_ylabel('r [AU]')
     ax[1].set_ylabel('v [AU/yr]')
 
+def findPerihelion(path):
+    dataPlanet = np.loadtxt(path+"Mercury.dat")
+    xPlanet = dataPlanet[:, 0]; yPlanet = dataPlanet[:, 1]; zPlanet = dataPlanet[:, 2]
+    dataSun = np.loadtxt(path+"Sun.dat")
+    xSun = dataSun[:, 0]; ySun = dataSun[:, 1]; zSun = dataSun[:, 2]
+    x=xPlanet-xSun; y=yPlanet-ySun; z=zPlanet-zSun;
+    r = np.sqrt(x*x+y*y+z*z)
+    ind = argrelextrema(r, np.less)[0]
+
+    theta = np.arctan(y[ind]/x[ind])
+    return theta
 
 if __name__ == "__main__":
 
@@ -149,7 +161,7 @@ if __name__ == "__main__":
 
     #plt.savefig(figdir+"center_of_mass.pdf")
 
-    '''
+
     #hele solsystemet
     scenario = 6
     endtime = 200
@@ -157,7 +169,7 @@ if __name__ == "__main__":
     #run_maincpp(scenario, endtime, dt)
     sns.set_palette(sns.color_palette("husl", 9))
 
-    '''
+
     fig = plt.figure()
     ax = plt.axes(projection='3d')
     plotSystem(ax, "../data/solarsystem", d3=True)
@@ -167,7 +179,7 @@ if __name__ == "__main__":
     ax.set_ylabel('y [AU]')
     ax.set_zlabel('z [AU]')
     #plt.savefig(figdir+"solarsystem3d.pdf")
-    '''
+
 
     fig, ax = plt.subplots()
     plotSystem(ax, "../data/solarsystem")
@@ -179,6 +191,21 @@ if __name__ == "__main__":
     plt.savefig(figdir+"solarsystem2d.pdf")
 
     plt.show()
+
+    '''
+    #The perihelion precession of Mercury
+    scenario = 7
+    endtime = 100
+    dt = 0.001
+    run_maincpp(scenario, endtime, dt)
+    
+    fig, ax = plt.subplots()
+
+    #plotSystem(ax[0], "../data/sun_mercury/classical")
+    #plotSystem(ax[1], "../data/sun_mercury/relativistic")
+
+    plt.show()
+
 
     '''
     # sammenligne Euler og Verlet
