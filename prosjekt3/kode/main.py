@@ -97,6 +97,33 @@ if __name__ == "__main__":
     figdir = "../figurer/"
 
     '''
+    #timer algoritmene
+    scenario = 0
+    endtime = [1,10,100,500]
+    dt = 0.001
+    n = 10
+    timeFE = []
+    timeVV = []
+
+    for t in endtime:
+        if os.path.exists("time{}.log".format(t)):
+            os.system("rm time{}.log".format(t))
+
+    for t in endtime:
+        for i in range(n):
+            os.system("./main.exe {} {} {} >> time{}.log".format(scenario, t, dt, t))
+
+
+    f = open("../data/timing.dat", "w")
+    for i in range(len(endtime)):
+        timeFE.append(np.loadtxt("time{}.log".format(endtime[i]))[:,0])
+        timeVV.append(np.loadtxt("time{}.log".format(endtime[i]))[:,1])
+        relation = np.mean(timeVV[i])/np.mean(timeFE[i])
+        error = (np.std(timeFE[i])/np.mean(timeFE[i]) + np.std(timeVV[i])/np.mean(timeVV[i]))*relation
+        f.write("{} {:.2E} {:.2E} \n".format(endtime[i],relation,error))
+
+    '''
+    '''
     # endrer massen til jupiter
     scenario = 4
     endtime = 20
@@ -109,7 +136,7 @@ if __name__ == "__main__":
     for i in range(3):
         plotSystem(ax.flatten()[sub[i]], "sun_earth_jupiter/jupiter_mass_{}".format(masses[i]),centersun=True)
         ax.flatten()[sub[i]].axis('equal')
-        i += 1
+
     ax[1,1].set_xlim(ax[0,0].get_xlim())
     ax[1,1].set_ylim(ax[0,0].get_ylim())
     ax[1,1].legend(loc='upper center', bbox_to_anchor=(0.5, 2),fontsize=14, frameon=False)
@@ -141,6 +168,9 @@ if __name__ == "__main__":
 
     plt.show()
     '''
+
+    plt.show()
+    '''
     '''
     #massesenter
     scenario = 5
@@ -148,11 +178,15 @@ if __name__ == "__main__":
     dt = 0.001
     #run_maincpp(scenario, endtime, dt)
 
-    fig, ax = plt.subplots(2,1)
-    plotPlanet(ax[0], "../data/sun_earth_jupiter/mass_origo/Sun.dat")
-    ax[0].axis('equal')
-    ax[0].set_xlabel("x [AU]")
-    ax[0].set_ylabel("y [AU]")
+    fig = plt.figure()
+    ax1 = plt.subplot2grid((2, 2), (0, 0), colspan=1)
+    ax2 = plt.subplot2grid((2, 2), (1, 0), colspan=2)
+    ax3= plt.subplot2grid((2, 2), (0, 1))
+
+    plotPlanet(ax1, "../data/sun_earth_jupiter/mass_origo/Sun.dat")
+    ax1.axis('equal')
+    ax1.set_xlabel("x [AU]",fontsize=14)
+    ax1.set_ylabel("y [AU]",fontsize=14)
 
     dataS = np.loadtxt("../data/sun_earth_jupiter/sun_origo/Sun.dat")
     xS = dataS[:, 0]; yS = dataS[:, 1]; zS = dataS[:, 2]
@@ -173,18 +207,28 @@ if __name__ == "__main__":
 
     t = np.arange(0,endtime,dt)
 
-    ax[1].plot(t,rE-rEc,label="Earth")
-    ax[1].plot(t,rJ-rJc,label="Jupiter")
+    ax2.plot([0,0],[0,0])
+    ax2.plot(t,rE-rEc)
+    ax2.plot(t,rJ-rJc)
+    ax2.set_xlabel("t [yr]",fontsize=14)
+    ax2.set_ylabel("correction [AU]",fontsize=14)
 
-    #ax[1].set_xlabel("t [yr]")
-    #ax[1].set_ylabel(r"r$_{sun}$-r$_{mass}$")
+    ax3.plot([0,0],label="Sun")
+    ax3.plot([0,0],label="Earth")
+    ax3.plot([0,0],label="Jupiter")
+    ax3.axis([2,3,2,3])
+    ax3.legend(loc='upper center', bbox_to_anchor=(0.5, 0.75),fontsize=14, frameon=False)
+    ax3.axis('off')
 
-    #ax[1].legend()
+    fig.tight_layout()
+
+    rE = np.sqrt((xE-xS)**2+ (yE-yS)**2 +(zE-yS)**2)
+    rJ = np.sqrt((xJ-xS)**2+ (yJ-yS)**2 +(zJ-yS)**2)
 
     plt.savefig(figdir+"center_of_mass.pdf")
 
     plt.show()
-    '''
+
     '''
     #hele solsystemet
     scenario = 6
@@ -215,7 +259,7 @@ if __name__ == "__main__":
     #plt.savefig(figdir+"solarsystem2d.pdf")
 
     '''
-    """
+    '''
     #The perihelion precession of Mercury
     scenario = 7
     endtime = 100
@@ -268,30 +312,32 @@ if __name__ == "__main__":
     """
 
 
-
+    '''
+    '''
     # sammenligne Euler og Verlet
     figdir = "../figurer/"
     pathEuler = "euler_vs_verlet/euler"
     pathVerlet = "euler_vs_verlet/verlet"
-
     tlist = [1, 5, 10]
-    n = len(tlist)
-    fig = plt.figure()
-    bigax = emptyax(fig)
-    bigax.set_xlabel("x [AU]")
-    bigax.set_ylabel("y [AU]")
 
-    labelcounter = 0
-    label = True
-    for i, t in zip(range(3), tlist):
-        if labelcounter > 0:
-            label = False
-        run_maincpp(1, t, 0.001)
-        ax = fig.add_subplot(n, 1, i+1)
-        plotSystem(ax, pathEuler, label=label)
-        plotSystem(ax, pathVerlet, label=label)
-        ax.set_xlim(-1.6, 1.6)
-        #plt.axis("equal")
-        labelcounter += 1
-    fig.legend(fontsize=14, frameon=False)
+    fig, ax = plt.subplots(2, 2)
+    sub = [0,2,3]
+    for i in range(3):
+        run_maincpp(1, tlist[i], 0.001)
+        plotSystem(ax.flatten()[sub[i]], pathEuler, label=False)
+        plotSystem(ax.flatten()[sub[i]], pathVerlet, label=False)
+        ax.flatten()[sub[i]].axis('equal')
+
+    ax[0,1].plot([0,0],label=None)
+    ax[0,1].plot([0,0],label="Euler")
+    ax[0,1].plot([0,0],label=None)
+    ax[0,1].plot([0,0],label="Verlet")
+    ax[0,1].axis([2,3,2,3])
+    ax[0,1].legend(loc='upper center', bbox_to_anchor=(0.5, 0.75),fontsize=14, frameon=False)
+    ax[0,1].axis('off')
+
+    fig.text(0.5, 0.03, 'x [AU]',  ha='center',fontsize=14)
+    fig.text(0.02, 0.5, 'y [AU]',  va='center', rotation='vertical',fontsize=14)
+
     plt.savefig(figdir + "eulerVerlet.pdf")
+    '''

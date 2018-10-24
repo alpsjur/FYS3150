@@ -1,11 +1,24 @@
 \section{Results}
 \label{sec:results}
 
+\begin{table}[htbp]
+	\centering
+	\begin{tabular}{lrr}
+		T   & ratio & $\sigma$     \\
+		\hline
+		\addlinespace[0.1cm]
+		1   & 1.83      & 5.56e-2 \\
+		10  & 1.96      & 2.23e-2 \\
+		100 & 1.98      & 2.08e-2 \\
+		500 & 1.97      & 3.21e-2
+	\end{tabular} \caption{The ratio between the CPU time for the VV and the FE algorithm for different end times T. The mean and standard deviation ($\sigma$) of 10 runs is recorded.}\label{table:time}
+\end{table}
+
 Considering first Figure \ref{fig:compare euler verlet}, we see
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{eulerVerlet.pdf}
-	\caption{Graphical comparison of the Forward Euler and Velocity verlet algorithms for $\Delta t = 0.001$ and $T \in [1, 5, 10]\,$ years respectively.}
+	\caption{Graphical comparison of the Forward Euler and Velocity verlet algorithms for $\Delta t = 0.001$. The upper one is for T=1, lower left T=5 and lower right t=10.}
 	\label{fig:compare euler verlet}
 \end{figure}
 
@@ -39,7 +52,7 @@ Looking now at Figure \ref{fig:centre of mass}, we show the orbit of the sun whe
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{center_of_mass.pdf}
-	\caption{The upper figure shows the orbit of the sun when the centre of mass is set as the origin. The lower figure shows the difference between the distance to the centre of mass r$_{mass}$ and the distance to the sun r$_{sun}$ for Jupiter and Earth.}
+	\caption{The upper figure shows the orbit of the sun when the centre of mass is set as the origin. The lower figure shows the difference between the distance to the centre of mass and the distance to the sun for Jupiter and Earth.}
 	\label{fig:centre of mass}
 \end{figure}
 
