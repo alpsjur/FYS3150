@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 import numpy as np
 import seaborn as sns
+from scipy.signal import argrelextrema
 
 
 def remove_file(filedir):
@@ -94,8 +95,8 @@ if __name__ == "__main__":
     sns.set_palette("husl")
     plt.rc('text', usetex=True)
     figdir = "../figurer/"
-    '''
 
+    """
     # endrer massen til jupiter
     scenario = 4
     endtime = 20
@@ -137,7 +138,7 @@ if __name__ == "__main__":
     #plt.savefig(figdir+"change_beta_60yr.pdf")
 
     plt.show()
-    '''
+
     #massesenter
     scenario = 5
     endtime = 30
@@ -181,7 +182,7 @@ if __name__ == "__main__":
 
     plt.show()
 
-    '''
+
     #hele solsystemet
     scenario = 6
     endtime = 200
@@ -210,21 +211,54 @@ if __name__ == "__main__":
     ax.set_ylabel('y [AU]')
     #plt.savefig(figdir+"solarsystem2d.pdf")
 
-
+    """
     #The perihelion precession of Mercury
     scenario = 7
     endtime = 100
     dt = 0.0000001
+    n = int(endtime/dt) + (endtime % dt > 0)
+    n = int(n/1000) + (n % 1000 > 0)
+
     #run_maincpp(scenario, endtime, dt)
+    dataclass = np.loadtxt("../data/sun_mercury/classical/Mercury.dat")
+    xclass = dataclass[:, 0]; yclass = dataclass[:, 1]; rclass = np.sqrt(xclass**2 + yclass**2)
+
+    datarel = np.loadtxt("../data/sun_mercury/relativistic/Mercury.dat")
+    xrel = datarel[:, 0]; yrel = datarel[:, 1]; rrel = np.sqrt(xrel**2 + yrel**2)
 
     fig, ax = plt.subplots()
+    radToArc = 206264.8062
 
-    plotPerihelion(ax, dt, "../data/sun_mercury/classical/MercuryPerihelion.dat")
-    plotPerihelion(ax, dt, "../data/sun_mercury/relativistic/MercuryPerihelion.dat")
+    sortId = np.argsort(xrel)
+    xrel = xrel[sortId]
+    yrel = yrel[sortId]
+
+    sortId = np.argsort(xclass)
+    xclass = xclass[sortId]
+    yclass = yclass[sortId]
+
+    minrelx = argrelextrema(xrel, np.less)
+    minrely = argrelextrema(yrel, np.less)
+
+    minclass = argrelextrema(yclass, np.less)
+
+    tanlistrel = []
+    tanlistclass = []
+    timelist = []
+    for indexrel, indexclass in zip(minrel, minclass):
+        tanlistrel.append(np.arctan(yrel[indexrel]/xrel[indexrel])*radToArc)
+        tanlistclass.append(np.arctan(yclass[indexclass]/xclass[indexclass])*radToArc)
+        #timelist.append(*indexrel)
+
+    print(tanlistrel)
+    plt.plot(tanlistrel[0])
+    plt.plot(tanlistclass[0])
+    #plotPerihelion(ax, dt, "../data/sun_mercury/classical/MercuryPerihelion.dat")
+    #plotPerihelion(ax, dt, "../data/sun_mercury/relativistic/MercuryPerihelion.dat")
 
     plt.show()
 
-    '''
+
     '''
     # sammenligne Euler og Verlet
     figdir = "../figurer/"
