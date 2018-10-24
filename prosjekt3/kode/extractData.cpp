@@ -1,5 +1,6 @@
 #include "extractData.hpp"
 
+// denne funksjonen henter ut initielle verdier fra body051018.dat fra NASA
 Planet extract(string filename, int i){
   ifstream inf(filename);
   for (int j=0; j<i; ++j){

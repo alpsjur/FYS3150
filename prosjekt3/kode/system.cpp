@@ -27,18 +27,22 @@ void System::calculateCenterofMass(){
 
 void System::solveForwardEuler(double endtime, double dt){
   m_integrationSteps = int(endtime/dt);
+  double local_writeParameter;            // denne sparer noen flops
+
   Coordinate acc;
 
   initPlanets();
   if(m_write){
     initFiles();
+    // itererer over tidssteg
     for (int i = 0; i < m_integrationSteps-1; ++i){
       //itererer over planetene
+      local_writeParameter = (i+1)/m_writeParameter;
       for (int j = 0; j < m_numberofPlanets; ++j){
         acc = calculateAcc(i, j);
         m_planets[j].m_pos = m_planets[j].m_pos + m_planets[j].m_vel*dt;
         m_planets[j].m_vel = m_planets[j].m_vel + acc*dt;
-        if((i+1)/m_writeParameter == int((i+1)/m_writeParameter)){
+        if(local_writeParameter == int(local_writeParameter)){
           m_files[j] << m_planets[j].m_pos << " " << m_planets[j].m_vel << endl;
         }
       }
@@ -61,13 +65,17 @@ void System::solveVelocityVerlet(double endtime, double dt){
   m_integrationSteps = int(endtime/dt);
   double dt2 = dt/2.0;
   double dtdt2 = dt*dt/2.0;
+  double local_writeParameter;       // denne blir brukt til å spare flops
+
   vector<Coordinate> acc(m_numberofPlanets);
   Coordinate accNew;
   initPlanets();
   if(m_write){
     initFiles();
+    // itererer over tid
     for (int i = 0; i < m_integrationSteps-1; ++i){
       //itererer over planetene
+      local_writeParameter = (i+1)/m_writeParameter;
       for (int j = 0; j < m_numberofPlanets; ++j){
         acc[j] = calculateAcc(i, j);
         m_planets[j].m_pos = m_planets[j].m_pos + dt*m_planets[j].m_vel + dtdt2*acc[j];
@@ -75,13 +83,14 @@ void System::solveVelocityVerlet(double endtime, double dt){
       for (int j = 0; j < m_numberofPlanets; ++j){
         accNew = calculateAcc(i+1, j);
         m_planets[j].m_vel = m_planets[j].m_vel + dt2*(acc[j] + accNew);
-        if((i+1)/m_writeParameter == int((i+1)/m_writeParameter)){
+        if(local_writeParameter == int(local_writeParameter)){
           m_files[j] << m_planets[j].m_pos << " " << m_planets[j].m_vel << endl;
         }
       }
     }
     closeFiles();
   }
+  // her var vi litt desp, burde ordne dette i python istedet
   else if(m_writePerihelion){
     double r;
     vector<double> rp(m_numberofPlanets-1);
@@ -185,7 +194,7 @@ void System::writetoFile(string folder){
   m_directory = "../data/" + folder;
 }
 
-double System::getEnergyTotal(){
+double System::getEnergyChange(){
   // denne funksjonen er bare korrekt for to legemer akkurat nå
   double dE = 0;
   double E0, E1;
@@ -204,7 +213,7 @@ double System::getEnergyTotal(){
   return dE;
 }
 
-double System::getAngularMomentumTotal(){
+double System::getAngularMomentumChange(){
   // denne funksjonen funker også bare for to legemer
   Coordinate dL, L0, L1;
   for(int j = 1; j < m_numberofPlanets; ++j){

@@ -20,7 +20,7 @@ private:
 public:
   Coordinate()
   : m_x(0), m_y(0), m_z(0){
-    // standard byggeren hvis ingenting blir gitt i initialiseringen
+    // standard byggeren hvis ingenting blir gitt i initialiseringen. Gir origo
   }
   Coordinate(double x, double y, double z)
   : m_x(x), m_y(y), m_z(z){

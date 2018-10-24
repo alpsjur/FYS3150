@@ -9,11 +9,12 @@
 using namespace std;
 
 
-
+// denne klassen lager Planet objekter som brukes i System klassen
 class Planet{
-  friend class System;
   // kamerat deklareringer
+  friend class System;
 private:
+  // den har navn, masse, initielle koordinater, og koordinater som oppdateres
   string m_name;
   double m_mass;
 
@@ -36,6 +37,7 @@ public:
     : m_name(name), m_mass(mass), m_initPos(initPos), m_initVel(initVel){
     // initialiserer alle kameratene
   }
+  // metoder for å hente private variabler
   string getName(){return m_name;}
   double getMass(){return m_mass;}
 };

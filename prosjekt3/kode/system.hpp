@@ -13,7 +13,6 @@ using namespace std;
 
 // klasse for å løse newtons gravitasjonslov for varierende planetsystemer
 class System{
-  // kamerat deklareringer
 private:
   double m_pi = 3.14159265358979;
   double m_g = 4.0*m_pi*m_pi;
@@ -21,13 +20,13 @@ private:
   string m_name, m_directory;
   int m_numberofPlanets;
   int m_integrationSteps = 0;
-  vector<Planet> m_planets;
+  vector<Planet> m_planets;              // vektor med planetene
   double m_beta = 2;
-  bool m_write = false;
-  vector<ofstream> m_files;
-  bool m_relativistic = false;
-  bool m_writePerihelion = false;
-  double m_writeParameter = 100;
+  bool m_write = false;                  // true hvis man skriver til fil
+  vector<ofstream> m_files;              // vektor med filer som åpnes i solver
+  bool m_relativistic = false;           // true hvis man regner relativistisk
+  bool m_writePerihelion = false;        // sjekker om vi vil gjøre perihelion oppg
+  double m_writeParameter = 100;         // skrive ut til fil for hver 100 verdi
 
 
   void initPlanets();
@@ -56,8 +55,8 @@ public:
   void scalePlanetInitVel(double scale, int planet);
   void scalePlanetMass(double scale, int planet);
   double getPlanetInitVel(int planet){return m_planets[planet].m_initVel.norm();}
-  double getEnergyTotal();
-  double getAngularMomentumTotal();
+  double getEnergyChange();
+  double getAngularMomentumChange();
   void writePerihelion(string folder);
   void writeForEach(double writeParameter){m_writeParameter = writeParameter;}
 };

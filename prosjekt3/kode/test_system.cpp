@@ -28,8 +28,8 @@ TEST_CASE("ENERGY AND MOMENTUM CONSERVATION"){
   System sunEarth("Sun-Earth system", sunEarthList);
   sunEarth.calculateCenterofMass();
   sunEarth.solveVelocityVerlet(endtime, dt);
-  double E = sunEarth.getEnergyTotal();
-  double L = sunEarth.getAngularMomentumTotal();
+  double E = sunEarth.getEnergyChange();
+  double L = sunEarth.getAngularMomentumChange();
 
   REQUIRE(E == Approx(0));
   REQUIRE(L == Approx(0));

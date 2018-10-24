@@ -14,20 +14,17 @@ all : target tests
 target : ${PROG}
 tests : ${TEST_PROG}
 
-${PROG} : main.o system.o planet.o coordinate.o extractData.o
-	${CPPflags} main.o system.o planet.o coordinate.o extractData.o ${LIB} -o ${PROG}
+${PROG} : main.o system.o coordinate.o extractData.o
+	${CPPflags} main.o system.o coordinate.o extractData.o ${LIB} -o ${PROG}
 
-${TEST_PROG} : tests_main.o test_system.o test_coordinate.o system.o planet.o coordinate.o extractData.o
-	${CPPflags} tests_main.o test_system.o test_coordinate.o system.o planet.o coordinate.o extractData.o ${LIB} -o ${TEST_PROG}
+${TEST_PROG} : tests_main.o test_system.o test_coordinate.o system.o coordinate.o extractData.o
+	${CPPflags} tests_main.o test_system.o test_coordinate.o system.o coordinate.o extractData.o ${LIB} -o ${TEST_PROG}
 
 main.o : main.cpp
 	${CPPflags} -c main.cpp
 
 coordinate.o : coordinate.cpp
 	${CPPflags} -c coordinate.cpp
-
-planet.o : planet.cpp
-	${CPPflags} -c planet.cpp
 
 system.o : system.cpp
 	${CPPflags} -c system.cpp

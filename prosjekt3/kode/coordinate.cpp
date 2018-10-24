@@ -4,6 +4,8 @@
 
 using namespace std;
 
+// standard operasjoner for vektorer
+
 bool operator == (const Coordinate &lhs, const Coordinate &rhs){
   bool equality = false;
   if(lhs.m_x == rhs.m_x and lhs.m_y == rhs.m_y and lhs.m_z == rhs.m_z){

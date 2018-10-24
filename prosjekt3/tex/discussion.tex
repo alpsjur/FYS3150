@@ -22,7 +22,7 @@ that the Earth is evicted from its orbit around the sun, this is expected due to
 Jupiter's already significant effect on Earth's orbit. This also implies that in a hypothetical universe where Jupiter had this mass, a "Earth"-orbit wouldn't be stable due to Jupiter's influence, which could further imply that no planets could stay within the Goldilocks zone. In this solar system then, life would be far less likely based on current knowledge.
 
 \subsection{Setting the centre of mass as the origin}
-From figure \ref{fig:centre of mass} we see that when setting the centre of mass as the origin, the radius of the orbit of the sun is about $5\cdot 10^{-3}$ AU. In comparison the radius of the sun is about $4.6\cdot 10^-3{}$ AU. Considering that we model the astronomical objects as point masses, when in reality they have a volume, setting the sun as
+From Figure \ref{fig:centre of mass} we see that when setting the centre of mass as the origin, the radius of the orbit of the sun is about $5\cdot 10^{-3}$ AU. In comparison the radius of the sun is about $4.6\cdot 10^-3{}$ AU. Considering that we model the astronomical objects as point masses, when in reality they have a volume, setting the sun as
 Finally,
 using our Verlet solver, we carry out a real three-body calculation where all
 three systems, the Earth, Jupiter and the Sun are in motion. To do this, choose
@@ -38,10 +38,6 @@ This implies that the centre of mass correction is very miniscule, and that our 
 that the Sun is stationary seems to hold water for most practical purposes. We must be careful however, and distinguish between observing from the reference frame of the sun, and making the planets orbit the Sun. In the first case, the Sun is in the origin, but the planets orbit the centre of mass, while in the latter case the planets orbit the Sun and we don't consider the effect of a centre of mass. For extreme cases then, if we let the planets orbit the sun, we won't capture any possible effects on the Sun by changing planet parameters.
 
 \subsection{Final model of the solar system}
-Extend your program to include all planets in the solar system (if you
-have time, you can also include the various moons, but it is not required) and
-discuss your results.
-
 As seen in Figure \ref{fig:solar system}, we see that the solar system has a rich
 three dimensional structure, especially for the outer planets. Its configuration is determined by its
 initial conditions way back then.

@@ -31,3 +31,25 @@ TEST_CASE("COORDINATE: NORM"){
 
   REQUIRE(normU == 3);
 }
+
+TEST_CASE("COORDINATE: CROSS PRODUCT"){
+  Coordinate u(3, -5, 2);
+  Coordinate v(-2, 1, 6);
+
+  Coordinate uCrossv = u^v;
+
+  Coordinate true_uCrossv(-32, -22, -7);
+
+  REQUIRE(uCrossv== true_uCrossv);
+}
+
+TEST_CASE("COORDINATE: DOT PRODUCT"){
+  Coordinate u(3, -5, 2);
+  Coordinate v(-2, 1, 6);
+
+  double uDotv = u*v;
+
+  double true_uDotv = 1;
+
+  REQUIRE(uDotv == uDotv);
+}
