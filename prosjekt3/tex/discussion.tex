@@ -16,15 +16,12 @@ towards 3? Comment your results.
 
 \subsection{Stability when changing the mass of Jupiter}
 
-Fra oppgaveteksten: Set up the algorithm and plot the positions of
-the Earth and Jupiter using the velocity Verlet algorithm. Discuss the stability
-of the solutions using your Verlet solver.
-Repeat the calculations by increasing the mass of Jupiter by a factor of 10
-and 1000 and plot the position of the Earth. Study again the stability of the
-Verlet solver.
+From Figure \ref{fig:jupiter mass} we see that Earth's orbit remains stable for a
+ten-fold increase in Jupiter's mass. Increasing its mass a thousand-fold we see
+that the Earth is evicted from its orbit around the sun,
 
 \subsection{Setting the centre of mass as the origin}
-From figure \ref{fig:centre of mass} we see that when setting the centre of mass as the origin, the radius of the orbit of the sun is about $5\cdot 10^{-3}$ AU. In comparison the radius of the sun is about $4.6\cdot 10^-3{}$ AU. Considering that we model the astronomical objects as point masses, when in reality they have a volume, setting the sun as 
+From figure \ref{fig:centre of mass} we see that when setting the centre of mass as the origin, the radius of the orbit of the sun is about $5\cdot 10^{-3}$ AU. In comparison the radius of the sun is about $4.6\cdot 10^-3{}$ AU. Considering that we model the astronomical objects as point masses, when in reality they have a volume, setting the sun as
 Finally,
 using our Verlet solver, we carry out a real three-body calculation where all
 three systems, the Earth, Jupiter and the Sun are in motion. To do this, choose
@@ -34,10 +31,22 @@ momentum of the system exactly zero (the center-of-mass will remain fixed).
 Compare these results with those from the previous exercise and comment your
 results.
 
+Considering again Figure \ref{fig:centre of mass}, we see that the Sun's orbit around
+the centre of mass has a mean radius of much less than the radius of the Sun itself.
+This implies that the centre of mass correction is very miniscule, and that our assumption
+that the Sun is stationary is not that incorrect.
+
 \subsection{Final model of the solar system}
 Extend your program to include all planets in the solar system (if you
 have time, you can also include the various moons, but it is not required) and
 discuss your results.
 
+As seen in Figure \ref{fig:solar system}, we see that the solar system has a rich
+three dimensional structure, especially for the outer planets. Its configuration is determined by its
+initial conditions way back then.
+
 
 \subsection{The perihelion precession of Mercury}
+Looking back at Figure \ref{fig:perihelion}, we can confirm that $43''$ of Mercury's perihelion
+precession is accounted for by the general theory of relativity. Furthermore, the fact that without the correction, there
+appears to be no precession. This is not the case in reality, as most of the precession is due to classical effects (see \ref{sec:rel}). In our model however, we only consider the Sun-Mercury system, and most of the classical precession effects are caused by interactions with other planets. It is therefore reasonable that we find the precession to be around zero for the classical case.

@@ -96,11 +96,7 @@ if __name__ == "__main__":
     plt.rc('text', usetex=True)
     figdir = "../figurer/"
 
-<<<<<<< HEAD
-    """
-=======
     '''
->>>>>>> 9e01212c4fbd6f89441f818b85081544b45367af
     # endrer massen til jupiter
     scenario = 4
     endtime = 20
@@ -144,12 +140,8 @@ if __name__ == "__main__":
     #plt.savefig(figdir+"change_beta_60yr.pdf")
 
     plt.show()
-<<<<<<< HEAD
-
-=======
     '''
     '''
->>>>>>> 9e01212c4fbd6f89441f818b85081544b45367af
     #massesenter
     scenario = 5
     endtime = 30
@@ -192,13 +184,8 @@ if __name__ == "__main__":
     plt.savefig(figdir+"center_of_mass.pdf")
 
     plt.show()
-<<<<<<< HEAD
-
-
-=======
     '''
     '''
->>>>>>> 9e01212c4fbd6f89441f818b85081544b45367af
     #hele solsystemet
     scenario = 6
     endtime = 200
@@ -227,11 +214,8 @@ if __name__ == "__main__":
     ax.set_ylabel('y [AU]')
     #plt.savefig(figdir+"solarsystem2d.pdf")
 
-<<<<<<< HEAD
-    """
-=======
     '''
->>>>>>> 9e01212c4fbd6f89441f818b85081544b45367af
+    """
     #The perihelion precession of Mercury
     scenario = 7
     endtime = 100
@@ -260,14 +244,15 @@ if __name__ == "__main__":
     minrelx = argrelextrema(xrel, np.less)
     minrely = argrelextrema(yrel, np.less)
 
-    minclass = argrelextrema(yclass, np.less)
+    minclassx = argrelextrema(xclass, np.less)
+    minclassy = argrelextrema(yclass, np.less)
 
     tanlistrel = []
     tanlistclass = []
     timelist = []
-    for indexrel, indexclass in zip(minrel, minclass):
-        tanlistrel.append(np.arctan(yrel[indexrel]/xrel[indexrel])*radToArc)
-        tanlistclass.append(np.arctan(yclass[indexclass]/xclass[indexclass])*radToArc)
+    for indexrelx, indexrely, indexclassx, indexclassy in zip(minrelx, minrely, minclassx, minclassy):
+        tanlistrel.append(np.arctan(yrel[indexrely]/xrel[indexrelx])*radToArc)
+        tanlistclass.append(np.arctan(yclass[indexclassy]/xclass[indexclassx])*radToArc)
         #timelist.append(*indexrel)
 
     print(tanlistrel)
@@ -280,14 +265,10 @@ if __name__ == "__main__":
     ax.set_ylabel("perihelion precession [arc seconds]",fontsize=14)
 
     plt.savefig(figdir+"perihelion.pdf")
+    """
 
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 9e01212c4fbd6f89441f818b85081544b45367af
-    '''
     # sammenligne Euler og Verlet
     figdir = "../figurer/"
     pathEuler = "euler_vs_verlet/euler"
@@ -314,41 +295,3 @@ if __name__ == "__main__":
         labelcounter += 1
     fig.legend(fontsize=14, frameon=False)
     plt.savefig(figdir + "eulerVerlet.pdf")
-
-
-    pathVelo = "escape_velocity"
-    pathBeta = "change_beta"
-
-    endtime = 3
-    dt = 0.001
-    betalist = [2, 2.3, 2.6, 3]
-    vscalelist = [1, 1.3, 1.6, 2]
-    n = len(betalist)
-
-    vfig = plt.figure()
-    vbigax = emptyax(vfig)
-    vbigax.set_xlabel("x [AU]")
-    vbigax.set_ylabel("y [AU]")
-
-    betafig = plt.figure()
-    betabigax = emptyax(betafig)
-    betabigax.set_xlabel("x [AU]")
-    betabigax.set_ylabel("y [AU]")
-
-    labelcounter = 0
-    label = True
-    for i, beta, vscale in zip(range(1, 5), betalist, vscalelist):
-        if labelcounter > 0:
-            label = False
-        run_maincpp(2, endtime, dt, vscale, 1)
-        ax = vfig.add_subplot(n, 1, i)
-        plotSystem(ax, pathVelo, label=label)
-        plt.axis("equal")
-        run_maincpp(2, endtime, dt, 1, beta)
-        ax = betafig.add_subplot(n, 1, i)
-        plotSystem(ax, pathBeta, label=label)
-        labelcounter += 1
-    vfig.legend(fontsize=14, frameon=False)
-    betafig.legend(fontsize=14, frameon=False)
-    plt.show()
-    '''

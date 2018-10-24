@@ -108,9 +108,11 @@ void compareEulerVerlet(vector<Planet>& sunEarthList, double endtime, double dt)
   System sunEarth("Sun-Earth system", sunEarthList);
 
   sunEarth.writetoFile("euler_vs_verlet/euler");
+  sunEarth.writeForEach(10);
   sunEarth.solveForwardEuler(endtime, dt);
 
   sunEarth.writetoFile("euler_vs_verlet/verlet");
+  sunEarth.writeForEach(10);
   sunEarth.solveVelocityVerlet(endtime, dt);
 }
 
