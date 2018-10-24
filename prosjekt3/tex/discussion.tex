@@ -6,22 +6,21 @@ Comparing both efficiency and accuracy as described in the methods section, we s
 that the Forward Euler algorithm decreases in accuracy quite rapidly compared to the Velocity Verlet algorithm. This is most likely because VV conserves energy and angular momentum, as shown from our unit testing, where it remained conserved even for 200 years. From \ref{table:time} we see that FE is around twice as fast in all cases, which is to be expected owed to its less FLOPS. If we consider efficiency to be determined by the fastest runtime, it is clearly the most efficient. However, FE is so inaccurate that in the perspective that efficiency is accuracy per time, VV is the most efficient.
 
 \subsection{Changing Newton's law of gravitation}
-In Figure \ref{fig:beta} we see that decreasing the gravitational force between Earth and the Sun makes the system become unstable as $\beta \rightarrow 3$. Our perspective is that Earth in the true universe where $\beta = 2$ has a velocity that is comparable to the escape velocity in a universe where $\beta = 3$. We can see this as Earth's velocity seem to stabilise around zero after a while, corresponding to the definition of escape velocity, where the gravitational force approaches zero as does the velocity.
+In Figure \ref{fig:changing beta} we see that decreasing the gravitational force between Earth and the Sun makes the system become unstable as $\beta \rightarrow 3$. Our perspective is that Earth in the true universe where $\beta = 2$ has a velocity that is comparable to the escape velocity in a universe where $\beta = 3$. We can see this as Earth's velocity seem to stabilise around zero after a while, corresponding to the definition of escape velocity, where the gravitational force approaches zero as does the velocity.
 
 
 \subsection{Earth's escape velocity}
 Experimentally changing Earth's velocity to find the escape velocity yields a result corresponding with our analytical expression described in \ref{sec:escvel} to a great degree. This then is an affirmation that our simple model behaves correctly.
-
 
 \subsection{Stability when changing the mass of Jupiter}
 
 Looking at Figure \ref{fig:jupiter mass} we see that Earth's orbit remains stable for a
 ten-fold increase in Jupiter's mass. Increasing its mass a thousand-fold we see
 that the Earth is evicted from its orbit around the sun, this is expected due to
-Jupiter's already significant effect on Earth's orbit. This also implies that in a hypothetical universe where Jupiter had this mass, a "Earth"-orbit wouldn't be stable due to Jupiter's influence, which could further imply that no planets could stay within the Goldilocks zone. In this solar system then, life would be far less likely based on current knowledge.
+Jupiter's already significant mass, and therefore effect on Earth's orbit. This also implies that in a hypothetical universe where Jupiter had this mass, a "Earth"-orbit wouldn't be stable due to Jupiter's influence, which could further imply that no planets could stay within the Goldilocks zone. In this solar system then, life would be far less likely based on current knowledge.
 
 \subsection{Setting the centre of mass as the origin}
-From Figure \ref{fig:centre of mass} we see that when setting the centre of mass as the origin, the radius of the orbit of the sun is about $5\cdot 10^{-3}$ AU. In comparison the radius of the sun is about $4.6\cdot 10^-3{}$ AU. Considering that we model the astronomical objects as point masses, when in reality they have a volume, setting the sun as stationary at the origin is negligible. We must be careful however, and distinguish between observing from the reference frame of the sun, and making the planets orbit the Sun. In the first case, the Sun is in the origin, but the planets orbit the centre of mass, while in the latter case the planets orbit the Sun and we don't consider the effect of a centre of mass. For extreme cases then, if we let the planets orbit the sun, we won't capture any possible effects on the Sun by changing planet parameters.
+From Figure \ref{fig:centre of mass} we see that when setting the centre of mass as the origin, the radius of the orbit of the sun is about $5\cdot 10^{-3}$ AU. In comparison the radius of the sun is about $4.6\cdot 10^-{3}$ AU. So our modelled sun is still in the same area as the "real" sun should be, even when not correcting for the centre of mass. Considering that we model the astronomical objects as point masses, we already make a simplified model. So setting the sun as the origin is not a bad approximation. 
 
 \subsection{Final model of the solar system}
 As seen in Figure \ref{fig:solar system}, we see that the solar system has a rich
