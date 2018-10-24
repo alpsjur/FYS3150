@@ -2,7 +2,7 @@
 \label{sec:methods}
 
 \subsection{Forces governing the motions in the solar system}
-In this model we will consider only the gravitational forces between the bodies in the system. Newton's law of gravitation states that the force $\mathbf{F}_{ij}$ on a body $b_i$ with mass $M_i$ due to a body $b_j$ with mass $M_j$ at a distance $r_{ij}$ is given as
+In this model we considered only the gravitational forces between the bodies in the system. Newton's law of gravitation states that the force $\mathbf{F}_{ij}$ on a body $b_i$ with mass $M_i$ due to a body $b_j$ with mass $M_j$ at a distance $r_{ij}$ is given as
 \begin{equation}\label{eq: gravity}
 	\mathbf{F}_{ij} = \frac{GM_iM_j}{r_{ij}^2}\frac{\mathbf{r}_{ij}}{r_{ij}}.
 \end{equation}
@@ -170,14 +170,14 @@ We make use of vectors and strings from the standard library, as well as boost,
 which makes creating directories simpler. All our results are reproducible
 by running a main python program.
 
-We create three classes: the Coordinate class to handle vector arithmetics, the Planet
+We created three classes: the Coordinate class to handle vector arithmetics, the Planet
 class which creates a object with a name, mass and initial coordinates,
 and the final class, our System class which takes Planet objects. Initialising
 a vector of Planet objects, and solving for their motion in a gravitational field, the System
-class will be our solver paradigm. In this solver, we implement both the Forward Euler and
-Velocity Verlet algorithm, as well as methods for getting the change in total energy and angular
-momentum, as well as varying different parameters like r dependence of NGL and initial velocity.
-We also allow for a general relativistic correction to NGL, as decribed in Section \ref{sec:rel}.
+class will be our solver paradigm. In this solver, we implemented both the Forward Euler and
+Velocity Verlet algorithms, as well as methods for getting the change in total energy and angular
+momentum, and varying different parameters like r dependence of NLG and initial velocity.
+We also allowed for a general relativistic correction to NGL, as decribed in Section \ref{sec:rel}.
 During the development, we produced three different programs. The first employed dynamically allocated pointers to act as arrays, but being unable to fix all memory leaks in a satisfactory way, we instead used vectors from the standard library.
 After we realised how unecessary it was to store large arrays, we switched over to a scalar code, which only saves the last position and velocity coordinates for calculating the change in total energy and angular momentum.
 
@@ -188,15 +188,14 @@ In our model of the solar system, both angular momentum and mechanical energy sh
 are no external forces or torques acting on the system. This means that at any point in time, the total energy or
 angular momentum of the system should be the same as initially. An ideal method should conserve these methods,
 and therefore we test both algorithms for energy and angular momentum conservation.
-Furthermore, we implement this as a unit test for the VV algorithm, as we expect this method to conserve these quantities.
+Furthermore, we implemented this as a unit test for the VV algorithm, as we expect this method to conserve these quantities.
 
-Another simple comparison is to time the two algorithms in order to determine which is the most efficient. When timing the algorithms we run both algorithms with the same input parameters X times, and record the mean time and standard deviation.
-We also check if Earth escapes its orbit if we set its initial velocity to be the analytical
+Another simple comparison was to time the two algorithms in order to determine which was the most efficient. When timing the algorithms we ran both algorithms with the same input parameters X times, and recorded the mean time and standard deviation.
+We also checked if Earth escaped its orbit if we set its initial velocity to be the analytical
 escape velocity given by \ref{eq:esc}.
-One more test that could be implemented, but which we will not, is comparing Venus' 2D orbit with a circle
-with radius the mean distance of Venus from the sun. As we expect this orbit to be
-almost circular due to its low eccentricity \cite{planetaryfactsheet}. This would then
-be a way to quantify our error, which we could use to compare the algorithms.
+One more test that could have be implemented, but which we did not, was comparing Venus' 2D orbit with a circle
+with radius the mean distance of Venus from the sun. As we expected this orbit to be
+almost circular due to its low eccentricity \cite{planetaryfactsheet}. This would then have been a way to quantify our error, which we could have used to compare the algorithms.
 
 \subsubsection{Obtaining initial values}
 The initial velocities and positions for the planets, together with the masses, were collected from NASA's web-based interface to JPL's HORIZONS system. For further references, see \cite{horizon}. October 5th 2018 was used as the initial time.
