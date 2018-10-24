@@ -20,13 +20,12 @@ private:
   Coordinate m_initPos;
   Coordinate m_initVel;
 
-  vector<Coordinate> m_pos;
-  vector<Coordinate> m_vel;
+  Coordinate m_pos;
+  Coordinate m_vel;
 
   // funksjoner som klassen System skal ha tilgang til, men ikke utenfor
-  void initArrays(int integrationSteps);
-  void initPos(){m_pos[0] = m_initPos;}
-  void initVel(){m_vel[0] = m_initVel;}
+  void initPos(){m_pos = m_initPos;}
+  void initVel(){m_vel = m_initVel;}
 
 public:
   Planet()
