@@ -108,9 +108,11 @@ void compareEulerVerlet(vector<Planet>& sunEarthList, double endtime, double dt)
   System sunEarth("Sun-Earth system", sunEarthList);
 
   sunEarth.writetoFile("euler_vs_verlet/euler");
+  sunEarth.writeForEach(10);
   sunEarth.solveForwardEuler(endtime, dt);
 
   sunEarth.writetoFile("euler_vs_verlet/verlet");
+  sunEarth.writeForEach(10);
   sunEarth.solveVelocityVerlet(endtime, dt);
 }
 
@@ -182,13 +184,15 @@ void solveMercuryPrecession(vector<Planet> &sunMercuryList, double endtime, doub
   System sunMercuryClassical("Sun-Mercury classical system", sunMercuryList);
   System sunMercuryRelativistic("Sun-Mercury relativistic system", sunMercuryList);
 
+  double writeParameter = (endtime/dt)/1000.0;
+
   sunMercuryClassical.calculateCenterofMass();
-  sunMercuryClassical.writeForEach(10000)
-  sunMercuryClassical.writetoFile("sun_mercury/classical")
+  sunMercuryClassical.writeForEach(writeParameter);
+  sunMercuryClassical.writetoFile("sun_mercury/classical");
 
   sunMercuryRelativistic.calculateCenterofMass();
   sunMercuryRelativistic.relativistic();
-  sunMercuryRelativistic.writeForEach(10000)
+  sunMercuryRelativistic.writeForEach(writeParameter);
   sunMercuryRelativistic.writetoFile("sun_mercury/relativistic");
   sunMercuryRelativistic.solveVelocityVerlet(endtime, dt);
 }
