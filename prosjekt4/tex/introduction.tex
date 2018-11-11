@@ -1,2 +1,19 @@
 \section{Introduction}
 \label{sec:introduction}
+
+Statistical mechanics aims to describe thermodynamics from a quantum mechanical point of view.
+Just as classical mechanics should be the large-scale approximation to quantum mechanics,
+thermodynamics should be the large-scale approximation to statistical mechanics. A concept
+which relates classical quantities such as the total energy, heat capacity, entropy, and pressure, is
+the partition function
+  \begin{equation}
+    \label{eq:partition}
+    Z = \sum_s e^{-\frac{E_s}{kT}},
+  \end{equation}
+where $k$ is Boltzmann's constant, $T$ is the temperature, and $E_i$ is the energy for each microstate $s$.
+Eq. \ref{eq:partition} describes the statistical properties of a system in thermal equillibrium.
+While useful and interesting theoretically, analytical solutions are rare to come by. In particular,
+it is quite difficult to calculate the microstate energies.
+
+The aim of this report is then to find the microstate energies numerically, using
+the Metropolis algorithm to
