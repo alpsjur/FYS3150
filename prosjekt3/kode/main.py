@@ -278,7 +278,7 @@ if __name__ == "__main__":
     ax.set_ylabel('y [AU]')
     #plt.savefig(figdir+"solarsystem2d.pdf")
 
-    '''
+
 
     #The perihelion precession of Mercury
     scenario = 7
@@ -300,7 +300,7 @@ if __name__ == "__main__":
     plt.savefig(figdir+"perihelion.pdf")
     #plt.show()
 
-    '''
+
     # sammenligne Euler og Verlet
     figdir = "../figurer/"
     pathEuler = "euler_vs_verlet/euler"
