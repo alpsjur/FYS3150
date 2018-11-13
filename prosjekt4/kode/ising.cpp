@@ -1,6 +1,21 @@
 #include "ising.h"
 
 void IsingModel::initSystem(){
+  if(m_ordered){
+    //lager uniform initsialtilstand
+    m_spinMatrix.ones(m_rowLength, m_columnLength);
+  }
+  else{
+    //lager tilfeldig initsialtilstan
+    m_spinMatrix = randi<imat>(m_rowLength, m_columnLength, distr_param(0, 1));
+    for(int row = 0; row < m_rowLength; ++row){
+      for(int column = 0; column < m_columnLength; ++column){
+        if(m_spinMatrix(row, column) == 0){
+          m_spinMatrix(row, column) = -1;
+        }
+      }
+    }
+  }
   magnetisation = 0;
   energy = 0;
   for(int row = 0; row < m_rowLength; ++row){

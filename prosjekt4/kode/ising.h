@@ -16,13 +16,16 @@ private:
   double m_couplingParameter;
   int m_rowLength, m_columnLength;
   double m_deltaEnergy, m_deltaMagnetisation;
+  bool m_ordered;
 
 public:
   double energy, magnetisation;
-  IsingModel(imat &spinMatrix, double couplingParameter, double &energy, double &magnetisation)
-  : m_spinMatrix(spinMatrix), m_couplingParameter(couplingParameter),
-    energy(energy), magnetisation(magnetisation), m_rowLength(spinMatrix.n_rows),
-    m_columnLength(spinMatrix.n_cols){}
+  IsingModel(int &latticeDimension, double &couplingParameter, bool &ordered)
+  : m_couplingParameter(couplingParameter), m_ordered(ordered){
+      m_spinMatrix.zeros(latticeDimension, latticeDimension);
+      m_rowLength = m_spinMatrix.n_rows;
+      m_columnLength = m_spinMatrix.n_cols;
+    }
 
   void initSystem();
   void flipSpin(int&, int&);

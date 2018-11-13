@@ -18,7 +18,7 @@
 using namespace std;
 using namespace arma;
 
-void writeToFile(ofstream&, int, int, double, vec&);
+void writeToFile(ofstream&, int&, double&, double&, double&, vec&);
 
 inline bool acceptanceRule(double parameter, double randomNumber){
   return (randomNumber <= parameter);

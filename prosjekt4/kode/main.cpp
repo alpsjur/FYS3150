@@ -11,12 +11,11 @@ int main(int argc, char *argv[]){
   // initialising files
 
   // initialising Ising model
-  double energy, magnetisation;
-  int gridDimension = 2;
+  int gridDimension = 40;
   double couplingParameter = 1;
+  bool ordered = false;
 
-  imat spinMatrix(gridDimension, gridDimension, fill::ones);
-  IsingModel spinLattice(spinMatrix, couplingParameter, energy, magnetisation);
+  IsingModel spinLattice(gridDimension, couplingParameter, ordered);
   spinLattice.initSystem();
 
   // initialising and opening files
@@ -28,16 +27,18 @@ int main(int argc, char *argv[]){
   }
 
   // initialising and distributing Monte Carlo cycles
-  double mcCycles = 10000;
+  double equilMC = 25e3;  // found experimentally from studying relaxation time
+  double totalEquilMC = numProcs*equilMC;  // the equillibrium MC after collecting
+  double mcCycles = 1e6;
   double my_mcCycles = mcCycles/numProcs;
   if ((myRank == numProcs-1) && ((int) mcCycles%numProcs != 0)){
     my_mcCycles += (int) mcCycles%numProcs;
   }
 
   // initialising and parallelisising temperature parameters
-  double initTemp = 1.0;
-  double finalTemp = 2.5;
-  double dT = 0.5;
+  double initTemp = 2.26;
+  double finalTemp = 2.3;
+  double dT = 0.001;
   MPI_Bcast (&gridDimension, 1, MPI_INT, 0, MPI_COMM_WORLD);
   MPI_Bcast (&initTemp, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
   MPI_Bcast (&finalTemp, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
@@ -48,26 +49,27 @@ int main(int argc, char *argv[]){
 
   // initialising vectors to hold expectation values obtained from MC
   int numberOfExpvals = 5;
+  // running and timing a parallellised Metropolis algorithm
   vec expectationValues(numberOfExpvals, fill::zeros);
   vec collectedExpVals(numberOfExpvals, fill::zeros);
-
-  // running and timing a parallellised Metropolis algorithm
   double timeStartMPI = MPI_Wtime();
   for (double temp = initTemp; temp <= finalTemp; temp += dT){
-    vec expectationValues(5, fill::zeros);
-    metropolis(spinLattice, temp, acceptanceRule, mcCycles, expectationValues, nodeSeed);
+    expectationValues.zeros(numberOfExpvals);
+    collectedExpVals.zeros(numberOfExpvals);
+    metropolis(spinLattice, temp, acceptanceRule, my_mcCycles, equilMC, expectationValues, nodeSeed);
     for(int i = 0; i < numberOfExpvals; ++i){
       MPI_Reduce(&expectationValues[i], &collectedExpVals[i], 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     }
     if(myRank == 0){
-      writeToFile(outfile, gridDimension, mcCycles, temp, collectedExpVals);
+      writeToFile(outfile, gridDimension, mcCycles, totalEquilMC, temp, collectedExpVals);
+      cout << "temperature = " << temp << " complete" << endl;
     }
   }
 
   double timeEndMPI = MPI_Wtime();
   if (myRank == 0){
     outfile.close();
-    cout << "complete after " << (timeEndMPI - timeStartMPI) << " on " << numProcs << " nodes";
+    cout << "complete after " << (timeEndMPI - timeStartMPI) << " on " << numProcs << " nodes" << endl;
   }
 
   MPI_Finalize();
@@ -75,22 +77,24 @@ int main(int argc, char *argv[]){
 }
 
 
-void writeToFile(ofstream &outfile, int gridDimension, int mcCycles, double temperature, vec& expectationValues){
+void writeToFile(ofstream &outfile, int &gridDimension, double &mcCycles, double &equilMC, double &temperature, vec &expectationValues){
   double gridSize = double(gridDimension*gridDimension);
-  double norm = 1.0/((double) (mcCycles));  // divided by  number of cycles
+  double norm = 1.0/((double) (mcCycles - equilMC));  // divided by  number of cycles
   double energy_expvals = expectationValues(0)*norm;
   double energy2_expvals = expectationValues(1)*norm;
   double magnetisation_expvals = expectationValues(2)*norm;
   double magnetisation2_expvals = expectationValues(3)*norm;
   double magnetisationAbs_expval = expectationValues(4)*norm;
   // all expectation values are per spin, divide by 1/NSpins/NSpins
-  double energyVariance = (energy_expvals - energy_expvals*energy_expvals)/gridSize;
+  double energyVariance = (energy2_expvals - energy_expvals*energy_expvals)/gridSize;
   double magnetisationVariance = (magnetisation2_expvals - magnetisationAbs_expval*magnetisationAbs_expval)/gridSize;
   outfile << setiosflags(ios::showpoint | ios::uppercase);
   outfile << setw(15) << setprecision(8) << temperature;
   outfile << setw(15) << setprecision(8) << energy_expvals/gridSize;
-  outfile << setw(15) << setprecision(8) << energyVariance/temperature/temperature;
+  outfile << setw(15) << setprecision(8) << energyVariance/(temperature*temperature);
   outfile << setw(15) << setprecision(8) << magnetisation_expvals/gridSize;
   outfile << setw(15) << setprecision(8) << magnetisationVariance/temperature;
   outfile << setw(15) << setprecision(8) << magnetisationAbs_expval/gridSize << endl;
+
+  return;
 }

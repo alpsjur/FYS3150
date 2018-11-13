@@ -1,7 +1,8 @@
 # Comment lines
 # General makefile for c++ - choose PROG =   name of given program
 # Here we define compiler option, libraries and the  target
-CPPflags = mpic++ -O3
+CPPflagsMPI = mpic++ -O3
+CPPflags = c++ -O3
 # Here we define the library functions we nee
 LIB = -larmadillo -llapack -lblas
 #LIB = -lboost_system -lboost_filesystem
@@ -15,20 +16,20 @@ target : ${PROG}
 tests : ${TEST_PROG}
 
 ${PROG} : main.o metropolis.o ising.o
-	${CPPflags} main.o metropolis.o ising.o ${LIB} -o ${PROG}
+	${CPPflagsMPI} main.o metropolis.o ising.o ${LIB} -o ${PROG}
 
 ${TEST_PROG} : tests_main.o test_metropolis.o metropolis.o ising.o
-	${CPPflags} tests_main.o test_metropolis.o metropolis.o ising.o ${LIB} -o ${TEST_PROG}
+	${CPPflags}  tests_main.o test_metropolis.o metropolis.o ising.o ${LIB} -o ${TEST_PROG}
 
 
 main.o : main.cpp
-	${CPPflags} -c main.cpp
+	${CPPflagsMPI} -c main.cpp
 
 metropolis.o : metropolis.cpp
-	${CPPflags} -c metropolis.cpp
+	${CPPflagsMPI} -c metropolis.cpp
 
 ising.o : ising.cpp
-	${CPPflags} -c ising.cpp
+	${CPPflagsMPI} -c ising.cpp
 
 tests_main.o : tests_main.cpp
 	${CPPflags} -c tests_main.cpp

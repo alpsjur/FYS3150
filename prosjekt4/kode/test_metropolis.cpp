@@ -1,4 +1,3 @@
-#include <mpi.h>
 #include <cmath>
 #include <armadillo>
 #include <vector>
@@ -18,37 +17,43 @@ inline bool acceptanceRule(double parameter, double randomNumber){
 
 TEST_CASE("ANALYTICAL 2X2 ISING LATTICE"){
   // analytical expressions
-  double couplingParameter = 1;
-  double temperature = 1;
-  double boltzmannsConstant = 1;
-  double beta = temperature*boltzmannsConstant;
-  double betaJ = 8*beta*couplingParameter;
-  double meanEnergy = - 4.0*couplingParameter*sinh(betaJ)
-                      /(cosh(betaJ) + 6);
-  double heatCapacitance = 32.0*couplingParameter*couplingParameter/(beta*temperature)
-                          * (sinh(betaJ)*sinh(betaJ) - cosh(betaJ)*cosh(betaJ) - 3.0*cosh(betaJ))
-                          / (cosh(betaJ) + 3)*(cosh(betaJ) + 3);
-  double meanMagnetisation = 0;
+  double couplingParameter = 1.0;
+  double temperature = 1.0;
+  double boltzmannsConstant = 1.0;
+  double beta = 1.0/(temperature*boltzmannsConstant);
+  double betaJ = 8.0*beta*couplingParameter;
+  double meanEnergy = - 8.0*couplingParameter*sinh(betaJ)
+                      /(cosh(betaJ) + 3);
+  double heatCapacity = 64.0*couplingParameter*couplingParameter/(beta*temperature)
+                        * (1.0 + 3.0*cosh(betaJ))/((cosh(betaJ) + 3)*(cosh(betaJ) + 3));
+  double meanMagnetisation = (2.0*exp(-betaJ) + 4);
 
 
-  double energy, magnetisation;
   int gridDimension = 2;
+  bool ordered = false;
 
-  imat spinMatrix(gridDimension, gridDimension, fill::ones);
-  IsingModel spinLattice(spinMatrix, couplingParameter, energy, magnetisation);
+  IsingModel spinLattice(gridDimension, couplingParameter, ordered); 
   spinLattice.initSystem();
 
-
+  double equilMC = 2.5e3;
   double mcCycles = 1e6;
-  vec expectationValues(5, fill::zeros);
 
-  metropolis(spinLattice, temperature, acceptanceRule, mcCycles, expectationValues);
+  long nodeSeed = -1;
 
-  double norm = 1.0/((double) (mcCycles));
-  double gridSize = double(gridDimension*gridDimension);
-  double energy_expvals = expectationValues(0)*norm/gridSize;
-  double magnetisation_expvals = expectationValues(2)*norm/gridSize;
+  // initialising vectors to hold expectation values obtained from MC
+  int numberOfExpvals = 5;
+  vec expectationValues(numberOfExpvals, fill::zeros);
 
-  REQUIRE(energy_expvals == meanEnergy);
-  REQUIRE(magnetisation_expvals == meanMagnetisation);
+  // running metropolis algorithm
+  metropolis(spinLattice, temperature, acceptanceRule, mcCycles, equilMC, expectationValues, nodeSeed);
+
+  double norm = 1.0/((double) (mcCycles - equilMC));
+  double energy_expval = expectationValues(0)*norm;
+  double energy2_expval = expectationValues(1)*norm;
+  double mcHeatCapacity = (energy2_expval - energy_expval*energy_expval)*(beta/temperature);
+  double magnetisation_expval = expectationValues(4)*norm;
+
+  REQUIRE(energy_expval == Approx(meanEnergy).epsilon(0.01));
+  REQUIRE(magnetisation_expval == Approx(meanMagnetisation).epsilon(0.01));
+  REQUIRE(mcHeatCapacity == Approx(heatCapacity).epsilon(0.01));
 }

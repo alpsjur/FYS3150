@@ -7,6 +7,7 @@
 
 using namespace std;
 
-void metropolis(IsingModel&, double&, function<bool(double, double)>, double&, vec&, long&);
+void metropolis(IsingModel&, double&, function<bool(double, double)>, double&, double&, vec&, long&);
+double ran2(long*);
 
 #endif /* METROPOLIS.H */
