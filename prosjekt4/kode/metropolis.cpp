@@ -3,10 +3,12 @@
 
 void metropolis(IsingModel &spinLattice, double &temperature, function<bool(double,
                 double)> acceptanceRule, double &mcCycles, double &equilMC,
-                vec &expectationValues, long &nodeSeed)
+                vec &expectationValues, double *pdf, long &nodeSeed)
   {
 
-  // initialise possible energy changes
+  // initialise possible energy changes and frequency of energies
+  double *pdf_pointer = &pdf[1000];
+  double frequency = 0.0;
   vec energyChanges = zeros<mat>(17);
   for(int dE =-8; dE <= 8; dE += 4) {energyChanges(dE+8) = exp(-dE/temperature);}
 
@@ -32,8 +34,17 @@ void metropolis(IsingModel &spinLattice, double &temperature, function<bool(doub
       expectationValues(2) += spinLattice.magnetisation;
       expectationValues(3) += spinLattice.magnetisation * spinLattice.magnetisation;
       expectationValues(4) += fabs(spinLattice.magnetisation);
+
+      // finding probability distribution noting
+      pdf_pointer[(int)spinLattice.energy]++;
+      frequency++;
     }
   }
+
+  for(int energy = 0; energy < 2000; ++energy){
+    pdf[energy]/=frequency;
+  }
+
   return;
 }
 

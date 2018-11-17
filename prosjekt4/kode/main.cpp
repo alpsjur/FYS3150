@@ -2,82 +2,55 @@
 
 
 int main(int argc, char *argv[]){
-  // initialising parallellisation
-  int myRank, numProcs;
-  MPI_Init (&argc, &argv);
-  MPI_Comm_size (MPI_COMM_WORLD, &numProcs);
-  MPI_Comm_rank (MPI_COMM_WORLD, &myRank);
 
-  // initialising files
-
+  // initialising and opening files
+  ofstream outfile;
+  outfile.open(argv[1]);
+  //ofstream outPDF;
+  //outPDF.open("../data/isingPDF_GRID20_1E6_T24.dat");
   // initialising Ising model
-  int gridDimension = 40;
+  int gridDimension = 80;
   double couplingParameter = 1;
+
+  double initMC = 1e6;
+  double finalMC = 1e6;
+  double dMC = 1e2;
+  double equilMC = 0;  // found experimentally from studying relaxation time
+
+  double initTemp = 2.0;
+  double finalTemp = 2.3;
+  double dT = 0.01;
   bool ordered = false;
 
   IsingModel spinLattice(gridDimension, couplingParameter, ordered);
   spinLattice.initSystem();
 
-  // initialising and opening files
-  char *outfilename;
-  ofstream outfile;
-  if (myRank == 0) {
-    outfilename = argv[1];
-    outfile.open(outfilename);
-  }
-
-  // initialising and distributing Monte Carlo cycles
-  double equilMC = 25e3;  // found experimentally from studying relaxation time
-  double totalEquilMC = numProcs*equilMC;  // the equillibrium MC after collecting
-  double mcCycles = 1e6;
-  double my_mcCycles = mcCycles/numProcs;
-  if ((myRank == numProcs-1) && ((int) mcCycles%numProcs != 0)){
-    my_mcCycles += (int) mcCycles%numProcs;
-  }
-
-  // initialising and parallelisising temperature parameters
-  double initTemp = 2.26;
-  double finalTemp = 2.3;
-  double dT = 0.001;
-  MPI_Bcast (&gridDimension, 1, MPI_INT, 0, MPI_COMM_WORLD);
-  MPI_Bcast (&initTemp, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-  MPI_Bcast (&finalTemp, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-  MPI_Bcast (&dT, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
-  // distributing different random seeds for each node
-  long nodeSeed = -1 - myRank;
+  //initialising random seed
+  long nodeSeed = -1;
 
   // initialising vectors to hold expectation values obtained from MC
   int numberOfExpvals = 5;
-  // running and timing a parallellised Metropolis algorithm
   vec expectationValues(numberOfExpvals, fill::zeros);
-  vec collectedExpVals(numberOfExpvals, fill::zeros);
-  double timeStartMPI = MPI_Wtime();
-  for (double temp = initTemp; temp <= finalTemp; temp += dT){
-    expectationValues.zeros(numberOfExpvals);
-    collectedExpVals.zeros(numberOfExpvals);
-    metropolis(spinLattice, temp, acceptanceRule, my_mcCycles, equilMC, expectationValues, nodeSeed);
-    for(int i = 0; i < numberOfExpvals; ++i){
-      MPI_Reduce(&expectationValues[i], &collectedExpVals[i], 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  // initialising array to hold probability distribution function
+  double pdf[2000] = {0};
+  // running the metropolis algorithm for different mcs and temperatures
+  for(double mcCycles = initMC; mcCycles <= finalMC; mcCycles += dMC){
+    for (double temp = initTemp; temp <= finalTemp; temp += dT){
+      expectationValues.zeros(numberOfExpvals);
+      metropolis(spinLattice, temp, acceptanceRule, mcCycles, equilMC, expectationValues, pdf, nodeSeed);
+      writeExpVals(outfile, gridDimension, mcCycles, equilMC, temp, expectationValues);
+      //writePDF(outPDF, pdf, gridDimension);
     }
-    if(myRank == 0){
-      writeToFile(outfile, gridDimension, mcCycles, totalEquilMC, temp, collectedExpVals);
-      cout << "temperature = " << temp << " complete" << endl;
-    }
+    //writeMCexpvals(outfile, mcCycles, gridDimension, expectationValues);
   }
+  outfile.close();
+  //outPDF.close();
 
-  double timeEndMPI = MPI_Wtime();
-  if (myRank == 0){
-    outfile.close();
-    cout << "complete after " << (timeEndMPI - timeStartMPI) << " on " << numProcs << " nodes" << endl;
-  }
-
-  MPI_Finalize();
   return 0;
 }
 
 
-void writeToFile(ofstream &outfile, int &gridDimension, double &mcCycles, double &equilMC, double &temperature, vec &expectationValues){
+void writeExpVals(ofstream &outfile, int &gridDimension, double &mcCycles, double &equilMC, double &temperature, vec &expectationValues){
   double gridSize = double(gridDimension*gridDimension);
   double norm = 1.0/((double) (mcCycles - equilMC));  // divided by  number of cycles
   double energy_expvals = expectationValues(0)*norm;
@@ -94,6 +67,39 @@ void writeToFile(ofstream &outfile, int &gridDimension, double &mcCycles, double
   outfile << setw(15) << setprecision(8) << energyVariance/(temperature*temperature);
   outfile << setw(15) << setprecision(8) << magnetisation_expvals/gridSize;
   outfile << setw(15) << setprecision(8) << magnetisationVariance/temperature;
+  outfile << setw(15) << setprecision(8) << magnetisationAbs_expval/gridSize << endl;
+
+  return;
+}
+
+
+void writePDF(ofstream &outfile, double *pdf, int &gridDimension){
+  double gridSize = double(gridDimension*gridDimension);
+  double energy;
+  for(int i = 0; i < 2000; ++i){
+    if(pdf[i] != 0){
+      if(i < 1000){
+        energy = (double) -i/gridSize;
+      }
+      else {
+        energy = (double) i/gridSize;
+      }
+      outfile << setw(15) << setprecision(8) << (double) energy;
+      outfile << setw(15) << setprecision(8) << pdf[i] << endl;
+    }
+  }
+  return;
+}
+
+
+void writeMCexpvals(ofstream &outfile, double &mcCycles, int &gridDimension, vec &expectationValues){
+  double gridSize = double(gridDimension*gridDimension);
+  double norm = 1.0/(double) mcCycles;  // divided by  number of cycles
+  double energy_expvals = expectationValues(0)*norm;
+  double magnetisationAbs_expval = expectationValues(4)*norm;
+  outfile << setiosflags(ios::showpoint | ios::uppercase);
+  outfile << setw(15) << setprecision(8) << mcCycles;
+  outfile << setw(15) << setprecision(8) << energy_expvals/gridSize;
   outfile << setw(15) << setprecision(8) << magnetisationAbs_expval/gridSize << endl;
 
   return;

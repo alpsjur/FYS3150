@@ -1,7 +1,8 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef MAINMPI_H
+#define MAINMPI_H
 
 #include <iostream>
+#include <mpi.h>
 #include <armadillo>
 #include <fstream>
 #include <iomanip>
@@ -18,11 +19,9 @@ using namespace std;
 using namespace arma;
 
 void writeExpVals(ofstream&, int&, double&, double&, double&, vec&);
-void writePDF(ofstream&, double*, int&);
-void writeMCexpvals(ofstream&, double&, int&, vec&);
 
 inline bool acceptanceRule(double parameter, double randomNumber){
   return (randomNumber <= parameter);
 }
 
-#endif /* MAIN.H */
+#endif /* MAINMPI.H */

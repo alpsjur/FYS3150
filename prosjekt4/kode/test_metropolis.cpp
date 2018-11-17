@@ -32,7 +32,7 @@ TEST_CASE("ANALYTICAL 2X2 ISING LATTICE"){
   int gridDimension = 2;
   bool ordered = false;
 
-  IsingModel spinLattice(gridDimension, couplingParameter, ordered); 
+  IsingModel spinLattice(gridDimension, couplingParameter, ordered);
   spinLattice.initSystem();
 
   double equilMC = 2.5e3;
@@ -40,12 +40,13 @@ TEST_CASE("ANALYTICAL 2X2 ISING LATTICE"){
 
   long nodeSeed = -1;
 
+  double pdf[2000];
   // initialising vectors to hold expectation values obtained from MC
   int numberOfExpvals = 5;
   vec expectationValues(numberOfExpvals, fill::zeros);
 
   // running metropolis algorithm
-  metropolis(spinLattice, temperature, acceptanceRule, mcCycles, equilMC, expectationValues, nodeSeed);
+  metropolis(spinLattice, temperature, acceptanceRule, mcCycles, equilMC, expectationValues, pdf, nodeSeed);
 
   double norm = 1.0/((double) (mcCycles - equilMC));
   double energy_expval = expectationValues(0)*norm;
