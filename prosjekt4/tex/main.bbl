@@ -1,0 +1,15 @@
+\begin{thebibliography}{1}
+
+\bibitem{statmech}
+Jacques Kotze.
+\newblock Introduction to monte carlo methods for an ising model of a
+  ferromagnet.
+\newblock {\em arXiv preprint arXiv:0803.0217}, 2008.
+
+\bibitem{onsager}
+Lars Onsager.
+\newblock Crystal statistics. i. a two-dimensional model with an order-disorder
+  transition.
+\newblock {\em Phys. Rev.}, 65:117--149, Feb 1944.
+
+\end{thebibliography}

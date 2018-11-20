@@ -3,7 +3,7 @@
 
 \subsection{Ising model}
 \label{sec:ising}
-To study phase transitions emerging from statistical mechanics, we will use the Ising model. In the Ising model we consider a lattice of interacting spins which are influenced by eachother and an magnetic field $B$. In general then, we can express the Ising model as an Hamiltonian:
+To study phase transitions emerging from statistical mechanics, we will use the Ising model. In the Ising model we consider a lattice of interacting spins which are influenced by each other and an magnetic field $B$. In general then, we can express the Ising model as an Hamiltonian:
   \begin{equation}
   \label{eq:isingH}
     H = -\sum_{\expval{i\, j}}J_{ij}s_i s_j - \mu\sum_j B_js_j,
@@ -13,20 +13,129 @@ where $\expval{i\,j}$ denotes a multiplication only over neighbours, $J_{ij}$ is
   \label{eq:ising}
     E \equiv H = -J\sum_{\expval{i\, j}}s_i s_j.
   \end{equation}
+Furthermore, we will enforce periodic boundary conditions, i.e "wrap" the lattice around itself, and so the endpoints at each side of the lattice will neighbour each other.
 From eq. \ref{eq:ising} we can get the mean energy of the system, of which we can use to calculate the specific heat capacity:
   \begin{equation}
     \label{eq:energy}
-    \expval{c_V} = \pdv{\expval{E}}{T} = \frac{\beta}{T}\pdv{\expval{E}}{\beta}.
+    \expval{c_V} = \frac{\beta}{T}\pdv{\expval{E}}{\beta} = \frac{\beta}{T}\qty(\expval{E^2} - \expval{E}^2).
   \end{equation}
-Here $\beta = \frac{1}{kT}$ (see eq. \ref{eq:partition}) is the Boltzmann factor relating the energy of the system with the temperature. Furthermore, we can obtain the magnetisation of the system
+Here $\beta = \frac{1}{kT}$ (see eq. \ref{eq:partition}) is the Boltzmann factor relating the energy of the system with the temperature. Furthermore, we can obtain the mean magnetisation of the system
   \begin{equation}
   \label{eq:magnet}
-    M = \sum_i s_i,
+    \expval{M} = \sum_i s_i,
   \end{equation}
-and use this to construct the suceptibility
+and use this to construct the susceptibility function:
+  \begin{equation}
+  \label{eq:suscept}
+    \chi = \beta \pdv{M}{\beta} = \beta \qty(\expval{M^2} - \expval{M}^2).
+  \end{equation}
+These then are the observables we are interested in, and to obtain a measure of the relative error, we also solve these analytically for the case of a 2x2 lattice ($L=2$). The energies as well as degeneracy and spin orientation are shown in Table \ref{table:analytic}.
+
+\begin{table}[htbp]
+	\centering
+	\begin{tabular}{cccc}
+		\# $\uparrow$ & g & E [J] & M \\
+		\hline
+		\addlinespace[0.1cm]
+		4                   & 1          & -8    & 4             \\
+		3                   & 4          & 0      & 2             \\
+		2                   & 4          & 0      & 0             \\
+		2                   & 2          & 8     & 0             \\
+		1                   & 4          & 0      & -2            \\
+		0                   & 1          & -8    & -4           
+	\end{tabular}
+	\caption{Microstates for the 2x2 Ising lattice.}
+	\label{table:analytic}
+\end{table}
+
+ Solving the partition function, we get the following relations:
+  \begin{equation}
+  \label{eq:analyticpartition}
+    Z = 12 + 4\cosh{8\beta J}
+  \end{equation}
+
+  \begin{equation}
+  \label{eq:analyticenergy}
+    \expval{E} = -\frac{8J\sinh{8\beta J}}{3 + \cosh{8\beta J}}
+  \end{equation}
+
+  \begin{equation}
+  \label{eq:analyticheatcap}
+    c_V = \frac{64 \beta J^2}{T} \frac{1 + 3\cosh{8 \beta J}}{\qty(\cosh{8\beta J} + 3)^2}
+  \end{equation}
+
+  \begin{equation}
+  \label{analyticmagnet}
+    M = \frac{2e^{-8 \beta J} + 4}{3 + \cosh{8 \beta J}}
+  \end{equation}
+
+  \begin{equation}
+  \label{analyticsuscept}
+    \chi =
+  \end{equation}
+
+\subsection{Second-order phase transitions and the critical temperature}
+\label{sec:phase}
+A second-order phase transition is characterised by divergent susceptibility and heat capacity. Such a discontinuity occurs at the critical temperature, $T_C$, i.e. a "boiling" or "melting" point. In the Ising model then, we would expect divergent susceptibility to occur for an infinite lattice, $L \leftarrow \infty$. In the case where $L$ is finite however, this will not happen, and thus in our simulations we looked for a maxima in the heat capacity. We denote the temperature at this point as $T_C\qty(L)$. Using the following power law (see \cite{statmech} for a more in-depth discussion)
+	\begin{equation}
+	\label{eq:power}
+	T_C\qty(L) - T_C\qty(L \leftarrow \infty) = aL^{-\frac{1}{\nu}},
+	\end{equation}
+we can, by setting $\nu = 1$, obtain the following relation
+	\begin{equation}
+	\label{eq:criticalT}
+	T_C\qty(L \leftarrow \infty) = \frac{T_C\qty(L_I)L_I - T_C\qty(L_i)L_i}{L_I - L_i},
+	\end{equation}
+where $L_I > L_i$, so $T_C > 0$. Eq. \ref{eq:criticalT} lets us estimate the critical temperature in the thermodynamic limit. An analytical value to this expression is given by Onsager \cite{onsager} as
+	\begin{equation}
+	\label{eq:analyticT}
+	\frac{kT_C}{J} = \frac{2}{\ln{1 + \sqrt{2}}} \approx 2.269.
+	\end{equation}
 
 \subsection{Metropolis algorithm}
 \label{sec:metropolis}
+A natural choice of algorithm for studying our system is the Metropolis method, a Markov-chain based algorithm which simulates random behaviour. It does this by comparing the possible change in energy due to flipping a random spin, with a random number from a $[0, 1]$ uniform distribution. The Metropolis algorithm accepts a change if it causes the new state to be more likely. This is the fact that lets us neglect calculating the partition function (see eq. \ref{eq:partition}), and only the ratio of probability between two states:
+	\begin{equation}
+	\label{eq:probratio}
+		w = e^{-\beta \Delta E}.
+	\end{equation}
+From quantum mechanics we have that the most likely state is the ground state, i.e. the state of lowest energy, and so our implementation of the algorithm will check if the energy decreases or not. Of course, the ground state energy is a particular value, and so we will have to keep the possibility of the energy increasing to prevent too large a decrease. The complete algorithm is then shown in Algorithm \ref{algo:metro}
+	
+	\begin{algorithm}[htbp]
+	\label{algo:metro}
+	\caption{Metropolis algorithm specialised for the Ising lattice.}
+		\SetAlgoLined
+		\BlankLine
+		\BlankLine
+		initialise energy of system $E$\;
+		\For{$i=1,\ldots,\,$ MC Cycles}{
+			\For{$s=1, \ldots,\, L\cdot L $ }{
+				calculate $\Delta E$ due to spin flip\;
+				\If{$\Delta E \leq 0$}{
+					accept new state\;
+					flip spin	
+				}
+				\Else{
+					calculate transition probability $w$\;
+					generate random number $r \in \qty[0,1] $\;	
+					\If{$r \leq w$}{
+						accept new state\;
+						flip spin
+					}
+					\Else{
+						keep old state\;	
+					}
+				}
+			}
+			update expectation values\;
+		}
+		calculate mean expectation values\;	
+		\BlankLine
+		\BlankLine
+	\end{algorithm}
 
 \subsection{Implementation}
 \label{sec:implementation}
+
+We implement the Ising model and Metropolis algorithm in C++ using the armadillo library to handle matrices and vectors. In analysing the algorithm and model itself, it was sufficient with lattice sizes $L=2, 20$. When studying the different parameters however, it was necessary to study larger lattices ($L = 40, 60, 80, 100$), resulting in a long run-time. This prompted us to parallelise the program using MPI. Employing 4 nodes, this yielded a significant increase in speed, and was necessary to produce our data in time.
+All the figures were produced in python 3.6 using the matplotlib, pandas and seaborn packages. In most of them, we use a rolling mean to capture a overall picture of the function. This felt natural as we in most cases had very few points. All our code and data can be found at a github repository by janadr. \footnote{https://github.com/janadr/FYS3150/tree/master/prosjekt4}

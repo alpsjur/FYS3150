@@ -6,19 +6,19 @@ int main(int argc, char *argv[]){
   // initialising and opening files
   ofstream outfile;
   outfile.open(argv[1]);
-  //ofstream outPDF;
+  ofstream outPDF;
   //outPDF.open("../data/isingPDF_GRID20_1E6_T24.dat");
   // initialising Ising model
-  int gridDimension = 80;
+  int gridDimension = 2;
   double couplingParameter = 1;
 
-  double initMC = 1e6;
+  double initMC = 25e3;
   double finalMC = 1e6;
-  double dMC = 1e2;
-  double equilMC = 0;  // found experimentally from studying relaxation time
+  double dMC = 1e4;
+  double equilMC = 20e3;  // found experimentally from studying relaxation time
 
-  double initTemp = 2.0;
-  double finalTemp = 2.3;
+  double initTemp = 1.0;
+  double finalTemp = 1.0;
   double dT = 0.01;
   bool ordered = false;
 
@@ -38,13 +38,14 @@ int main(int argc, char *argv[]){
     for (double temp = initTemp; temp <= finalTemp; temp += dT){
       expectationValues.zeros(numberOfExpvals);
       metropolis(spinLattice, temp, acceptanceRule, mcCycles, equilMC, expectationValues, pdf, nodeSeed);
-      writeExpVals(outfile, gridDimension, mcCycles, equilMC, temp, expectationValues);
+      //writeExpVals(outfile, gridDimension, mcCycles, equilMC, temp, expectationValues);
       //writePDF(outPDF, pdf, gridDimension);
+      writeRelativeError(outfile, mcCycles, equilMC, expectationValues);
     }
     //writeMCexpvals(outfile, mcCycles, gridDimension, expectationValues);
   }
   outfile.close();
-  //outPDF.close();
+  outPDF.close();
 
   return 0;
 }
@@ -75,11 +76,11 @@ void writeExpVals(ofstream &outfile, int &gridDimension, double &mcCycles, doubl
 
 void writePDF(ofstream &outfile, double *pdf, int &gridDimension){
   double gridSize = double(gridDimension*gridDimension);
-  double energy;
+  double energy = 0;
   for(int i = 0; i < 2000; ++i){
     if(pdf[i] != 0){
-      if(i < 1000){
-        energy = (double) -i/gridSize;
+      if(i > 1000){
+        energy = (double)  -(i - 1000.0)/gridSize;
       }
       else {
         energy = (double) i/gridSize;
@@ -101,6 +102,28 @@ void writeMCexpvals(ofstream &outfile, double &mcCycles, int &gridDimension, vec
   outfile << setw(15) << setprecision(8) << mcCycles;
   outfile << setw(15) << setprecision(8) << energy_expvals/gridSize;
   outfile << setw(15) << setprecision(8) << magnetisationAbs_expval/gridSize << endl;
+
+  return;
+}
+
+void writeRelativeError(ofstream &outfile, double &mcCycles, double& equilMC, vec &expectationValues){
+  double couplingParameter = 1.0;
+  double temperature = 1.0;
+  double boltzmannsConstant = 1.0;
+  double beta = 1.0/(temperature*boltzmannsConstant);
+  double betaJ = 8.0*beta*couplingParameter;
+  double meanEnergy = - 8.0*couplingParameter*sinh(betaJ)
+                      /(cosh(betaJ) + 3);
+  double meanMagnetisation = (2.0*exp(-betaJ) + 4);
+
+  double norm = 1.0/((double) (mcCycles - equilMC));
+  double energy_expvals = expectationValues(0)*norm;
+  double magnetisationAbs_expval = expectationValues(4)*norm;
+
+  outfile << setiosflags(ios::showpoint | ios::uppercase);
+  outfile << setw(15) << setprecision(8) << mcCycles;
+  outfile << setw(15) << setprecision(8) << fabs(meanEnergy - energy_expvals)/fabs(meanEnergy);
+  outfile << setw(15) << setprecision(8) << fabs(meanMagnetisation - magnetisationAbs_expval)/fabs(meanMagnetisation) << endl;
 
   return;
 }

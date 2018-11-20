@@ -28,7 +28,7 @@ void metropolis(IsingModel &spinLattice, double &temperature, function<bool(doub
         }
       }
     }
-    if(cycles > equilMC){
+    if(cycles >= equilMC){
       expectationValues(0) += spinLattice.energy;
       expectationValues(1) += spinLattice.energy * spinLattice.energy;
       expectationValues(2) += spinLattice.magnetisation;
@@ -36,11 +36,10 @@ void metropolis(IsingModel &spinLattice, double &temperature, function<bool(doub
       expectationValues(4) += fabs(spinLattice.magnetisation);
 
       // finding probability distribution noting
-      pdf_pointer[(int)spinLattice.energy]++;
+      pdf_pointer[(int) -spinLattice.energy]++;
       frequency++;
     }
   }
-
   for(int energy = 0; energy < 2000; ++energy){
     pdf[energy]/=frequency;
   }

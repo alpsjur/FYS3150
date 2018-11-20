@@ -11,11 +11,11 @@ int main(int argc, char *argv[]){
   // initialising files
 
   // initialising Ising model
-  int gridDimension = 80;
+  int gridDimension = 20;
   double couplingParameter = 1;
   double mcCycles = 1e6;
   double equilMC = 25e3;  // found experimentally from studying relaxation time
-  double initTemp = 2.0;
+  double initTemp = 2.3;
   double finalTemp = 2.3;
   double dT = 0.01;
   bool ordered = false;
@@ -63,7 +63,7 @@ int main(int argc, char *argv[]){
       MPI_Reduce(&expectationValues[i], &collectedExpVals[i], 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     }
     if(myRank == 0){
-      writeExpVals(outfile, gridDimension, mcCycles, totalEquilMC, temp, collectedExpVals);
+      //writeExpVals(outfile, gridDimension, mcCycles, totalEquilMC, temp, collectedExpVals);
       cout << "temperature = " << temp << " complete" << endl;
     }
   }
