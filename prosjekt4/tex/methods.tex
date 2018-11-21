@@ -8,12 +8,12 @@ To study phase transitions emerging from statistical mechanics, we will use the 
   \label{eq:isingH}
     H = -\sum_{\expval{i\, j}}J_{ij}s_i s_j - \mu\sum_j B_js_j,
   \end{equation}
-where $\expval{i\,j}$ denotes a multiplication only over neighbours, $J_{ij}$ is a coupling parameter, $\mu$ is the magnetic moment, and $B_j$ is a component of an external magnetic field. As our interest primarily lay in identifying phase transitions, we will simplify the model. We assume that the coupling parameter $J_{ij}$ is the same for all spins and positive, i.e. the interaction is ferromagnetic, and that the lattice is not affected by an external magnetic field. Our model then becomes
+where $\expval{i\,j}$ denotes a multiplication only over neighbours, $J_{ij}$ is a coupling parameter, $\mu$ is the magnetic moment, and $B_j$ is a component of a external magnetic field. As our interest primarily lay in identifying phase transitions, we will simplify the model. We assume that the coupling parameter $J_{ij}$ is the same for all spins and is positive, i.e. the interaction is ferromagnetic, and that the lattice is not affected by an external magnetic field. Our model then becomes
   \begin{equation}
   \label{eq:ising}
     E \equiv H = -J\sum_{\expval{i\, j}}s_i s_j.
   \end{equation}
-Furthermore, we will enforce periodic boundary conditions, i.e "wrap" the lattice around itself, and so the endpoints at each side of the lattice will neighbour each other.
+Furthermore, we will enforce periodic boundary conditions, i.e "wrap" the lattice around itself, and so the endpoints at each side of the lattice will neighbour each other (like a torus).
 From eq. \ref{eq:ising} we can get the mean energy of the system, of which we can use to calculate the specific heat capacity:
   \begin{equation}
     \label{eq:energy}
@@ -29,7 +29,7 @@ and use this to construct the susceptibility function:
   \label{eq:suscept}
     \chi = \beta \pdv{M}{\beta} = \beta \qty(\expval{M^2} - \expval{M}^2).
   \end{equation}
-These then are the observables we are interested in, and to obtain a measure of the relative error, we also solve these analytically for the case of a 2x2 lattice ($L=2$). The energies as well as degeneracy and spin orientation are shown in Table \ref{table:analytic}.
+These then are the observables we are interested in, and to obtain a measure of the relative error, we also solve these analytically for the case of a 2x2 lattice ($L=2$). The energies, as well as degeneracy and spin orientation, are shown in Table \ref{table:analytic}.
 
 \begin{table}[htbp]
 	\centering
@@ -142,4 +142,4 @@ Additionally, we will only sample after the system has reached thermal equilibri
 \label{sec:implementation}
 
 We implement the Ising model and Metropolis algorithm in C++ using the armadillo library to handle matrices and vectors. In analysing the algorithm and model itself, it was sufficient with lattice sizes $L=2, 20$. When studying the different parameters however, it was necessary to study larger lattices ($L = 40, 60, 80, 100$), resulting in a long run-time. This prompted us to parallelise the program using MPI. Employing 4 nodes, this yielded an increase in speed of about 1.5, and was necessary to produce our data in time.
-All the figures were produced in python 3.6 using the matplotlib, pandas and seaborn packages. In most of them, we use a rolling mean to capture a overall picture of the function. This felt natural as we in most cases had very few points. We also implement the analytical values for the 2x2 lattice as unit tests. Another possible unit tests that could have been implemented was to check if the probability distribution remained normalised. All our code and data can be found at a github repository by janadr. \footnote{https://github.com/janadr/FYS3150/tree/master/prosjekt4}
+All the figures were produced in python 3.6 using the matplotlib, pandas and seaborn packages. In most of them, we use a rolling mean to capture an overall picture of the function. This felt natural as we in most cases had very few points. We also implement the analytical values for the 2x2 lattice as unit tests. Another possible unit tests that could have been implemented, was to check if the probability distribution remained normalised. All our code and data can be found at a github repository by janadr. \footnote{https://github.com/janadr/FYS3150/tree/master/prosjekt4}

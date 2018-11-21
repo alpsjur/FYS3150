@@ -54,7 +54,6 @@ def estimateTC(tempcrits, gridSizes):
         for i in range(j):
             criticalT.append((tempcrits[0, j]*gridSizes[j] - tempcrits[0, i]*gridSizes[i])/(gridSizes[j] - gridSizes[i]))
             criticalT_rm.append((tempcrits[1, j]*gridSizes[j] - tempcrits[1, i]*gridSizes[i])/(gridSizes[j] - gridSizes[i]))
-    print(criticalT)
     return np.array([criticalT, criticalT_rm])
 
 
@@ -93,14 +92,13 @@ for size in gridSizes[1:]:
 
 #print(df001.head())
 
-#plot_all(df001, "001", header, gridSizes, window=2)
-#plot_all(df0001, "0001", header, gridSizes, window=5)
+plot_all(df001, "001", header, gridSizes, window=2)
+plot_all(df0001, "0001", header, gridSizes, window=5)
 tempcrits001 = calculateTC(df001, gridSizes, window=2)
 tempcrits0001 = calculateTC(df0001, gridSizes, window=5)
 
 # haaper framtidige meg ikke ser tilbake paa denne koden
 TC001 = estimateTC(tempcrits001, gridSizes)[0, :]
-print(TC001)
 TC001_rm = estimateTC(tempcrits001, gridSizes)[1, :]
 TC0001 = estimateTC(tempcrits0001, gridSizes)[0, :]
 TC0001_rm = estimateTC(tempcrits0001, gridSizes)[1, :]
@@ -118,8 +116,8 @@ header = ["energy", "probability", "expval", "STD"]
 pdf10 = construct_df("isingPDF_GRID20_1E6_T1.dat", header)
 pdf24 = construct_df("isingPDF_GRID20_1E6_T24.dat", header)
 
-print(pdf10.reset_index().expval, pdf10.reset_index().std)
-print(pdf24.reset_index().expval, pdf24.reset_index().std)
+#print(pdf10.reset_index().expval, pdf10.reset_index().std)
+#print(pdf24.reset_index().expval, pdf24.reset_index().std)
 
 figPDF = plt.figure()
 
