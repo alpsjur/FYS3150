@@ -1,9 +1,9 @@
 #include "metropolis.h"
 
 
-void metropolis(IsingModel &spinLattice, double &temperature, function<bool(double,
+void metropolis(IsingModel spinLattice, double &temperature, function<bool(double,
                 double)> acceptanceRule, double &mcCycles, double &equilMC,
-                vec &expectationValues, double *pdf, long &nodeSeed)
+                vec &expectationValues, double *pdf, int &acceptanceCounter, long &nodeSeed)
   {
 
   // initialise possible energy changes and frequency of energies
@@ -25,6 +25,7 @@ void metropolis(IsingModel &spinLattice, double &temperature, function<bool(doub
           deltaMagnetisation = spinLattice.calculateDeltaMagnetisation(rowRandom, columnRandom);
           spinLattice.magnetisation += deltaMagnetisation;
           spinLattice.energy += deltaEnergy;
+          //acceptanceCounter++;
         }
       }
     }

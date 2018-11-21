@@ -53,12 +53,13 @@ int main(int argc, char *argv[]){
   vec collectedExpVals(numberOfExpvals, fill::zeros);
   // initialising array to hold probability distribution function
   double pdf[2000];
+  int acceptanceCounter;
   // running and timing a parallellised Metropolis algorithm
   double timeStartMPI = MPI_Wtime();
   for (double temp = initTemp; temp <= finalTemp; temp += dT){
     expectationValues.zeros(numberOfExpvals);
     collectedExpVals.zeros(numberOfExpvals);
-    metropolis(spinLattice, temp, acceptanceRule, my_mcCycles, equilMC, expectationValues, pdf, nodeSeed);
+    metropolis(spinLattice, temp, acceptanceRule, my_mcCycles, equilMC, expectationValues, pdf, acceptanceCounter, nodeSeed);
     for(int i = 0; i < numberOfExpvals; ++i){
       MPI_Reduce(&expectationValues[i], &collectedExpVals[i], 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     }

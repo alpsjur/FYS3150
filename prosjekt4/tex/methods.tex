@@ -71,8 +71,10 @@ These then are the observables we are interested in, and to obtain a measure of 
 
   \begin{equation}
   \label{analyticsuscept}
-    \chi =
+    \chi = \beta\qty[8\frac{e^{8\beta J} + 1}{3 + \cosh{8\beta J}} - \qty(2\frac{e^{8\beta J} + 2}{3 + \cosh{8 \beta J}})^2 ]
   \end{equation}
+ 
+Throughout the article, we will use dimensionless units where $[T] = \frac{k_bK}{J}$.
 
 \subsection{Second-order phase transitions and the critical temperature}
 \label{sec:phase}
@@ -89,7 +91,7 @@ we can, by setting $\nu = 1$, obtain the following relation
 where $L_I > L_i$, so $T_C > 0$. Eq. \ref{eq:criticalT} lets us estimate the critical temperature in the thermodynamic limit. An analytical value to this expression is given by Onsager \cite{onsager} as
 	\begin{equation}
 	\label{eq:analyticT}
-	\frac{kT_C}{J} = \frac{2}{\ln{1 + \sqrt{2}}} \approx 2.269.
+	\frac{kT_C}{J} = \frac{2}{\ln\qty(1 + \sqrt{2})} \approx 2.269.
 	\end{equation}
 
 \subsection{Metropolis algorithm}
@@ -134,8 +136,10 @@ From quantum mechanics we have that the most likely state is the ground state, i
 		\BlankLine
 	\end{algorithm}
 
+Additionally, we will only sample after the system has reached thermal equilibrium, i.e. after the thermalisation time.
+
 \subsection{Implementation}
 \label{sec:implementation}
 
-We implement the Ising model and Metropolis algorithm in C++ using the armadillo library to handle matrices and vectors. In analysing the algorithm and model itself, it was sufficient with lattice sizes $L=2, 20$. When studying the different parameters however, it was necessary to study larger lattices ($L = 40, 60, 80, 100$), resulting in a long run-time. This prompted us to parallelise the program using MPI. Employing 4 nodes, this yielded a significant increase in speed, and was necessary to produce our data in time.
-All the figures were produced in python 3.6 using the matplotlib, pandas and seaborn packages. In most of them, we use a rolling mean to capture a overall picture of the function. This felt natural as we in most cases had very few points. All our code and data can be found at a github repository by janadr. \footnote{https://github.com/janadr/FYS3150/tree/master/prosjekt4}
+We implement the Ising model and Metropolis algorithm in C++ using the armadillo library to handle matrices and vectors. In analysing the algorithm and model itself, it was sufficient with lattice sizes $L=2, 20$. When studying the different parameters however, it was necessary to study larger lattices ($L = 40, 60, 80, 100$), resulting in a long run-time. This prompted us to parallelise the program using MPI. Employing 4 nodes, this yielded an increase in speed of about 1.5, and was necessary to produce our data in time.
+All the figures were produced in python 3.6 using the matplotlib, pandas and seaborn packages. In most of them, we use a rolling mean to capture a overall picture of the function. This felt natural as we in most cases had very few points. We also implement the analytical values for the 2x2 lattice as unit tests. Another possible unit tests that could have been implemented was to check if the probability distribution remained normalised. All our code and data can be found at a github repository by janadr. \footnote{https://github.com/janadr/FYS3150/tree/master/prosjekt4}

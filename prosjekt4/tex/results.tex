@@ -25,6 +25,30 @@ Taking a closer look at the most likely state, we see the probability distributi
 	\label{fig:probabilitydist}
 \end{figure}
 
+Furthermore, we present the expectation value and standard deviation (sd) of the energy in Table \ref{table:energystd}. We see that when $T=1.0$ the sd is relatively low, while for $T=2.4$ it is over double the absolute magnitude of the expected energy.
+
+\begin{table}[htbp]
+	\centering
+	\begin{tabular}{l|cccc}
+		\textbf{T} & $\expval{E}$ & $\sigma_{\expval{E}}$  \\
+		\midrule
+		
+		1.0 & -1.997 & 0.15246889 \\
+		2.4 & -1.237 & 2.849  \\
+	\end{tabular}
+	\caption{Expected energy for $T=1.0$ and $T=2.4$ with standard deviation.}
+	\label{table:energystd}
+\end{table}
+
+
+As for the amount of accepted states as a function of Monte Carlo cycles we see (Figure \ref{fig:acceptance}) that there generally is a lot more accepted states in the case of higher temperature. There also seem to be very little difference between the unordered and ordered lattices besides some small fluctuations.
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.5\textwidth]{acceptance.pdf}
+	\caption{Number of accepted states as a function of Monte Carlo cycles.}
+	\label{fig:acceptance}
+\end{figure}
+
 Shown in Figure \ref{fig:energy001} is the mean energy of the system. We see that there is a steady increase with little difference between lattice sizes.
 \begin{figure}[htbp]
 	\centering
@@ -68,13 +92,13 @@ Zooming in on the heat capacity in the interval $T \in [2.26, 2.30]$ we get a cl
 \begin{table}[htbp]
 	\centering
 	\begin{tabular}{l|cccc}
-		\textbf{$dT$} & $dT_0$ & $dT_0 \qty(RM)$ & $dT_1$ & $dT_1 \qty(RM)$  \\
+		\bm{$dT$} & $dT_0$ & $dT_0 \qty(RM)$ & $dT_1$ & $dT_1 \qty(RM)$  \\
 		\midrule
-		\addlinespace[0.1cm]
 
-		\textbf{$T_C$} & 2.263 & 2.273 & 2.260 & 2.267 \\
+		\bm{$T_C$} & 2.265 & 2.271 & 2.262 & 2.265 \\
+		\textbf{STD} & 0.018 & 0.012 & 0.016 & 0.018 \\
 	\end{tabular}
-	\caption{Critical temperature for $dT_0 = 0.01$ and $dT_1 = 0.001$ with and without rolling mean, windows size 2 and 5 respectively.}
+	\caption{Critical temperature for $dT_0 = 0.01$ and $dT_1 = 0.001$ with and without rolling mean, window size 2 and 5 respectively.}
 	\label{table:Tmax}
 \end{table}
 

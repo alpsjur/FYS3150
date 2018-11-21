@@ -29,9 +29,9 @@ def plot_all(df, dt, header, gridSizes, window=5):
         for size in gridSizes:
             ax.scatter(df.index, df[parameter + " {}".format(size)].values)
             df_rm.plot(y=parameter + " {}".format(size), legend=False, label="L={}".format(size), ax=ax)
-        ax.set_xlabel(r"Temperature $[\frac{K}{J}]$", fontsize=14)
+        ax.set_xlabel(r"Temperature $[\frac{k_B K}{J}]$", fontsize=14)
         ax.set_ylabel(r"{}".format(parameter), fontsize=14)
-        fig.legend(loc="upper center", fontsize=14, frameon=False, ncol=4)
+        fig.legend(loc="upper center", fontsize=14, frameon=False, ncol=4, bbox_to_anchor=[0.5, 1.03])
         plt.tight_layout()
         #plt.savefig(figdir + parameter + dt + ".pdf")
 
@@ -48,11 +48,14 @@ def calculateTC(df, gridSizes, window=5):
 
 # function to estimate the critical temperature in the thermodynamic limit
 def estimateTC(tempcrits, gridSizes):
-    criticalT = np.zeros((2, len(gridSizes)-1))
-    for j in range(len(gridSizes)-1):
-        criticalT[0, j] = (tempcrits[0, j+1]*gridSizes[j+1] - tempcrits[0, j]*gridSizes[j])/(gridSizes[j+1] - gridSizes[j])
-        criticalT[1, j] = (tempcrits[1, j+1]*gridSizes[j+1] - tempcrits[1, j]*gridSizes[j])/(gridSizes[j+1] - gridSizes[j])
-    return criticalT
+    criticalT = []
+    criticalT_rm = []
+    for j in range(len(gridSizes)):
+        for i in range(j):
+            criticalT.append((tempcrits[0, j]*gridSizes[j] - tempcrits[0, i]*gridSizes[i])/(gridSizes[j] - gridSizes[i]))
+            criticalT_rm.append((tempcrits[1, j]*gridSizes[j] - tempcrits[1, i]*gridSizes[i])/(gridSizes[j] - gridSizes[i]))
+    print(criticalT)
+    return np.array([criticalT, criticalT_rm])
 
 
 # this functions return a empty ax for creating axis labels for multiple subplots
@@ -95,18 +98,28 @@ for size in gridSizes[1:]:
 tempcrits001 = calculateTC(df001, gridSizes, window=2)
 tempcrits0001 = calculateTC(df0001, gridSizes, window=5)
 
-print(estimateTC(tempcrits001, gridSizes)[0, :].mean())
-print(estimateTC(tempcrits001, gridSizes)[1, :].mean())
-print(estimateTC(tempcrits0001, gridSizes)[0, :].mean())
-print(estimateTC(tempcrits0001, gridSizes)[1, :].mean())
+# haaper framtidige meg ikke ser tilbake paa denne koden
+TC001 = estimateTC(tempcrits001, gridSizes)[0, :]
+print(TC001)
+TC001_rm = estimateTC(tempcrits001, gridSizes)[1, :]
+TC0001 = estimateTC(tempcrits0001, gridSizes)[0, :]
+TC0001_rm = estimateTC(tempcrits0001, gridSizes)[1, :]
+
+print(TC001.mean(), TC001.std())
+print(TC001_rm.mean(), TC001_rm.std())
+print(TC0001.mean(), TC0001.std())
+print(TC0001_rm.mean(), TC0001_rm.std())
 
 figdir = "../figurer/"
 
 # plotting the probability distribution
-header = ["energy", "probability"]
+header = ["energy", "probability", "expval", "STD"]
 
 pdf10 = construct_df("isingPDF_GRID20_1E6_T1.dat", header)
 pdf24 = construct_df("isingPDF_GRID20_1E6_T24.dat", header)
+
+print(pdf10.reset_index().expval, pdf10.reset_index().std)
+print(pdf24.reset_index().expval, pdf24.reset_index().std)
 
 figPDF = plt.figure()
 
@@ -169,3 +182,23 @@ for i in range(len(mcheader[1:])):
 axes[1].set_xlabel("Monte Carlo Cycles", fontsize=14)
 plt.tight_layout()
 #plt.savefig(figdir + "relerror.pdf")
+
+
+df_accept1_unordered = construct_df("acceptance_T1_unordered.dat", ["Monte Carlo cycles", "unordered T=1.0"])
+df_accept1_ordered = construct_df("acceptance_T1_ordered.dat", ["Monte Carlo cycles", "ordered T=1.0"])
+df_accept24_unordered = construct_df("acceptance_T24_unordered.dat", ["Monte Carlo cycles", "unordered T=2.4"])
+df_accept24_ordered = construct_df("acceptance_T24_ordered.dat", ["Monte Carlo cycles", "ordered T=2.4"])
+
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
+
+df_accept1_unordered.plot(loglog=True, legend=False, ax=ax)
+df_accept1_ordered.plot(loglog=True, legend=False, ax=ax)
+df_accept24_unordered.plot(loglog=True, legend=False, ax=ax)
+df_accept24_ordered.plot(loglog=True, legend=False, ax=ax)
+
+fig.legend(fontsize=14, ncol=2, loc="upper center", frameon=False, bbox_to_anchor=[0.5, 1.03])
+ax.set_xlabel("Monte Carlo cycles", fontsize=14)
+ax.set_ylabel("Acceptance count", fontsize=14)
+#plt.savefig(figdir + "acceptance.pdf")
+plt.show()

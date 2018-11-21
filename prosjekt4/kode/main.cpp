@@ -6,16 +6,14 @@ int main(int argc, char *argv[]){
   // initialising and opening files
   ofstream outfile;
   outfile.open(argv[1]);
-  ofstream outPDF;
-  //outPDF.open("../data/isingPDF_GRID20_1E6_T24.dat");
   // initialising Ising model
-  int gridDimension = 2;
+  int gridDimension = 20;
   double couplingParameter = 1;
 
-  double initMC = 25e3;
+  double initMC = 1e6;
   double finalMC = 1e6;
-  double dMC = 1e4;
-  double equilMC = 20e3;  // found experimentally from studying relaxation time
+  double dMC = 1e2;
+  double equilMC = 25e3;  // found experimentally from studying relaxation time
 
   double initTemp = 1.0;
   double finalTemp = 1.0;
@@ -33,19 +31,21 @@ int main(int argc, char *argv[]){
   vec expectationValues(numberOfExpvals, fill::zeros);
   // initialising array to hold probability distribution function
   double pdf[2000] = {0};
+  int acceptanceCounter;
   // running the metropolis algorithm for different mcs and temperatures
   for(double mcCycles = initMC; mcCycles <= finalMC; mcCycles += dMC){
-    for (double temp = initTemp; temp <= finalTemp; temp += dT){
+    for(double temp = initTemp; temp <= finalTemp; temp += dT){
+      //acceptanceCounter = 0;
       expectationValues.zeros(numberOfExpvals);
-      metropolis(spinLattice, temp, acceptanceRule, mcCycles, equilMC, expectationValues, pdf, nodeSeed);
+      metropolis(spinLattice, temp, acceptanceRule, mcCycles, equilMC, expectationValues, pdf, acceptanceCounter, nodeSeed);
       //writeExpVals(outfile, gridDimension, mcCycles, equilMC, temp, expectationValues);
-      //writePDF(outPDF, pdf, gridDimension);
-      writeRelativeError(outfile, mcCycles, equilMC, expectationValues);
+      writePDF(outfile, pdf, gridDimension, mcCycles, equilMC, expectationValues);
+      //writeRelativeError(outfile, mcCycles, equilMC, expectationValues);
+      //writeAcceptanceRate(outfile, mcCycles, equilMC, acceptanceCounter);
     }
     //writeMCexpvals(outfile, mcCycles, gridDimension, expectationValues);
   }
   outfile.close();
-  outPDF.close();
 
   return 0;
 }
@@ -74,8 +74,12 @@ void writeExpVals(ofstream &outfile, int &gridDimension, double &mcCycles, doubl
 }
 
 
-void writePDF(ofstream &outfile, double *pdf, int &gridDimension){
+void writePDF(ofstream &outfile, double *pdf, int &gridDimension, double &mcCycles, double &equilMC, vec &expectationValues){
   double gridSize = double(gridDimension*gridDimension);
+  double norm = 1.0/((double) (mcCycles - equilMC));
+  double energy_expvals = expectationValues(0)*norm;
+  double energy2_expvals = expectationValues(1)*norm;
+  double energySTD = sqrt((energy2_expvals - energy_expvals*energy_expvals)/gridSize);
   double energy = 0;
   for(int i = 0; i < 2000; ++i){
     if(pdf[i] != 0){
@@ -86,7 +90,9 @@ void writePDF(ofstream &outfile, double *pdf, int &gridDimension){
         energy = (double) i/gridSize;
       }
       outfile << setw(15) << setprecision(8) << (double) energy;
-      outfile << setw(15) << setprecision(8) << pdf[i] << endl;
+      outfile << setw(15) << setprecision(8) << pdf[i];
+      outfile << setw(15) << setprecision(8) << energy_expvals/gridSize;
+      outfile << setw(15) << setprecision(8) << energySTD << endl;
     }
   }
   return;
@@ -124,6 +130,14 @@ void writeRelativeError(ofstream &outfile, double &mcCycles, double& equilMC, ve
   outfile << setw(15) << setprecision(8) << mcCycles;
   outfile << setw(15) << setprecision(8) << fabs(meanEnergy - energy_expvals)/fabs(meanEnergy);
   outfile << setw(15) << setprecision(8) << fabs(meanMagnetisation - magnetisationAbs_expval)/fabs(meanMagnetisation) << endl;
+
+  return;
+}
+
+void writeAcceptanceRate(ofstream &outfile, double &mcCycles, double &equilMC, int &acceptanceCounter){
+  outfile << setiosflags(ios::showpoint | ios::uppercase);
+  outfile << setw(15) << setprecision(8) << mcCycles;
+  outfile << setw(15) << setprecision(8) << acceptanceCounter << endl;
 
   return;
 }
