@@ -11,6 +11,7 @@ inline int periodic(int i, int gridDimension){
 
 
 class IsingModel{
+  // class that initialises an Ising lattice, as well as provide functions for simulation
 private:
   imat m_spinMatrix;
   double m_couplingParameter;
