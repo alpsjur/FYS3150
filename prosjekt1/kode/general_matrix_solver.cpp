@@ -42,7 +42,6 @@ int main(int argc, char * argv[]) {  // kommandolinje argumenter må være char
 
     clock_t c_start = clock();
     forward_sub(n, a, b, c, d);
-    delete[] a;
     v[n-1] = d[n-1]/b[n-1];
     backward_sub(n, v, b, c, d);
     clock_t c_end = clock();
@@ -50,6 +49,7 @@ int main(int argc, char * argv[]) {  // kommandolinje argumenter må være char
     // Beregner CPU-tid i milisekunder
     double CPU_time = 1000.0 * (c_end - c_start) / CLOCKS_PER_SEC;
 
+    delete[] a;
     delete[] b;
     delete[] c;
     delete[] d;
