@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <iomanip>
 #include <ctime>
 #include <armadillo>
 
@@ -20,6 +21,9 @@ void backward_sub(int, vector<double>&, vector<double>&, vector<double>&, vector
 
 void advance_vorticity_forward(double&, double&, double&, double&, double&, double&);
 void advance_vorticity_centered(double&, double&, double&, double&, double&, double&);
+
+void writePsi(ofstream&, double&);
+void writeZeta(ofstream&, double&);
 
 void centered_difference(double&, double&, double&, double&);
 void centered_difference2(double&, double&, double&, double&, double&);
