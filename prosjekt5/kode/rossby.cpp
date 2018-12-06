@@ -10,15 +10,11 @@ int main(int argc, char *argv[]){
   int timedim = atoi(argv[1]);
   int posdim = atoi(argv[2]);
 
-  double endtime = 20.0;
+  double endtime = 200.0;
   double endpos = 1;
 
   double deltatime = endtime/timedim;
   double deltapos = endpos/posdim;
-
-  // grensebetingelser for vortisiteten og straumfunksjonen
-  zeta[0] = 0.0;
-  zeta[posdim] = 0.0;
 
 
   // initialising a vector of vectors (matrix) to hold a wave for every timestep
@@ -46,11 +42,11 @@ int main(int argc, char *argv[]){
   vector<double> d(posdim+2);
   vector<double> x(posdim);
 
-  initPsi(posdim, psi);
+  initWave(posdim, psi, zeta);
   for(int n = 0; n < timedim; ++n){
-    for(int j = 1; j < posdim; ++j){
+    for(int j = 1; j < posdim-1; ++j){
       //jobbe videre her
-      zeta[j] -= (deltatime/deltapos)*(psi[j+1] - psi[j-1]);
+      advance_vorticity_forward(zeta[j], psi[j+1], psi[j-1], deltatime, deltapos);
       writeZeta(outzeta, zeta[j]);
       writePsi(outpsi, psi[j]);
     }
@@ -67,11 +63,12 @@ int main(int argc, char *argv[]){
 
 
 //initsaliserer strømfunksjonen
-void initPsi(int posdim, vector<double> &psi){
+void initWave(int posdim, vector<double> &psi, vector<double> &zeta){
   double x;
-  for(int i = 0; i < posdim; ++i){
-    x = i*(1./(posdim-1));
-    psi[i] = sinewave(x);
+  for(int j = 0; j < posdim; ++j){
+    x = j*(1./(posdim-1));
+    zeta[j] = -16.0*3.14159*3.14159*sinewave(x);
+    psi[j] = sinewave(x);
     //psi[i] = gaussian(x);
   }
   return;
@@ -121,10 +118,10 @@ void backward_sub(int posdim, vector<double> &psi, vector<double> &b,
   return;
 }
 
-void advance_vorticity_forward(double &zeta_forward, double &zeta_center,
-                              double &psi_forward, double &psi_backward,
-                              double &deltatime, double &deltapos){
-  zeta_forward = zeta_center - (deltatime/(2.0*deltapos))*(psi_forward - psi_backward);
+void advance_vorticity_forward(double &zeta_forward, double &psi_forward,
+                              double &psi_backward, double &deltatime,
+                              double &deltapos){
+  zeta_forward -= (deltatime/(2.0*deltapos))*(psi_forward - psi_backward);
   return;
 }
 
