@@ -5,7 +5,7 @@ import seaborn as sns
 
 
 sns.set()
-sns.set_style("whitegrid")
+sns.set_style("white")
 sns.set_palette("husl")
 
 
@@ -23,13 +23,13 @@ def init():
     return line,
 
 def animate(i):
-    line.set_ydata(data[i+1])
+    line.set_ydata(data[i])
     return line,
 
 
 anim = animation.FuncAnimation(fig, animate,
                                 init_func=init,
-                                frames=200,
+                                frames=1000,
                                 interval=2,
                                 blit=True
                                 )

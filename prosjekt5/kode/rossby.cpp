@@ -44,12 +44,14 @@ int main(int argc, char *argv[]){
 
   initWave(posdim, psi, zeta);
   for(int n = 0; n < timedim; ++n){
+    outpsi<< setw(15) << 0.0;
     for(int j = 1; j < posdim-1; ++j){
       //jobbe videre her
       advance_vorticity_forward(zeta[j], psi[j+1], psi[j-1], deltatime, deltapos);
       writeZeta(outzeta, zeta[j]);
       writePsi(outpsi, psi[j]);
     }
+    outpsi << setw(15) << 0.0;
     outzeta << endl;
     outpsi << endl;
     initMatrixElements(posdim, zeta, x, a, b, c, d);
@@ -80,27 +82,21 @@ void initMatrixElements(int posdim, vector<double> zeta, vector<double> &x, vect
                         vector<double> &b, vector<double> &c, vector<double> &d) {
   const double h = 1.0/(posdim + 1.0);
   const double hh = h*h;
-  a[0] = -1.0;
-  b[0] = 1.0;
-  c[0] = 0.0;
-  d[0] = 0.0;
+
   for(int i = 0; i < posdim; ++i) {
     x[i] = (i + 1)*h;
-    a[i+1] = -1.0;
-    b[i+1] = 2.0;
-    c[i+1] = -1.0;
-    d[i+1] = hh*zeta[i];
+    a[i] = 1.0;
+    b[i] = -2.0;
+    c[i] = 1.0;
+    d[i] = hh*zeta[i];
   }
-  a[posdim] = 0;
-  b[posdim+1] = 1;
-  d[posdim+1] = 0;
   return;
 }
 
 // utfører gaussisk eliminasjon for å redusere likningssettet
 void forward_sub(int posdim, vector<double> &a, vector<double> &b,
                  vector<double> &c, vector<double> &d) {
-  for(int i = 1; i < posdim+2; ++i) {
+  for(int i = 1; i < posdim; ++i) {
     const double k = a[i-1]/b[i-1];
     b[i] -= k*c[i-1];
     d[i] -= k*d[i-1];
@@ -112,8 +108,8 @@ void forward_sub(int posdim, vector<double> &a, vector<double> &b,
 // løser likningssettet for v-vektoren
 void backward_sub(int posdim, vector<double> &psi, vector<double> &b,
                   vector<double> &c, vector<double> &d) {
-  for(int i = posdim; i >= 1; --i) {
-    psi[i-1] = (d[i] - c[i]*psi[i])/b[i];
+  for(int i = posdim - 2; i >= 0; --i) {
+    psi[i] = (d[i] - c[i]*psi[i+1])/b[i];
   }
   return;
 }
