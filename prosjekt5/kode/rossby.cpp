@@ -57,7 +57,7 @@ int main(int argc, char *argv[]){
       writeZeta(outzeta, zeta[j]);
       writePsi(outpsi, psi[j]);
     }
-    advance_vorticity_forward(zeta[posdim-1], psiClosed, psi[0], deltatime, deltapos);
+    advance_vorticity_forward(zeta[posdim-1], psiClosed, psi[posdim-1], deltatime, deltapos);
     writePsi(outpsi, psi[posdim-1]);    // skriver ut siste verdi til fil
     outpsi << setw(15) << psiClosed;    // skriver ut høyre BC
     outzeta << endl;
