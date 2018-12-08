@@ -13,6 +13,14 @@ int main(int argc, char *argv[]){
   double endtime = atof(argv[3]);
   double endpos = 1.0;
 
+  bool initialSine;
+  if(atof(argv[4])==0){
+    initialSine = true;
+  }
+  else{
+    initialSine = false;
+  }
+
   int posdim = (int) endpos/deltapos;
   int timedim = (int) endtime/deltatime;
 
@@ -25,27 +33,13 @@ int main(int argc, char *argv[]){
   double psiClosed = 0;
 
   // matriseelementer
-  /*
-  løser likingssett på formen
-
-    [1 0 0 0 ..... 0]   [  v0]   [ 0]
-    [a b c 0 ..... 0]   [  v1]   [d0]
-    [0 a b c ..... 0]   [  v2]   [d1]
-    [0 0 a b ..... 0] * [  v3] = [d2]
-    [........... b c]   [....]   [..]
-    [0 ......... a b]   [vn+1]   [dn]
-    [0 ......... 0 1]   [vn+2]   [ 0]
-
-  der a = c = 1, b = -2
-
-  */
-  vector<double> a(posdim+2);
-  vector<double> b(posdim+2);
-  vector<double> c(posdim+2);
-  vector<double> d(posdim+2);
+  vector<double> a(posdim);
+  vector<double> b(posdim);
+  vector<double> c(posdim);
+  vector<double> d(posdim);
   vector<double> x(posdim);
 
-  initWave(posdim, psi, zeta);
+  initWave(posdim, psi, zeta, initialSine);
   for(int n = 0; n < timedim; ++n){
     outpsi<< setw(15) << psiClosed;      // skrivet ut venstre BC
     writePsi(outpsi, psi[0]);            // skriver ut første verdi til fil
@@ -73,17 +67,22 @@ int main(int argc, char *argv[]){
 
 
 //initsaliserer strømfunksjonen
-void initWave(int posdim, vector<double> &psi, vector<double> &zeta){
+void initWave(int posdim, vector<double> &psi, vector<double> &zeta, bool initialSine){
   double x;
   double h = 1.0/(posdim + 1.0);
   double sigma = 0.2;
   double sigma2 = sigma*sigma;
   for(int j = 0; j < posdim; ++j){
     x = (j + 1)*h;
-    zeta[j] = -16.0*3.14159*3.14159*sinewave(x);
-    //zeta[j] = -2.0*gaussian(x, sigma)*(sigma2 - 2.0*x*x)/(sigma2*sigma2);
-    psi[j] = sinewave(x);
-    //psi[j] = gaussian(x, sigma);
+    if(initialSine){
+      zeta[j] = -16.0*3.14159*3.14159*sinewave(x);
+      psi[j] = sinewave(x);
+    }
+    else{
+      zeta[j] = -2.0*gaussian(x, sigma)*(sigma2 - 2.0*x*x)/(sigma2*sigma2);
+      psi[j] = gaussian(x, sigma);
+    }
+
   }
   return;
 }
@@ -120,22 +119,23 @@ void forward_sub(int posdim, vector<double> &a, vector<double> &b,
 // løser likningssettet for v-vektoren
 void backward_sub(int posdim, vector<double> &psi, vector<double> &b,
                   vector<double> &c, vector<double> &d) {
+  psi[posdim-1] = d[posdim-1]/b[posdim-1];
   for(int j = posdim - 2; j >= 0; --j) {
     psi[j] = (d[j] - c[j]*psi[j+1])/b[j];
   }
   return;
 }
 
-void advance_vorticity_forward(double &zeta_forward, double &psi_forward,
-                              double &psi_backward, double &deltatime,
-                              double &deltapos){
+void advance_vorticity_forward(double &zeta_forward, double psi_forward,
+                              double psi_backward, double deltatime,
+                              double deltapos){
   zeta_forward -= (deltatime/(2.0*deltapos))*(psi_forward - psi_backward);
   return;
 }
 
-void advance_vorticity_centered(double &zeta_forward, double &zeta_backward,
-                                double &psi_forward, double &psi_backward,
-                                double &deltatime, double &deltapos){
+void advance_vorticity_centered(double &zeta_forward, double zeta_backward,
+                                double psi_forward, double psi_backward,
+                                double deltatime, double deltapos){
   zeta_forward = zeta_backward - (deltatime/(2.0*deltapos))*(psi_forward - psi_backward);
   return;
 }

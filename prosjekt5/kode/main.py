@@ -8,18 +8,21 @@ sns.set()
 sns.set_style("whitegrid")
 sns.set_palette("husl")
 
-
 datadir = "../data/"
 data = np.loadtxt(datadir + "psi.dat")
 x = np.linspace(0, 1, len(data[0]))
 
+ymax = np.max(data)
+ymin = np.min(data)
+addedspace = (ymax-ymin)/10
+
 fig, ax = plt.subplots()
+ax.set_xlim(-0.1,1.1)
+ax.set_ylim(ymin-addedspace,ymax+addedspace)
 
 line, = ax.plot(x, data[0])
 
 def init():
-    #ax.set_xlim(-0.1, 1.1)
-    #ax.set_ylim(-0.15, 0.15)
     return line,
 
 def animate(i):
@@ -28,7 +31,7 @@ def animate(i):
 
 
 anim = animation.FuncAnimation(fig, animate,
-                                frames=1000,
+                                frames=len(data),
                                 interval=2,
                                 blit=True
                                 )
