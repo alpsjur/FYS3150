@@ -5,7 +5,7 @@ import seaborn as sns
 
 
 sns.set()
-sns.set_style("white")
+sns.set_style("whitegrid")
 sns.set_palette("husl")
 
 
@@ -18,7 +18,7 @@ fig, ax = plt.subplots()
 line, = ax.plot(x, data[0])
 
 def init():
-    ax.set_xlim(-0.1, 1.1)
+    #ax.set_xlim(-0.1, 1.1)
     #ax.set_ylim(-0.15, 0.15)
     return line,
 
@@ -28,7 +28,6 @@ def animate(i):
 
 
 anim = animation.FuncAnimation(fig, animate,
-                                init_func=init,
                                 frames=1000,
                                 interval=2,
                                 blit=True

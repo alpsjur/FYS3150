@@ -7,19 +7,22 @@ int main(int argc, char *argv[]){
   outpsi.open("../data/psi.dat");
   outzeta.open("../data/zeta.dat");
 
-  int timedim = atoi(argv[1]);
-  int posdim = atoi(argv[2]);
+  // funksjonen tar tre cmd argument, dt, dx og slutt tid
+  double deltapos = atof(argv[1]);
+  double deltatime = atof(argv[2]);
+  double endtime = atof(argv[3]);
+  double endpos = 1.0;
 
-  double endtime = 200.0;
-  double endpos = 1;
-
-  double deltatime = endtime/timedim;
-  double deltapos = endpos/posdim;
+  int posdim = (int) endpos/deltapos;
+  int timedim = (int) endtime/deltatime;
 
 
   // initialising a vector of vectors (matrix) to hold a wave for every timestep
   vector<double> psi(posdim);
   vector<double> zeta(posdim);
+
+  // grensebetingelser til bølgen
+  double psiClosed = 0;
 
   // matriseelementer
   /*
@@ -44,14 +47,19 @@ int main(int argc, char *argv[]){
 
   initWave(posdim, psi, zeta);
   for(int n = 0; n < timedim; ++n){
-    outpsi<< setw(15) << 0.0;
-    for(int j = 1; j < posdim-1; ++j){
+    outpsi<< setw(15) << psiClosed;      // skrivet ut venstre BC
+    writePsi(outpsi, psi[0]);            // skriver ut første verdi til fil
+    // finner den første x-verdien til zeta
+    advance_vorticity_forward(zeta[0], psi[1], psi[posdim-1], deltatime, deltapos);
+    for(int j = 1; j < posdim - 1; ++j){
       //jobbe videre her
       advance_vorticity_forward(zeta[j], psi[j+1], psi[j-1], deltatime, deltapos);
       writeZeta(outzeta, zeta[j]);
       writePsi(outpsi, psi[j]);
     }
-    outpsi << setw(15) << 0.0;
+    advance_vorticity_forward(zeta[posdim-1], psiClosed, psi[0], deltatime, deltapos);
+    writePsi(outpsi, psi[posdim-1]);    // skriver ut siste verdi til fil
+    outpsi << setw(15) << psiClosed;    // skriver ut høyre BC
     outzeta << endl;
     outpsi << endl;
     initMatrixElements(posdim, zeta, x, a, b, c, d);
@@ -67,11 +75,15 @@ int main(int argc, char *argv[]){
 //initsaliserer strømfunksjonen
 void initWave(int posdim, vector<double> &psi, vector<double> &zeta){
   double x;
+  double h = 1.0/(posdim + 1.0);
+  double sigma = 0.2;
+  double sigma2 = sigma*sigma;
   for(int j = 0; j < posdim; ++j){
-    x = j*(1./(posdim-1));
+    x = (j + 1)*h;
     zeta[j] = -16.0*3.14159*3.14159*sinewave(x);
+    //zeta[j] = -2.0*gaussian(x, sigma)*(sigma2 - 2.0*x*x)/(sigma2*sigma2);
     psi[j] = sinewave(x);
-    //psi[i] = gaussian(x);
+    //psi[j] = gaussian(x, sigma);
   }
   return;
 }
@@ -83,12 +95,12 @@ void initMatrixElements(int posdim, vector<double> zeta, vector<double> &x, vect
   const double h = 1.0/(posdim + 1.0);
   const double hh = h*h;
 
-  for(int i = 0; i < posdim; ++i) {
-    x[i] = (i + 1)*h;
-    a[i] = 1.0;
-    b[i] = -2.0;
-    c[i] = 1.0;
-    d[i] = hh*zeta[i];
+  for(int j = 0; j < posdim; ++j) {
+    x[j] = (j + 1)*h;
+    a[j] = 1.0;
+    b[j] = -2.0;
+    c[j] = 1.0;
+    d[j] = hh*zeta[j];
   }
   return;
 }
@@ -96,10 +108,10 @@ void initMatrixElements(int posdim, vector<double> zeta, vector<double> &x, vect
 // utfører gaussisk eliminasjon for å redusere likningssettet
 void forward_sub(int posdim, vector<double> &a, vector<double> &b,
                  vector<double> &c, vector<double> &d) {
-  for(int i = 1; i < posdim; ++i) {
-    const double k = a[i-1]/b[i-1];
-    b[i] -= k*c[i-1];
-    d[i] -= k*d[i-1];
+  for(int j = 1; j < posdim; ++j) {
+    const double k = a[j-1]/b[j-1];
+    b[j] -= k*c[j-1];
+    d[j] -= k*d[j-1];
   }
   return;
 }
@@ -108,8 +120,8 @@ void forward_sub(int posdim, vector<double> &a, vector<double> &b,
 // løser likningssettet for v-vektoren
 void backward_sub(int posdim, vector<double> &psi, vector<double> &b,
                   vector<double> &c, vector<double> &d) {
-  for(int i = posdim - 2; i >= 0; --i) {
-    psi[i] = (d[i] - c[i]*psi[i+1])/b[i];
+  for(int j = posdim - 2; j >= 0; --j) {
+    psi[j] = (d[j] - c[j]*psi[j+1])/b[j];
   }
   return;
 }
@@ -137,20 +149,5 @@ void writePsi(ofstream &outpsi, double &psivalue){
 void writeZeta(ofstream &outzeta, double &zetavalue){
   outzeta << setiosflags(ios::showpoint | ios::uppercase);
   outzeta << setw(15) << setprecision(8) << zetavalue;
-  return;
-}
-
-void centered_difference(double &derivative, double &forward, double &backward, double &step){
-  derivative = (forward - backward)/(2.0*step);
-  return;
-}
-
-void centered_difference2(double &derivative, double &forward, double &center, double &backward, double &step){
-  derivative = (forward - 2.0*center + backward)/(step*step);
-  return;
-}
-
-void forward_difference(double &derivative, double &forward, double &center, double &step){
-  derivative = (forward - center)/step;
   return;
 }
