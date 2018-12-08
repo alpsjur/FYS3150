@@ -5,6 +5,8 @@
 # programs:
 *.exe
 # datafiles
+*.dat
+*.txt
 # temporary files:
 *.pyc
 *.bak
