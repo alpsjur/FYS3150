@@ -21,6 +21,14 @@ int main(int argc, char *argv[]){
     initialSine = false;
   }
 
+  bool advanceForward;
+  if(atof(argv[5])==0){
+    advanceForward = true;
+  }
+  else{
+    advanceForward = false;
+  }
+
   int posdim = (int) endpos/deltapos;
   int timedim = (int) endtime/deltatime;
 
@@ -28,6 +36,8 @@ int main(int argc, char *argv[]){
   // initialising a vector of vectors (matrix) to hold a wave for every timestep
   vector<double> psi(posdim);
   vector<double> zeta(posdim);
+  vector<double> zeta_previous;
+  vector<double> zeta_2previous;
 
   // grensebetingelser til bølgen
   double psiClosed = 0;
@@ -40,18 +50,38 @@ int main(int argc, char *argv[]){
   vector<double> x(posdim);
 
   initWave(posdim, psi, zeta, initialSine);
+  if(!advanceForward){
+    zeta_2previous = zeta;
+    zeta_previous = zeta;
+  }
   for(int n = 0; n < timedim; ++n){
     outpsi<< setw(15) << psiClosed;      // skrivet ut venstre BC
     writePsi(outpsi, psi[0]);            // skriver ut første verdi til fil
     // finner den første x-verdien til zeta
-    advance_vorticity_forward(zeta[0], psi[1], psi[posdim-1], deltatime, deltapos);
+    if(advanceForward){
+      advance_vorticity_forward(zeta[0], psi[1], psiClosed, deltatime, deltapos);
+    }
+    else{
+      advance_vorticity_centered(zeta[0], zeta_2previous[0], psi[1], psiClosed, deltatime, deltapos);
+    }
     for(int j = 1; j < posdim - 1; ++j){
-      //jobbe videre her
-      advance_vorticity_forward(zeta[j], psi[j+1], psi[j-1], deltatime, deltapos);
+      if(advanceForward){
+        advance_vorticity_forward(zeta[j], psi[j+1], psi[j-1], deltatime, deltapos);
+      }
+      else{
+        advance_vorticity_centered(zeta[j], zeta_2previous[j], psi[j+1], psi[j-1], deltatime, deltapos);
+        zeta_2previous = zeta_previous;
+        zeta_previous = zeta;
+      }
       writeZeta(outzeta, zeta[j]);
       writePsi(outpsi, psi[j]);
     }
-    advance_vorticity_forward(zeta[posdim-1], psiClosed, psi[posdim-1], deltatime, deltapos);
+    if(advanceForward){
+      advance_vorticity_forward(zeta[posdim-1], psiClosed, psi[posdim-2], deltatime, deltapos);
+    }
+    else{
+      advance_vorticity_centered(zeta[posdim-1], zeta_2previous[posdim-1], psiClosed, psi[posdim-2], deltatime, deltapos);
+    }
     writePsi(outpsi, psi[posdim-1]);    // skriver ut siste verdi til fil
     outpsi << setw(15) << psiClosed;    // skriver ut høyre BC
     outzeta << endl;
@@ -136,7 +166,7 @@ void advance_vorticity_forward(double &zeta_forward, double psi_forward,
 void advance_vorticity_centered(double &zeta_forward, double zeta_backward,
                                 double psi_forward, double psi_backward,
                                 double deltatime, double deltapos){
-  zeta_forward = zeta_backward - (deltatime/(2.0*deltapos))*(psi_forward - psi_backward);
+  zeta_forward = (deltatime/deltapos)*(psi_backward-psi_forward) + zeta_backward;
   return;
 }
 
