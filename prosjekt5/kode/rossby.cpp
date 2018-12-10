@@ -70,7 +70,7 @@ int main(int argc, char *argv[]){
 void initWave(int posdim, vector<double> &psi, vector<double> &zeta, bool initialSine){
   double x;
   double h = 1.0/(posdim + 1.0);
-  double sigma = 0.2;
+  double sigma = 0.1;
   double sigma2 = sigma*sigma;
   for(int j = 0; j < posdim; ++j){
     x = (j + 1)*h;
