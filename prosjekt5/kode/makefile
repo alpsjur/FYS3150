@@ -3,30 +3,35 @@
 # Here we define compiler option, libraries and the  target
 CPPflags = c++ -std=c++0x -O3
 # Here we define the library functions we nee
-LIB = #-larmadillo -llapack -lblas
+LIB = -larmadillo -llapack -lblas
 # Here we define the name of the executable
-PROG = rossby.exe
+PROGPERIODIC = rossby_periodic.exe
+PROGBOUNDED = rossby_bounded.exe
 TEST_PROG = test_jacobi.exe
 
-all : target
+all : king kong
 
-target : ${PROG}
+king : ${PROGPERIODIC}
+kong : ${PROGBOUNDED}
 tests : ${TEST_PROG}
 
-${PROG} : main.o rossby.o
-	${CPPflags} main.o rossby.o ${LIB} -o ${PROG}
+${PROGPERIODIC} : rossby_periodic.o
+	${CPPflags} rossby_periodic.o ${LIB} -o ${PROGPERIODIC}
 
-${TEST_PROG} : tests_main.o test_jacobi.o jacobis_method.o
-	${CPPflags} tests_main.o test_jacobi.o jacobis_method.o ${LIB} -o ${TEST_PROG}
+${PROGBOUNDED} : rossby_bounded.o
+	${CPPflags} rossby_bounded.o -o ${PROGBOUNDED}
+
+${TEST_PROG} : tests_main.o
+	${CPPflags} tests_main.o ${LIB} -o ${TEST_PROG}
 
 main.o : main.cpp
 	${CPPflags} -c main.cpp
 
-jacobis_method.o : rossby.cpp
-	${CPPflags} -c rossby.cpp
+rossby_periodic.o : rossby_periodic.cpp
+	${CPPflags} -c rossby_periodic.cpp
+
+rossby_bounded.o : rossby_bounded.cpp
+	${CPPflags} -c rossby_bounded.cpp
 
 tests_main.o : tests_main.cpp
 	${CPPflags} -c tests_main.cpp
-
-test_jacobi.o : test_jacobi.cpp
-	${CPPflags} -c test_jacobi.cpp

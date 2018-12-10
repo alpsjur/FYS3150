@@ -1,5 +1,5 @@
-#ifndef ROSSBY_H
-#define	ROSSBY_H
+#ifndef ROSSBY_BOUNDED_H
+#define	ROSSBY_BOUNDED_H
 
 #include <cmath>
 #include <iostream>
@@ -10,7 +10,7 @@
 #include <armadillo>
 
 using namespace std;
-double pi = 3.14159;
+double pi = 3.1415926535897932859;
 
 void initWave(int, vector<double>&, vector<double>&, bool);
 
@@ -28,4 +28,4 @@ void writeZeta(ofstream&, double&);
 inline double sinewave(double x) {return sin(4.0*pi*x);}
 inline double gaussian(double x, double sigma) {return exp(-(x/sigma)*(x/sigma));}
 
-#endif /* ROSSBY_H */
+#endif /* ROSSBY_BOUNDED_H */

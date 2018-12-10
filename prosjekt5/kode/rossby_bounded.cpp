@@ -1,11 +1,11 @@
-#include "rossby.h"
+#include "rossby_bounded.h"
 
 
 int main(int argc, char *argv[]){
 
   ofstream outpsi, outzeta;
-  outpsi.open("../data/psi.dat");
-  outzeta.open("../data/zeta.dat");
+  outpsi.open("../data/psi_bounded.dat");
+  outzeta.open("../data/zeta_bounded.dat");
 
   // funksjonen tar tre cmd argument, dt, dx og slutt tid
   double deltapos = atof(argv[1]);
@@ -105,7 +105,7 @@ void initWave(int posdim, vector<double> &psi, vector<double> &zeta, bool initia
   for(int j = 0; j < posdim; ++j){
     x = (j + 1)*h;
     if(initialSine){
-      zeta[j] = -16.0*3.14159*3.14159*sinewave(x);
+      zeta[j] = -16.0*pi*pi*sinewave(x);
       psi[j] = sinewave(x);
     }
     else{
