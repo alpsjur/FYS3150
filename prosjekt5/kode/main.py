@@ -9,7 +9,8 @@ sns.set()
 sns.set_palette("husl")
 
 datadir = "../data/"
-data = np.loadtxt(datadir + "psi.dat")
+figdir = "../figurer/"
+data = np.loadtxt(datadir + "psi_bounded.dat")
 x = np.linspace(0, 1, len(data[0]))
 t = np.linspace(0, 150, len(data[:, 0]))
 
@@ -38,5 +39,8 @@ anim = animation.FuncAnimation(fig, animate,
                                 )
 """
 c = ax.contourf(x, t, data)
-fig.colorbar(c)
+ax.set_xlabel("Spatial extent")
+ax.set_ylabel("Time")
+fig.colorbar(c, label="Amplitude")
+plt.savefig(figdir + "hovmuller_boundedgaussian.pdf")
 plt.show()
