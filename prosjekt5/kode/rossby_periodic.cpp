@@ -4,8 +4,6 @@
 // reading n power from command line
 int main(int argc, char *argv[]) {
   ofstream outpsi, outzeta;
-  outpsi.open("../data/psi_periodic.dat");
-  outzeta.open("../data/zeta_periodic.dat");
 
   double deltapos = atof(argv[1]);
   double deltatime = atof(argv[2]);
@@ -23,16 +21,18 @@ int main(int argc, char *argv[]) {
   bool advanceForward;
   if(atof(argv[5])==0){
     advanceForward = true;
+    outpsi.open("../data/psi_periodic_forward.dat");
+    outzeta.open("../data/zeta_periodic_forward.dat");
   }
   else{
     advanceForward = false;
+    outpsi.open("../data/psi_periodic_centered.dat");
+    outzeta.open("../data/zeta_periodic_centered.dat");
   }
 
   int posdim = (int) endpos/deltapos;
   int timedim = (int) endtime/deltatime;
 
-
-  vector<double> psi(posdim); // stream function vector
   vector<double> zeta(posdim);
   vector<double> zeta_previous;
   vector<double> zeta_2previous;
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
   // declaring vectors
   vec f(posdim);                    // column vector containing function values
   vec y(posdim);                    // solution of Ly = f
-  vec x(posdim);                    // solution of Ux = y
+  vec psi(posdim);                    // solution of Ux = y
 
 
   initWave(posdim, psi, zeta, initialSine);
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
     initialise(posdim, A, f, zeta);    // initialising A with tridiagonal values
     lu(L, U, A);                 // performing LU-decomposition on A
     solve(y, L, f);     // solving for y indicating that L is triangular
-    solve(x, U, y);
+    solve(psi, U, y);
   }
   outpsi.close();
   outzeta.close();
@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
 }
 
 
-void initWave(int posdim, vector<double> &psi, vector<double> &zeta, bool initialSine){
+void initWave(int posdim, vec &psi, vector<double> &zeta, bool initialSine){
   double x;
   double h = 1.0/(posdim + 1.0);
   double sigma = 0.1;
@@ -107,12 +107,13 @@ void initialise(int posdim, mat &A, vec &f, vector<double> zeta) {
   A(0,0) = 2.0;
   A(0, posdim-1) = -1;
   A(posdim-1, 0) = -1;
-  for (int j=0; j < posdim; ++j) {
+  for (int j=1; j < posdim; ++j) {
     f[j] = hh*zeta[j];
     A(j,j) = -2.0;
     A(j-1,j) = 1.0;
     A(j, j-1) = 1.0;
   }
+  return;
 }
 
 void advance_vorticity_forward(double &zeta_forward, double psi_forward,

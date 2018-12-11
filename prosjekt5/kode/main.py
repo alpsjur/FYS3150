@@ -5,42 +5,45 @@ import seaborn as sns
 
 
 sns.set()
-#sns.set_style("whitegrid")
+sns.set_style("whitegrid")
 sns.set_palette("husl")
 
 datadir = "../data/"
 figdir = "../figurer/"
-data = np.loadtxt(datadir + "psi_bounded.dat")
-x = np.linspace(0, 1, len(data[0]))
-t = np.linspace(0, 150, len(data[:, 0]))
 
-ymax = np.max(data)
-ymin = np.min(data)
-addedspace = (ymax-ymin)/10
 
+data_forward = np.loadtxt(datadir + "psi_periodic_forward.dat")
+data_centered = np.loadtxt(datadir + "psi_periodic_centered.dat")
+
+x = np.linspace(0, 1, len(data_forward[0]))
+t = np.linspace(0, 150, len(data_forward[:, 0]))
+dt = t[-1]/len(data_forward[:, 0])
+
+fig, ax = plt.subplots(2, 1, sharex=True)
+fig.add_subplot(111, frameon=False)
+
+plt.tick_params(labelcolor="none", top=False, bottom=False, left=False, right=False)
+plt.grid(False)
+plt.xlabel("Spatial extent", fontsize=14)
+plt.ylabel("Amplitude", fontsize=14)
+
+times = [50, 100, 150]
+labels = ["t = 0"]
+ax[0].plot(x, data_forward[0])
+ax[1].plot(x, data_centered[0])
+for time in times:
+    labels.append("t = {}".format(time))
+    timeIndex = int(time/dt) - 1
+    ax[0].plot(x, data_forward[timeIndex])
+    ax[1].plot(x, data_centered[timeIndex])
+fig.legend(labels, frameon=False, ncol=4, bbox_to_anchor=(1.0, 0.96), fontsize=14)
+#plt.savefig(figdir + "compare_forward_centered.pdf")
+
+# generating hov muller diagram
 fig, ax = plt.subplots()
-#ax.set_xlim(-0.1,1.1)
-#ax.set_ylim(ymin-addedspace,ymax+addedspace)
-
-#line, = ax.plot(x, data[0])
-
-def init():
-    return line,
-
-def animate(i):
-    line.set_ydata(data[i])
-    return line,
-
-"""
-anim = animation.FuncAnimation(fig, animate,
-                                frames=len(data),
-                                interval=2,
-                                blit=True
-                                )
-"""
-c = ax.contourf(x, t, data)
-ax.set_xlabel("Spatial extent")
-ax.set_ylabel("Time")
+c = ax.contourf(x, t, data_centered)
+ax.set_xlabel("Spatial extent", fontsize=14)
+ax.set_ylabel("Time", fontsize=14)
 fig.colorbar(c, label="Amplitude")
-plt.savefig(figdir + "hovmuller_boundedgaussian.pdf")
+#plt.savefig(figdir + "hovmuller_periodicgaussian.pdf")
 plt.show()

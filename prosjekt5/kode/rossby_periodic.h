@@ -15,7 +15,7 @@ using namespace arma;
 double pi = 3.1415926535897932859;
 
 
-void initWave(int, vector<double>&, vector<double>&, bool);
+void initWave(int, vec &, vector<double>&, bool);
 void initialise(int, mat &, vec &, vector<double>);
 
 void advance_vorticity_forward(double&, double, double, double, double);
