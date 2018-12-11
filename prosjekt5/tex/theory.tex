@@ -6,8 +6,47 @@
 Partial differential equations can often be separated into a set of coupled ordinary differential equations which are easier to solve.
 
 
-\subsection{Wave theory}
+\subsection{Rossby wave equation}
 \label{sec:wave}
+Rossby waves are low frequency waves induced by the meridional
+variation of the Coriolis parameter $f$. This parameter depends on the rotation of the Eart $\Omega$ and the latitude $\varphi$, and is given by 
+\begin{equation}
+	f = \Omega \sin{\varphi}.
+\end{equation} 
+An approximation where $f$ is set to vary linear in space is called the $\beta$-plane approximation, and can be written as
+\begin{equation}\label{beta-plane}
+	f = f_0 + \beta y,
+\end{equation} 
+where $\beta = \left.\frac{df}{dy}\right|_{\varphi_0} = \frac{2\Omega}{a} \cos{\varphi_0}$, $a$ being the radius of the Earth. Combining the $\beta$-plane approximation with the shallow water vorticity equation, you get the quasi-geostrophic vorticity equation. This can be linearised, and by assuming a constant mean flow without bottom topography, you get the barotropic Rossby wave equation:
+\begin{equation}\label{eq:rossby full}
+	\left(\partial_t + U\partial_x \right) \nabla_H \psi + \beta \partial_x \psi = 0.
+\end{equation}
+Here, $\psi$ is the stream function describing the velocity perturbation, $\partial_x$ denotes $\frac{\partial}{\partial x}$, $\nabla_H$ is the horizontal divergence $\partial x + \partial y$ and $U$ is the mean velocity. In this report, we will assume no mean velocity, i.e. $U=0$, in which case equation (\ref{eq:rossby full}) simplifies to 
+\begin{equation}\label{eq:rossby}
+	\partial_t \nabla_H \psi + \beta \partial_x \psi = 0.
+\end{equation}
+
+Two forms of boundaries will be examined in this report, that is periodic and constant boundaries. The first case can be used to describe an atmosphere that wraps around the earth, where the stream function is equal at the end-points. The latter case, where the stream function has a constant value at the boundaries, can be used to describe an ocean basin.  
+
+A possible solution to (\ref{eq:rossby}) in one dimension with periodic boundaries, where $x \in \left[0,L \right] $, is given by 
+\begin{equation}\label{eq:periodic sol}
+	\psi = A\cos{\left(kx-\omega t\right)},
+\end{equation}
+where $k=\frac{2n\pi}{L}$ and $\omega = - \frac{\beta L}{2n\pi}$. The phase speed $c$ can be calculated through the dispersion relation, given by
+\begin{equation}
+	c = \frac{\omega L}{2n\pi}=-\beta \left(\frac{L}{2n\pi}\right)^2.
+\end{equation}
+Since $\beta$ is positive for all latitudes, the phase speed will be negative, implying that Rossby waves travels from east to west in a bounded domain. 
+
+The same problem, but with constant boundaries equal to zero, has the possible solution 
+\begin{equation}\label{eq:bounded sol}
+	\psi = A\sin\left(\frac{\pi n}{L}x\right)\cos\left(kx-\omega t\right),
+\end{equation}
+with $k = \frac{L}{\pi n}$ and $\omega = - \frac{\beta}{2k}$. Here, the phase speed is given by 
+\begin{equation}
+	c = \frac{\omega L}{2n\pi} = - \frac{\beta}{4}
+\end{equation}
+Again, the phase speed is negative. Equation (\ref{eq:bounded sol}) describes a cosine wave where the amplitude is dependent on the position, following a sine curve with zeros at the boundaries. 
 
 \subsection{Implementation}
 \label{sec:implement}
