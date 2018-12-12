@@ -4,6 +4,8 @@
 // reading n power from command line
 int main(int argc, char *argv[]) {
   ofstream outpsi, outzeta;
+  string zetaname = "../data/zeta_periodic";
+  string psiname = "../data/psi_periodic";
 
   double deltapos = atof(argv[1]);
   double deltatime = atof(argv[2]);
@@ -13,22 +15,31 @@ int main(int argc, char *argv[]) {
   bool initialSine;
   if(atof(argv[4])==0){
     initialSine = true;
+    zetaname += "_sine";
+    psiname += "_sine";
   }
   else{
     initialSine = false;
+    zetaname += "_gaussian";
+    psiname += "_gaussian";
   }
 
   bool advanceForward;
   if(atof(argv[5])==0){
     advanceForward = true;
-    outpsi.open("../data/psi_periodic_forward.dat");
-    outzeta.open("../data/zeta_periodic_forward.dat");
+    zetaname += "_forward";
+    psiname += "_forward";
   }
   else{
     advanceForward = false;
-    outpsi.open("../data/psi_periodic_centered.dat");
-    outzeta.open("../data/zeta_periodic_centered.dat");
+    zetaname += "_centered";
+    psiname += "_centered";
   }
+  zetaname += ".dat";
+  psiname += ".dat";
+
+  outpsi.open(zetaname);
+  outzeta.open(psiname);
 
   int posdim = (int) endpos/deltapos;
   int timedim = (int) endtime/deltatime;

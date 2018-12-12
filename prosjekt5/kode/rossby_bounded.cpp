@@ -2,10 +2,9 @@
 
 
 int main(int argc, char *argv[]){
-
   ofstream outpsi, outzeta;
-  outpsi.open("../data/psi_bounded.dat");
-  outzeta.open("../data/zeta_bounded.dat");
+  string zetaname = "../data/zeta_bounded";
+  string psiname = "../data/psi_bounded";
 
   // funksjonen tar tre cmd argument, dt, dx og slutt tid
   double deltapos = atof(argv[1]);
@@ -16,18 +15,31 @@ int main(int argc, char *argv[]){
   bool initialSine;
   if(atof(argv[4])==0){
     initialSine = true;
+    zetaname += "_sine";
+    psiname += "_sine";
   }
   else{
     initialSine = false;
+    zetaname += "_gaussian";
+    psiname += "_gaussian";
   }
 
   bool advanceForward;
   if(atof(argv[5])==0){
     advanceForward = true;
+    zetaname += "_forward";
+    psiname += "_forward";
   }
   else{
     advanceForward = false;
+    zetaname += "_centered";
+    psiname += "_centered";
   }
+  zetaname += ".dat";
+  psiname += ".dat";
+
+  outpsi.open(psiname);
+  outzeta.open(zetaname);
 
   int posdim = (int) endpos/deltapos;
   int timedim = (int) endtime/deltatime;

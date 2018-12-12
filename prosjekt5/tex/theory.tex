@@ -1,15 +1,15 @@
 \section{Theory}
 \label{sec:theory}
 
-\subsection{Partial differential equations}
-\label{sec:pde}
-Partial differential equations can often be separated into a set of coupled ordinary differential equations which are easier to solve.
+\subsection{Properties of waves}
+\label{sec:waves}
+Waves are solutions of the wave equation (see eq. \ref{eq:wave}), and have certain properties including
 
 
 \subsection{Rossby wave equation}
 \label{sec:wave}
 Rossby waves are low frequency waves induced by the meridional
-variation of the Coriolis parameter $f$. This parameter depends on the rotation of the Eart $\Omega$ and the latitude $\varphi$, and is given by 
+variation of the Coriolis parameter $f$. This parameter depends on the rotation of the Earth $\Omega$ and the latitude $\varphi$, and is given by 
 \begin{equation}
 	f = \Omega \sin{\varphi}.
 \end{equation} 
@@ -46,8 +46,11 @@ with $k = \frac{L}{\pi n}$ and $\omega = - \frac{\beta}{2k}$. Here, the phase sp
 \begin{equation}
 	c = \frac{\omega L}{2n\pi} = - \frac{\beta}{4}
 \end{equation}
-Again, the phase speed is negative. Equation (\ref{eq:bounded sol}) describes a cosine wave where the amplitude is dependent on the position, following a sine curve with zeros at the boundaries. 
+Again, the phase speed is negative. Equation (\ref{eq:bounded sol}) describes a cosine wave where the amplitude is dependent on the position, following a sine curve with zeros at the boundaries.
+
 
 \subsection{Implementation}
 \label{sec:implement}
-We implement our algorithms in C++ using the armadillo and LAPACK libraries to handle matrix operations. To analyse data and produce figures, we use python 3.6 with a standard set of modules: matplotlib, numpy and seaborn.
+We implemented our algorithms in C++ using the armadillo and LAPACK libraries to handle matrix operations. To analyse data and produce figures, we used python 3.6 with a standard set of modules: matplotlib, numpy and seaborn.
+
+We used methods as outlined by \citet{sjurkal}. For closed boundaries we had the Dirichlet boundary conditions and could use gaussian elimination to solve eq. \ref{eq:poisson}. In the case of periodic boundaries our matrix became non-tridiagonal, and we had to use LU decomposition to solve the differential equation.
