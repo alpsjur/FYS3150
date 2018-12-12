@@ -21,6 +21,8 @@ void initialise(int, mat &, vec &, vector<double>);
 void advance_vorticity_forward(double&, double, double, double, double);
 void advance_vorticity_centered(double&, double, double, double, double, double);
 
+void jacobisMethod2D(int, double, mat&, mat);
+
 void writePsi(ofstream&, double&);
 void writeZeta(ofstream&, double&);
 

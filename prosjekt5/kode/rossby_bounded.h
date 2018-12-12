@@ -10,6 +10,7 @@
 #include <armadillo>
 
 using namespace std;
+using namespace arma;
 double pi = 3.1415926535897932859;
 
 void initWave(int, vector<double>&, vector<double>&, bool);
@@ -18,6 +19,7 @@ void initMatrixElements(int, vector<double>, vector<double>&, vector<double>&, v
 void forward_sub(int, vector<double>&, vector<double>&, vector<double>&, vector<double>&);
 void backward_sub(int, vector<double>&, vector<double>&, vector<double>&, vector<double>&);
 
+void jacobisMethod2D(int, double, mat&, mat);
 
 void advance_vorticity_forward(double&, double, double, double, double);
 void advance_vorticity_centered(double&, double, double, double, double, double);
