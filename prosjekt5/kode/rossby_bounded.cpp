@@ -41,7 +41,7 @@ int main(int argc, char *argv[]){
   outpsi.open(psiname);
   outzeta.open(zetaname);
 
-  int posdim = (int) endpos/deltapos;
+  int posdim = (int) endpos/deltapos-1;      //-1 siden endepunktene er kjente, og ikke beregnes
   int timedim = (int) endtime/deltatime;
 
 
@@ -61,11 +61,9 @@ int main(int argc, char *argv[]){
   vector<double> d(posdim);
   vector<double> x(posdim);
 
-  initWave(posdim, psi, zeta, initialSine);
-  if(!advanceForward){
-    zeta_2previous = zeta;
-    zeta_previous = zeta;
-  }
+  initWave(posdim, deltapos, psi, zeta, initialSine);
+  zeta_2previous = zeta;
+  zeta_previous = zeta;
   for(int n = 0; n < timedim; ++n){
     outpsi<< setw(15) << psiClosed;      // skrivet ut venstre BC
     writePsi(outpsi, psi[0]);            // skriver ut første verdi til fil
@@ -82,8 +80,6 @@ int main(int argc, char *argv[]){
       }
       else{
         advance_vorticity_centered(zeta[j], zeta_2previous[j], psi[j+1], psi[j-1], deltatime, deltapos);
-        zeta_2previous = zeta_previous;
-        zeta_previous = zeta;
       }
       writeZeta(outzeta, zeta[j]);
       writePsi(outpsi, psi[j]);
@@ -94,11 +90,13 @@ int main(int argc, char *argv[]){
     else{
       advance_vorticity_centered(zeta[posdim-1], zeta_2previous[posdim-1], psiClosed, psi[posdim-2], deltatime, deltapos);
     }
+    zeta_2previous = zeta_previous;
+    zeta_previous = zeta;
     writePsi(outpsi, psi[posdim-1]);    // skriver ut siste verdi til fil
     outpsi << setw(15) << psiClosed;    // skriver ut høyre BC
     outzeta << endl;
     outpsi << endl;
-    initMatrixElements(posdim, zeta, x, a, b, c, d);
+    initMatrixElements(posdim, deltapos, zeta, x, a, b, c, d);
     forward_sub(posdim, a, b, c, d);
     backward_sub(posdim, psi, b, c, d);
   }
@@ -109,12 +107,12 @@ int main(int argc, char *argv[]){
 
 
 //initsaliserer strømfunksjonen
-void initWave(int posdim, vector<double> &psi, vector<double> &zeta, bool initialSine){
+void initWave(int posdim, double deltapos, vector<double> &psi, vector<double> &zeta, bool initialSine){
   double x;
-  double h = 1.0/(posdim + 1.0);
+  //double h = 1.0/(posdim + 1.0;
   double sigma = 0.1;
   for(int j = 0; j < posdim; ++j){
-    x = (j + 1)*h;
+    x = (j + 1)*deltapos;
     if(initialSine){
       zeta[j] = sinewaveDerivative(x);
       psi[j] = sinewave(x);
@@ -130,11 +128,10 @@ void initWave(int posdim, vector<double> &psi, vector<double> &zeta, bool initia
 
 
 // initialiserer matriseelementene og funksjonsverdiene
-void initMatrixElements(int posdim, vector<double> zeta, vector<double> &x, vector<double> &a,
+void initMatrixElements(int posdim, double deltapos, vector<double> zeta, vector<double> &x, vector<double> &a,
                         vector<double> &b, vector<double> &c, vector<double> &d) {
-  const double h = 1.0/(posdim + 1.0);
+  const double h = deltapos;
   const double hh = h*h;
-
   for(int j = 0; j < posdim; ++j) {
     x[j] = (j + 1)*h;
     a[j] = 1.0;

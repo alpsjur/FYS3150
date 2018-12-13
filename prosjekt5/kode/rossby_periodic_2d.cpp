@@ -1,4 +1,4 @@
-#include "rossby_periodic.h"
+#include "rossby_periodic_2d.h"
 
 
 // reading n power from command line
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
   outpsi.open(zetaname);
   outzeta.open(psiname);
 
-  int posdim = (int) (endpos/deltapos)+1;  //+1 siden endepunktene er med
+  int posdim = (int) endpos/deltapos;
   int timedim = (int) endtime/deltatime;
 
   vector<double> zeta(posdim);
@@ -62,10 +62,11 @@ int main(int argc, char *argv[]) {
   vec psi(posdim);                    // solution of Ux = y
 
 
-  initWave(posdim, deltapos, psi, zeta, initialSine);
-  zeta_2previous = zeta;
-  zeta_previous = zeta;
-
+  initWave(posdim, psi, zeta, initialSine);
+  if(!advanceForward){
+    zeta_2previous = zeta;
+    zeta_previous = zeta;
+  }
   for(int n = 0; n < timedim; ++n){
     // finner den første x-verdien til zeta
     for(int j = 0; j < posdim; ++j){
@@ -74,32 +75,34 @@ int main(int argc, char *argv[]) {
       }
       else{
         advance_vorticity_centered(zeta[j], zeta_2previous[j], psi[periodic(j+1, posdim)], psi[periodic(j-1, posdim)], deltatime, deltapos);
+        zeta_2previous = zeta_previous;
+        zeta_previous = zeta;
       }
       writeZeta(outzeta, zeta[j]);
       writePsi(outpsi, psi[j]);
     }
-    zeta_2previous = zeta_previous;
-    zeta_previous = zeta;
     outzeta << endl;
     outpsi << endl;
-    initialise(posdim, deltapos, A, f, zeta);    // initialising A with tridiagonal values
-    //lu(L, U, A);                 // performing LU-decomposition on A
-    //solve(y, trimatl(L), f);     // solving for y indicating that L is triangular
-    //solve(psi, trimatu(U), y);
-    solve(psi, A, f);
+    initialise(posdim, A, f, zeta);    // initialising A with tridiagonal values
+    lu(L, U, A);                 // performing LU-decomposition on A
+    solve(y, L, f);     // solving for y indicating that L is triangular
+    solve(psi, U, y);
   }
   outpsi.close();
   outzeta.close();
   return 0;
 }
 
-
-void initWave(int posdim, double deltapos, vec &psi, vector<double> &zeta, bool initialSine){
-  double x;
-  //double h = 1.0/(posdim + 1.0);
+void initWave(int posdim, mat &psi, mat &zeta, bool initialSine){
+  double x; double y;
+  double h = 1.0/(posdim + 1.0);
   double sigma = 0.1;
-  for(int j = 0; j < posdim; ++j){
-    x = (j)*deltapos;
+  double sigma2 = sigma*sigma;
+  for(int l = 0; l < posdim; ++l){
+    x = (l + 1)*h;
+    for(int m = 0; m < posdim; ++m){
+
+    }
     if(initialSine){
       zeta[j] = sinewaveDerivative(x);
       psi[j] = sinewave(x);
@@ -112,18 +115,22 @@ void initWave(int posdim, double deltapos, vec &psi, vector<double> &zeta, bool 
   return;
 }
 
-void initialise(int posdim, double deltapos, mat &A, vec &f, vector<double> zeta) {
-  //const double h = 1.0/(posdim + 1.0);
-  const double hh = deltapos*deltapos;
-  A(0,0) = -2.0;
-  A(0, posdim-1) = 1.0;
-  A(posdim-1, 0) = 1.0;
-  f[0] = hh*zeta[0];
-  for (int j = 1; j < posdim; ++j) {
-    f[j] = hh*zeta[j];
-    A(j,j) = -2.0;
-    A(j-1,j) = 1.0;
-    A(j, j-1) = 1.0;
+void jacobisMethod2D(int posdim, double deltapos, mat &psi, mat zeta){
+  double hh = deltapos*deltapos;
+  mat psi_temporary;
+  int iterations = 0; int maxIterations = 10000;
+  double difference = 1.; double maxDifference = 1e-5;
+  while((iterations <= maxIterations) && (difference > maxDifference)){
+    psi_temporary = psi; difference = 0.;
+    for(int l = 1; l > posdim; ++l){
+      for(int m = 1; m > posdim; ++m){
+        psi(l,m) = 0.25*(psi_temporary(l,m+1)+psi_temporary(l,m-1)
+                   +psi_temporary(l+1,m)+psi_temporary(l-1,m)
+                   -hh*zeta(l,m));
+      }
+    }
+    iterations++;
+    difference /= pow(posdim,2.0);
   }
   return;
 }
