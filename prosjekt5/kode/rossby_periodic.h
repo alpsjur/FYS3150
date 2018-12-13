@@ -31,7 +31,7 @@ inline int periodic(int j, int posdim){
   return (j + posdim) % posdim;
 }
 inline double sinewave(double x) {return sin(4.0*pi*x);}
-inline double sinewaveDerivative(double x){-16.0*pi*pi*sinewave(x);}
+inline double sinewaveDerivative(double x){return -16.0*pi*pi*sinewave(x);}
 inline double gaussian(double x, double sigma) {return exp(-(x/sigma)*(x/sigma));}
 inline double gaussianDerivative(double x, double sigma) {double sigma2 = sigma*sigma;
                     return -2.0*gaussian(x, sigma)*(sigma2 - 2.0*x*x)/(sigma2*sigma2);}
