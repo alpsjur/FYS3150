@@ -5,7 +5,6 @@
 \label{sec:waves}
 Waves are solutions of the wave equation (see eq. \ref{eq:wave}), and have certain properties including
 
-
 \subsection{Rossby wave equation}
 \label{sec:wave}
 Rossby waves are low frequency waves induced by the meridional
@@ -47,6 +46,10 @@ with $k = \frac{L}{\pi n}$ and $\omega = - \frac{\beta}{2k}$. Here, the phase sp
 	c = \frac{\omega L}{2n\pi} = - \frac{\beta}{4}
 \end{equation}
 Again, the phase speed is negative. Equation (\ref{eq:bounded sol}) describes a cosine wave where the amplitude is dependent on the position, following a sine curve with zeros at the boundaries.
+
+\subsubsection{Differential equations}
+The forward difference is of first order, meaning that the error is proportional to $\Delta t$. The centred difference, on the other hand, is of second order, with an error proportional to $\Delta t^2$ for the time derivative and $\Delta x^2$ for the spacial derivative.     
+
 
 
 \subsection{Implementation}

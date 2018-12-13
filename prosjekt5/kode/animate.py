@@ -32,7 +32,7 @@ def animate(i):
 
 anim = animation.FuncAnimation(fig, animate,
                                 frames=len(data),
-                                interval=2,
+                                interval=1,
                                 blit=True
                                 )
 plt.show()

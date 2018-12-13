@@ -101,11 +101,11 @@ void initWave(int posdim, vec &psi, vector<double> &zeta, bool initialSine){
   for(int j = 0; j < posdim; ++j){
     x = (j + 1)*h;
     if(initialSine){
-      zeta[j] = -16.0*pi*pi*sinewave(x);
+      zeta[j] = sinewaveDerivative(x);
       psi[j] = sinewave(x);
     }
     else{
-      zeta[j] = -2.0*gaussian(x, sigma)*(sigma2 - 2.0*x*x)/(sigma2*sigma2);
+      zeta[j] = gaussianDerivative(x, sigma);
       psi[j] = gaussian(x, sigma);
     }
   }
