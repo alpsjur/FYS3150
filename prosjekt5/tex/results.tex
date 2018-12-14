@@ -1,7 +1,7 @@
 \section{Results}
 \label{sec:results}
 
-Looking at Figure \ref{fig:hovmollerSinePeriodic}, we observe the time evolution of a sine wave in the periodic domain. We see that the wave is easterly (travelling towards the west). There are four distinct anti-nodes throughout the entire duration of the wave, and a wavelength is determined to be $0.5$. After a time $t=140$ we can see that the wave is in anti-phase to its initial state.
+Looking at Figure \ref{fig:hovmollerSinePeriodic}, we observe the time evolution of a sine wave in the periodic domain. We see that the wave is easterly (travelling towards the west). There are four distinct anti-nodes throughout the entire duration of the wave, and a wavelength is determined to be $0.5$. After a time $t=80$ we can see that the wave is in phase to its initial state.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{hovmuller_periodicsine.pdf}
@@ -9,7 +9,7 @@ Looking at Figure \ref{fig:hovmollerSinePeriodic}, we observe the time evolution
 	\label{fig:hovmollerSinePeriodic}
 \end{figure}
 
-Considering now the bounded sine wave (Figure \ref{fig:hovmollerSineBounded}), the direction of propagation is still west, and the four anti-nodes look to be reduced by two, yielding only two anti-nodes at any point in time. We can approximate a wavelength to be $0.6$. The same behaviour after time $t=140$ is also observed here.
+Considering now the bounded sine wave (Figure \ref{fig:hovmollerSineBounded}), the direction of propagation is still west. The shape of the curve appears to be the same as for the periodic case, except that the equilibrium line of the sine curve is shifting up and down, so that the boundary conditions are satisfied.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{hovmuller_boundedsine.pdf}
@@ -39,7 +39,7 @@ From Figure \ref{fig:hovmollerGaussianPeriodic005}, \ref{fig:hovmollerGaussianPe
 	\label{fig:hovmollerGaussianPeriodic015}
 \end{figure}
 
-In Figure \ref{fig:hovmollerGaussianBounded} we show the Hovmöller diagram of a gaussian with closed boundaries. In this case, while there are still variations in time, we can clearly discern oscillations between minima and maxima. 
+In Figure \ref{fig:hovmollerGaussianBounded} we show the Hovmöller diagram of a gaussian with closed boundaries. In this case, while there are still variations in time, we can clearly discern oscillations between minima and maxima.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{hovmuller_boundedgaussian.pdf}
@@ -47,6 +47,9 @@ In Figure \ref{fig:hovmollerGaussianBounded} we show the Hovmöller diagram of a
 	\label{fig:hovmollerGaussianBounded}
 \end{figure}
 
+Figure \ref{fig:boundedsine2d} and \ref{fig:periodicsine2d} shows the evolution of an initial product between two sine waves, one in the x-direction and one in the y-direction, resulting in an two dimensional wave, for four different time steps, both in a periodic and bounded domain. In the periodic domain, the wave seems to keep its structure, while shifting in the x-direction. The direction can not be derived solely from these four time steps. However, referring to the code for animating the time evolution found in the GitHub repository janadr/FYS3150/prosjekt5/kode, it can be seen that the wave is travelling to the left. It should be noted that due to a lack of time, the code used to generate the data shown in Figure \ref{fig:periodicsine2d} does not handle the eastward boundary correctly. 
+
+For the bounded two dimensional domain, the amplitude of the wave have decreased closer to the x-boundaries for the time steps $t\neq 0$. Again it can be seen from the mentioned animation program that the wave is travelling westward. 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{periodic_sine_centered_2d.pdf}
@@ -61,19 +64,4 @@ In Figure \ref{fig:hovmollerGaussianBounded} we show the Hovmöller diagram of a
 	\label{fig:boundedsine2d}
 \end{figure}
 
-\begin{table}[htbp]
-	\centering
-	\begin{tabular}{lrr}
-		\textbf{n} & $\mathbf{{t_g}/{t_s}}$ & $\mathbf{{t_{LU}}/{t_s}}$  \\
-		\midrule
-		\addlinespace[0.1cm]
 
-		10         & 2.08                                                                                          & 3.70                                                                                        \\
-		$10^2$       & 1.89                                                                                          & $1.00\cdot 10^2 $                                                                                         \\
-		$10^3$       & 1.48                                                                                          & $1.05 \cdot 10^4 $                                                                                        \\
-		$10^4$       & 1.43                                                                                          & $1.18 \cdot 10^6$                                                                                         \\
-		$10^5$       & 1.39                                                                                          & -                                                                                         \\
-		$10^6$       & 1.41                                                                                          & -                                                                                        \\
-		$10^7$       & 1.39                                                                                          &    -
-	\end{tabular}  \caption{Ratio between CPU time for the general algorithm ($\mathbf{t_g}$), the special algorithm ($\mathbf{t_g}$) and the LU decomposition algorithm ($\mathbf{t_{LU}}$) for different matrix sizes (\textbf{n}). The LU decomposition crashed for \textbf{n} greater than $10^4$.} \label{table:time}
-\end{table}
