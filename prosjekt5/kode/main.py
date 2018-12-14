@@ -12,8 +12,8 @@ datadir = "../data/"
 figdir = "../figurer/"
 
 
-data_forward = np.loadtxt(datadir + "psi_bounded_sine_forward.dat")
-data_centered = np.loadtxt(datadir + "psi_bounded_sine_centered.dat")
+data_forward = np.loadtxt(datadir + "psi_periodic_sine_forward.dat")
+data_centered = np.loadtxt(datadir + "psi_periodic_sine_centered.dat")
 
 x = np.linspace(0, 1, len(data_forward[0]))
 t = np.linspace(0, 150, len(data_forward[:, 0]))

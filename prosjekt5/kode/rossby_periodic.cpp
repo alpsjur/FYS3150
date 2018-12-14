@@ -83,10 +83,9 @@ int main(int argc, char *argv[]) {
     outzeta << endl;
     outpsi << endl;
     initialise(posdim, deltapos, A, f, zeta);    // initialising A with tridiagonal values
-    //lu(L, U, A);                 // performing LU-decomposition on A
-    //solve(y, trimatl(L), f);     // solving for y indicating that L is triangular
-    //solve(psi, trimatu(U), y);
-    solve(psi, A, f);
+    lu(L, U, A);                 // performing LU-decomposition on A
+    solve(y, L, f);     // solving for y
+    solve(psi, U, y);
   }
   outpsi.close();
   outzeta.close();
@@ -96,10 +95,9 @@ int main(int argc, char *argv[]) {
 
 void initWave(int posdim, double deltapos, vec &psi, vector<double> &zeta, bool initialSine){
   double x;
-  //double h = 1.0/(posdim + 1.0);
   double sigma = 0.1;
   for(int j = 0; j < posdim; ++j){
-    x = (j)*deltapos;
+    x = j*deltapos;
     if(initialSine){
       zeta[j] = sinewaveDerivative(x);
       psi[j] = sinewave(x);

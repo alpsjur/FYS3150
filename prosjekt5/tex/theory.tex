@@ -1,9 +1,14 @@
 \section{Theory}
 \label{sec:theory}
 
-\subsection{Properties of waves}
+\subsection{Wave analysis}
 \label{sec:waves}
-Waves are solutions of the wave equation (see eq. \ref{eq:wave}), and have certain properties including
+Waves are solutions of the wave equation (see eq. \ref{eq:wave}), and have certain properties such as the phase velocity
+	\begin{equation}
+	\label{eq:phase}
+		v_p = \frac{\omega}{k},
+	\end{equation}
+which we found graphically studying Hovmöller diagrams \citep{hovmoller} in each case.
 
 \subsection{Rossby wave equation}
 \label{sec:wave}
@@ -50,9 +55,8 @@ Again, the phase speed is negative. Equation (\ref{eq:bounded sol}) describes a 
 \subsubsection{Differential equations}
 The forward difference is of first order, meaning that the error is proportional to $\Delta t$. The centred difference, on the other hand, is of second order, with an error proportional to $\Delta t^2$ for the time derivative and $\Delta x^2$ for the spatial derivative.     
 
-\subsection{Algorithms}
+\subsection{Discretisation and algorithm}
 \label{sec:algo}
-\subsubsection{1-dimensional}
 Scaling eq. \ref{eq:rossby}, we essentially wanted to solve two equations
 	\begin{equation}
 	\label{eq:betaplane}
@@ -90,9 +94,9 @@ in the explicit scheme, and
 in the implicit scheme. For Poisson's equation, we simply have
 	\begin{equation}
 	\label{eq:poissondiscret}
-	\frac{\psi^{n+1}_{j+1} - 2\psi^{n+1}_j + \psi^{n+1}_{j-1}}{\qty(\Delta x)^2} = \zeta^{n+1}_j,
+	\frac{\psi^{n+1}_{j+1} - 2\psi^{n+1}_j + \psi^{n+1}_{j-1}}{\qty(\Delta x)^2} = \zeta^{n+1}_j.
 	\end{equation}
-which could be solved as outlined in one of our earlier papers \citep{sjurkal}. Our general algorithm is then Algorithm \ref{algo:1drossby}.
+Our general algorithm is then Algorithm \ref{algo:1drossby}.
 	\begin{algorithm}[htbp]
 		\label{algo:1drossby}
 		\caption{Algorithm for solving the 1+1 dimensional Rossby wave equation. Here T is a final time, and X a upper spatial bound.}
@@ -110,11 +114,12 @@ which could be solved as outlined in one of our earlier papers \citep{sjurkal}. 
 		\BlankLine
 	\end{algorithm}
 What remains now is to determine how to solve the equations for closed and periodic boundary conditions.
-we looked at two type of boundary conditions, closed and periodic. We also tested different schemes, the explicit forward scheme and the implicit centered scheme. This essentially resulted in two different algorithms.
+In the case of closed boundaries we had the Dirichlet boundary conditions, and could use gaussian elimination as outlined in one of our earlier papers \citep{sjurkal}. As for the periodic domain, we found that the resulting matrix form of the Laplacian would be singular. This prompted us to implement Jacobi's method, as described by \citet{compphys}.
+
+Up until this point we had only considered the $1 + 1$ dimensional Rossby wave, however, expanding to $2 + 1$ dimensions was rather straightforward as we could employ the same Jacobi's method as for the one-dimensional case. Therefore, we won't go into anymore detail.
 
 
 \subsection{Implementation}
 \label{sec:implement}
 We implemented our algorithms in C++ using the armadillo and LAPACK libraries to handle matrix operations. To analyse data and produce figures, we used python 3.6 with a standard set of modules: matplotlib, numpy and seaborn.
 
-We used methods as outlined by \citet{sjurkal}. For closed boundaries we had the Dirichlet boundary conditions and could use gaussian elimination to solve eq. \ref{eq:poisson}. In the case of periodic boundaries our matrix became non-tridiagonal, and we had to use LU decomposition to solve the differential equation.

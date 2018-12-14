@@ -83,10 +83,7 @@ int main(int argc, char *argv[]) {
     }
     outzeta << endl;
     outpsi << endl;
-    initialise(posdim, A, f, zeta);    // initialising A with tridiagonal values
-    lu(L, U, A);                 // performing LU-decomposition on A
-    solve(y, L, f);     // solving for y indicating that L is triangular
-    solve(psi, U, y);
+    jacobisMethod2D(posdim, deltapos, psi, zeta);
   }
   outpsi.close();
   outzeta.close();
@@ -104,12 +101,12 @@ void initWave(int posdim, mat &psi, mat &zeta, bool initialSine){
 
     }
     if(initialSine){
-      zeta[j] = sinewaveDerivative(x);
-      psi[j] = sinewave(x);
+      zeta[j] = sinewaveDerivative(x, y);
+      psi[j] = sinewave(x, y);
     }
     else{
-      zeta[j] = gaussianDerivative(x, sigma);
-      psi[j] = gaussian(x, sigma);
+      zeta[j] = gaussianDerivative(x, y, sigma);
+      psi[j] = gaussian(x, y, sigma);
     }
   }
   return;
@@ -117,20 +114,23 @@ void initWave(int posdim, mat &psi, mat &zeta, bool initialSine){
 
 void jacobisMethod2D(int posdim, double deltapos, mat &psi, mat zeta){
   double hh = deltapos*deltapos;
+  double posdim2 = posdim*posdim;
   mat psi_temporary;
   int iterations = 0; int maxIterations = 10000;
   double difference = 1.; double maxDifference = 1e-5;
   while((iterations <= maxIterations) && (difference > maxDifference)){
-    psi_temporary = psi; difference = 0.;
-    for(int l = 1; l > posdim; ++l){
-      for(int m = 1; m > posdim; ++m){
-        psi(l,m) = 0.25*(psi_temporary(l,m+1)+psi_temporary(l,m-1)
-                   +psi_temporary(l+1,m)+psi_temporary(l-1,m)
-                   -hh*zeta(l,m));
+    psi_temporary = psi;
+    difference = 0.;
+    for(int i = 1; i < posdim; ++i){
+      for(int j = 1; j < posdim; ++j){
+        psi(i, j) = 0.25*(psi_temporary(i, j+1)+psi_temporary(i, j-1)
+                   +psi_temporary(i+1, j)+psi_temporary(i-1, j)
+                   -hh*zeta(i, j));
+        diff += fabs(psi_temporary(i, j)-psi(i, j));
       }
     }
     iterations++;
-    difference /= pow(posdim,2.0);
+    difference /= posdim2;
   }
   return;
 }
