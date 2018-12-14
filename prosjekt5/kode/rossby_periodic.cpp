@@ -84,7 +84,7 @@ void initWave(int posdim, double deltapos, vector<double> &psi, vector<double> &
   //double h = 1.0/(posdim + 1.0);
   double sigma = 0.1; double x0 = 0.5;
   for(int j = 0; j < posdim; ++j){
-    x = (j)*deltapos;
+    x = j*deltapos;
     if(initialSine){
       zeta[j] = sinewaveDerivative(x);
       psi[j] = sinewave(x);
