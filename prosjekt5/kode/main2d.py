@@ -13,8 +13,8 @@ datadir = "../data/"
 figdir = "../figurer/"
 
 
-data_centered = np.fromfile(datadir + "psi_bounded_sine_centered_2d.bin")
-data_centered = np.reshape(data_centered, ((1500,41,41)))
+data_forward = np.fromfile(datadir + "psi_periodic_sine_centered_2d.bin")
+data_forward = np.reshape(data_forward,((1500,41,41)))
 #data_centered = np.fromfile(datadir + "psi_bounded_sine_centered_2d.bin")
 
 fig, axes = plt.subplots(ncols=2, nrows=2, sharex=True, sharey=True)
