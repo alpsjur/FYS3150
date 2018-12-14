@@ -36,80 +36,77 @@ int main(int argc, char *argv[]) {
     psiname += "_centered";
   }
 
-  zetaname += ".dat";
-  psiname += ".dat";
+  zetaname += "_2d.dat";
+  psiname += "_2d.dat";
 
   outpsi.open(zetaname);
   outzeta.open(psiname);
 
-  int posdim = (int) endpos/deltapos;
+  int posdim = (int) endpos/deltapos-1;   //-1 siden endepunktene er kjent
   int timedim = (int) endtime/deltatime;
 
-  vector<double> zeta(posdim);
-  vector<double> zeta_previous;
-  vector<double> zeta_2previous;
+  mat psi(posdim,posdim);
+  mat zeta(posdim,posdim);
+  mat zeta_previous;
+  mat zeta_2previous;
 
+  //grensebetingelser til bølgen
   double psiClosed = 0;
-
-  // declaring matrices
-  mat A(posdim, posdim, fill::zeros);    //
-  mat L;                       // lower triangular matrix
-  mat U;                       // upper triangular matrix
-
-  // declaring vectors
-  vec f(posdim);                    // column vector containing function values
-  vec y(posdim);                    // solution of Ly = f
-  vec psi(posdim);                    // solution of Ux = y
-
-
-  initWave(posdim, psi, zeta, initialSine);
-  if(!advanceForward){
-    zeta_2previous = zeta;
-    zeta_previous = zeta;
-  }
+  initWave(posdim, deltapos, psi, zeta, initialSine);
+  zeta_2previous = zeta;
+  zeta_previous = zeta;
   for(int n = 0; n < timedim; ++n){
-    // finner den første x-verdien til zeta
+    // HER MÅ VI SKRIVE UT EN RAD MED PSICLOSED
+    // går gjennom alle y-radene for å beregne zeta, som er den x-dobbeltderiverte
     for(int j = 0; j < posdim; ++j){
+      outpsi<< setw(15) << psiClosed;      // skrivet ut venstre BC
+      writePsi(outpsi, psi(0,j));            // skriver ut første verdi til fil
+      // finner den første x-verdien til zeta
       if(advanceForward){
-        advance_vorticity_forward(zeta[j], psi[periodic(j+1, posdim)], psi[periodic(j-1, posdim)], deltatime, deltapos);
+        advance_vorticity_forward(zeta(0,j), psi(1,j), psiClosed, deltatime, deltapos);
       }
       else{
-        advance_vorticity_centered(zeta[j], zeta_2previous[j], psi[periodic(j+1, posdim)], psi[periodic(j-1, posdim)], deltatime, deltapos);
-        zeta_2previous = zeta_previous;
-        zeta_previous = zeta;
+        advance_vorticity_centered(zeta(0,j), zeta_2previous(0,j), psi(1,j), psiClosed, deltatime, deltapos);
       }
-      writeZeta(outzeta, zeta[j]);
-      writePsi(outpsi, psi[j]);
+      for(int i = 1; i < posdim; i++){
+        if(advanceForward){
+          advance_vorticity_forward(zeta(i,j), psi(i+1,j), psi(i-1,j), deltatime, deltapos);
+        }
+        else{
+          advance_vorticity_centered(zeta(i,j), zeta_2previous(i,j), psi(i+1,j), psi(i-1,j), deltatime, deltapos);
+        }
+        writeZeta(outzeta, zeta(i,j));
+        writePsi(outpsi, psi(i,j));
+      }
     }
+    zeta_2previous = zeta_previous;
+    zeta_previous = zeta;
     outzeta << endl;
     outpsi << endl;
-    initialise(posdim, A, f, zeta);    // initialising A with tridiagonal values
-    lu(L, U, A);                 // performing LU-decomposition on A
-    solve(y, L, f);     // solving for y indicating that L is triangular
-    solve(psi, U, y);
+    jacobisMethod2D(posdim, deltapos, psi, zeta);
+
   }
   outpsi.close();
   outzeta.close();
   return 0;
 }
 
-void initWave(int posdim, mat &psi, mat &zeta, bool initialSine){
+void initWave(int posdim, double deltapos, mat &psi, mat &zeta, bool initialSine){
   double x; double y;
-  double h = 1.0/(posdim + 1.0);
   double sigma = 0.1;
-  double sigma2 = sigma*sigma;
-  for(int l = 0; l < posdim; ++l){
-    x = (l + 1)*h;
-    for(int m = 0; m < posdim; ++m){
-
-    }
-    if(initialSine){
-      zeta[j] = sinewaveDerivative(x);
-      psi[j] = sinewave(x);
-    }
-    else{
-      zeta[j] = gaussianDerivative(x, sigma);
-      psi[j] = gaussian(x, sigma);
+  double x0 = 0.5; double y0 = 0.5;
+  for(int i = 0; i < posdim; ++i){
+    x = (i+1)*deltapos;
+    for(int j = 0; j < posdim; ++j){
+      y = (j+1)*deltapos;
+      if(initialSine){
+        zeta(i,j) = sinewaveDerivative(x, y);
+        psi(i,j) = sinewave(x, y);
+      }
+      else{
+        zeta(i,j) = gaussianDerivative(x, x0, y, y0, sigma);
+        psi(i,j) = gaussian(x, x0, y, y0, sigma);
+      }
     }
   }
   return;
@@ -119,7 +116,7 @@ void jacobisMethod2D(int posdim, double deltapos, mat &psi, mat zeta){
   double hh = deltapos*deltapos;
   mat psi_temporary;
   int iterations = 0; int maxIterations = 10000;
-  double difference = 1.; double maxDifference = 1e-5;
+  double difference = 1.; double maxDifference = 1e-7;
   while((iterations <= maxIterations) && (difference > maxDifference)){
     psi_temporary = psi; difference = 0.;
     for(int l = 1; l > posdim; ++l){
@@ -127,10 +124,11 @@ void jacobisMethod2D(int posdim, double deltapos, mat &psi, mat zeta){
         psi(l,m) = 0.25*(psi_temporary(l,m+1)+psi_temporary(l,m-1)
                    +psi_temporary(l+1,m)+psi_temporary(l-1,m)
                    -hh*zeta(l,m));
+        difference += fabs(psi_temporary(l,m)-psi(l,m));
       }
     }
     iterations++;
-    difference /= pow(posdim,2.0);
+    difference /= (posdim*posdim);
   }
   return;
 }

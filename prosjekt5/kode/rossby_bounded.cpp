@@ -24,7 +24,6 @@ int main(int argc, char *argv[]){
     psiname += "_gaussian";
   }
 
-
   bool advanceForward;
   if(atof(argv[5])==0){
     advanceForward = true;
