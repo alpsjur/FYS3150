@@ -1,6 +1,14 @@
 \section{Results}
 \label{sec:results}
 
+Shown in Figure \ref{fig:compare} is the breakdown of the forward difference scheme at around $\Delta t = 1$. We see that the centered difference scheme remains relatively stable, while the forward scheme wave increases in amplitude over time, showing instability.
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.5\textwidth]{compare_forward_centered.pdf}
+	\caption{Comparison between the explicit forward difference scheme (top) and the implicit centered difference scheme (bottom) for $\Delta t = 1$.}
+	\label{fig:compare}
+\end{figure}
+
 Looking at Figure \ref{fig:hovmollerSinePeriodic}, we observe the time evolution of a sine wave in the periodic domain. We see that the wave is easterly (travelling towards the west). There are four distinct anti-nodes throughout the entire duration of the wave, and a wavelength is determined to be $0.5$. After a time $t=80$ we can see that the wave is in phase to its initial state.
 \begin{figure}[htbp]
 	\centering
