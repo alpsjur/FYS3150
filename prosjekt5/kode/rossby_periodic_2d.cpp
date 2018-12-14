@@ -111,40 +111,40 @@ void jacobisMethod2D(int posdim, double deltapos, mat &psi, mat zeta, double psi
 
     //grensenbetingelser sider, bounded i y-retning
     for(int l = 1; l < posdim-1; ++l){
-      psi(l,0) = 0.25*(psi_temporary(l,1)+psiClosed
-                 +psi_temporary(l+1,0)+psi_temporary(l-1,0)
-                 -hh*zeta(l,0));
-      difference += fabs(psi_temporary(l,0)-psi(l,0));
-      psi(l,posdim-2) = 0.25*(psiClosed + psi_temporary(l, posdim-3)
-                 +psi_temporary(l+1,posdim-2)+psi_temporary(l-1,posdim-2)
-                 -hh*zeta(l,posdim-2));
-      difference += fabs(psi_temporary(l,0)-psi(l,0));
+      psi(l,0) = 0.25*(psi_temporary(l, 1) + psiClosed
+                 + psi_temporary(l+1, 0) + psi_temporary(l-1, 0)
+                 - hh*zeta(l, 0));
+      difference += fabs(psi_temporary(l, 0) - psi(l, 0));
+      psi(l, posdim-2) = 0.25*(psiClosed + psi_temporary(l, posdim-3)
+                 +psi_temporary(l+1, posdim-2) + psi_temporary(l-1, posdim-2)
+                 - hh*zeta(l, posdim-2));
+      difference += fabs(psi_temporary(l, 0) - psi(l, 0));
     }
     //grensebetingelser hjørner
-    psi(0,0) = 0.25*(psi_temporary(0,1)+psiClosed
-               +psi_temporary(1,0)+psiClosed
-               -hh*zeta(0,0));
-    difference += fabs(psi_temporary(0,0)-psi(0,0));
-    psi(posdim-1,posdim-2) = 0.25*(psiClosed+psi_temporary(posdim-1,posdim-3)
-               +psiClosed+psi_temporary(posdim-2,posdim-2)
-               -hh*zeta(posdim-1,posdim-2));
-    difference += fabs(psi_temporary(posdim-1,posdim-2)-psi(posdim-1,posdim-2));
-    psi(0,posdim-2) = 0.25*(psiClosed+psi_temporary(0,posdim-3)
-               +psi_temporary(1,posdim-2)+psiClosed
-               -hh*zeta(0,posdim-2));
-    difference += fabs(psi_temporary(0,posdim-2)-psi(0,posdim-2));
-    psi(posdim-1,0) = 0.25*(psi_temporary(posdim-1,1)+psiClosed
-               +psiClosed+psi_temporary(posdim-2,0)
-               -hh*zeta(posdim-1,0));
-    difference += fabs(psi_temporary(posdim-1,0)-psi(posdim-1,0));
+    psi(0, 0) = 0.25*(psi_temporary(0, 1) + psiClosed
+               + psi_temporary(1, 0) + psiClosed
+               - hh*zeta(0, 0));
+    difference += fabs(psi_temporary(0, 0) - psi(0, 0));
+    psi(posdim-1, posdim-2) = 0.25*(psiClosed + psi_temporary(posdim-1, posdim-3)
+               + psiClosed + psi_temporary(posdim-2, posdim-2)
+               - hh*zeta(posdim-1, posdim-2));
+    difference += fabs(psi_temporary(posdim-1, posdim-2) - psi(posdim-1, posdim-2));
+    psi(0, posdim-2) = 0.25*(psiClosed + psi_temporary(0, posdim-3)
+               + psi_temporary(1, posdim-2) + psiClosed
+               - hh*zeta(0, posdim-2));
+    difference += fabs(psi_temporary(0, posdim-2) - psi(0, posdim-2));
+    psi(posdim-1, 0) = 0.25*(psi_temporary(posdim-1, 1) + psiClosed
+               + psiClosed + psi_temporary(posdim-2, 0)
+               - hh*zeta(posdim-1, 0));
+    difference += fabs(psi_temporary(posdim-1, 0) - psi(posdim-1, 0));
 
     //ittererer over de indre punktene
     for(int i = 0; i < posdim; ++i){
       for(int j = 1; j < posdim-2; ++j){
-        psi(i,j) = 0.25*(psi_temporary(i,j+1)+psi_temporary(i,j-1)
-                   +psi_temporary(periodic(i+1,posdim),j)+psi_temporary(periodic(i-1,posdim),j)
-                   -hh*zeta(i,j));
-        difference += fabs(psi_temporary(i,j)-psi(i,j));
+        psi(i, j) = 0.25*(psi_temporary(i, j+1) + psi_temporary(i, j-1)
+                   + psi_temporary(periodic(i+1, posdim), j) + psi_temporary(periodic(i-1, posdim), j)
+                   - hh*zeta(i, j));
+        difference += fabs(psi_temporary(i, j) - psi(i,j));
       }
     }
     iterations++;

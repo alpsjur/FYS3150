@@ -5,7 +5,7 @@ Looking at Figure \ref{fig:hovmollerSinePeriodic}, we observe the time evolution
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{hovmuller_periodicsine.pdf}
-	\caption{Hovmöller diagram of a Rossby wave with periodic boundary conditions, initially a sine wave using a implicit scheme, where $\Delta x = 0.025$ and $\Delta t = 0.1$.}
+	\caption{Hovmöller diagram of a Rossby wave with \textbf{periodic} boundary conditions, initially a sine wave using a implicit scheme, where $\Delta x = 0.025$ and $\Delta t = 0.1$.}
 	\label{fig:hovmollerSinePeriodic}
 \end{figure}
 
@@ -13,29 +13,29 @@ Considering now the bounded sine wave (Figure \ref{fig:hovmollerSineBounded}), t
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{hovmuller_boundedsine.pdf}
-	\caption{Hovmöller diagram of a bounded Rossby wave with a initial sine wave using a implicit scheme. Here $\Delta x = 0.025$ and $\Delta t = 0.1$.}
+	\caption{Hovmöller diagram of a \textbf{bounded} Rossby wave with a initial sine wave using a implicit scheme. Here $\Delta x = 0.025$ and $\Delta t = 0.1$.}
 	\label{fig:hovmollerSineBounded}
 \end{figure}
 
-From Figure \ref{fig:hovmollerGaussianPeriodic} we see that the periodic gaussian wave exhibits different behaviour caompared to the sine wave. There are at most two distinct anti-nodes at any point in time, and there looks to be a changing pattern in time, compared to the sine waves which always look the same. No wavelength can be discerned from the diagram.
+From Figure \ref{fig:hovmollerGaussianPeriodic005}, \ref{fig:hovmollerGaussianPeriodic} and \ref{fig:hovmollerGaussianPeriodic015}, we see that, in general, the periodic gaussian wave exhibits different behaviour compared to the sine wave. There are at most two distinct anti-nodes at any point in time, and there looks to be a changing pattern in time, compared to the sine waves which always look the same. For varying width, $\sigma$, we see that the location of the anti-node are more concentrated in the middle for lower $\sigma$ (Figure \ref{fig:hovmollerGaussianPeriodic005}) and more spread out for higher $\sigma$ (Figure \ref{fig:hovmollerGaussianPeriodic015}).
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{hovmuller_periodicgaussian_sigma005.pdf}
-	\caption{Hovmöller diagram of a Rossby wave with periodic boundary conditions, initially a centered gaussian ($x_0=0.5$) using a implicit scheme. Here $\sigma = 0.05$, $\Delta x = 0.01$ and $\Delta t = 0.1$.}
+	\caption{Hovmöller diagram of a Rossby wave with \textbf{periodic} boundary conditions, initially a centered gaussian ($x_0=0.5$) using a implicit scheme. Here $\sigma = 0.05$, $\Delta x = 0.01$ and $\Delta t = 0.1$.}
 	\label{fig:hovmollerGaussianPeriodic005}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{hovmuller_periodicgaussian.pdf}
-	\caption{Hovmöller diagram of a Rossby wave with periodic boundary conditions, initially a centered gaussian ($x_0=0.5$) using a implicit scheme. Here $\sigma = 0.1$, $\Delta x = 0.025$ and $\Delta t = 0.1$.}
-	\label{fig:hovmollerGaussianPeriodic01}
+	\caption{Hovmöller diagram of a Rossby wave with \textbf{periodic} boundary conditions, initially a centered gaussian ($x_0=0.5$) using a implicit scheme. Here $\sigma = 0.1$, $\Delta x = 0.025$ and $\Delta t = 0.1$.}
+	\label{fig:hovmollerGaussianPeriodic}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{hovmuller_periodicgaussian_sigma015.pdf}
-	\caption{Hovmöller diagram of a Rossby wave with periodic boundary conditions, initially a centered gaussian ($x_0=0.5$) using a implicit scheme. Here $\sigma = 0.15$, $\Delta x = 0.025$ and $\Delta t = 0.1$.}
+	\caption{Hovmöller diagram of a Rossby wave with \textbf{periodic} boundary conditions, initially a centered gaussian ($x_0=0.5$) using a implicit scheme. Here $\sigma = 0.15$, $\Delta x = 0.025$ and $\Delta t = 0.1$.}
 	\label{fig:hovmollerGaussianPeriodic015}
 \end{figure}
 
@@ -43,8 +43,22 @@ In Figure \ref{fig:hovmollerGaussianBounded} we show the Hovmöller diagram of a
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{hovmuller_boundedgaussian.pdf}
-	\caption{Hovmöller diagram of a bounded Rossby wave initially a centered gaussian ($x_0=0.5$) using a implicit scheme. Here $\sigma = 0.1$.}
+	\caption{Hovmöller diagram of a \textbf{bounded} Rossby wave initially a centered gaussian ($x_0=0.5$) using a implicit scheme. Here $\sigma = 0.1$, $\Delta x = 0.025$ and $\Delta t = 0.1$.}
 	\label{fig:hovmollerGaussianBounded}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.5\textwidth]{periodic_sine_centered_2d.pdf}
+	\caption{2+1 dimensional time evolution of a sine wave in the \textbf{periodic} domain, where time advances from left to right, top to bottom, for $t = 0,\, 50,\, 100,\, 150$ respectively. Here $\Delta x = 0.025$ and. $\Delta t = 0.1$}
+	\label{fig:periodicsine2d}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.5\textwidth]{bounded_sine_centered_2d.pdf}
+	\caption{2+1 dimensional time evolution of a sine wave in the \textbf{bounded} domain, where time advances from left to right, top to bottom, for $t = 0,\, 50,\, 100,\, 150$ respectively. Here $\Delta x = 0.025$ and. $\Delta t = 0.1$}
+	\label{fig:boundedsine2d}
 \end{figure}
 
 \begin{table}[htbp]
