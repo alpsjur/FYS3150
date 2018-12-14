@@ -49,6 +49,7 @@ The same problem, but with constant boundaries equal to zero, has the possible s
 \end{equation}
 with $k = \frac{L}{\pi n}$ and $\omega = - \frac{\beta}{2k}$. Here, the phase speed is given by 
 \begin{equation}
+	\label{eq:phasespeed}
 	c = \frac{\omega L}{2n\pi} = - \frac{\beta}{4}
 \end{equation}
 Again, the phase speed is negative. Equation (\ref{eq:bounded sol}) describes a cosine wave where the amplitude is dependent on the position, following a sine curve with zeros at the boundaries.
@@ -100,11 +101,11 @@ in the implicit scheme. For Poisson's equation, we simply have
 Our general algorithm is then Algorithm \ref{algo:1drossby}.
 	\begin{algorithm}[htbp]
 		\label{algo:1drossby}
-		\caption{Algorithm for solving the 1+1 dimensional Rossby wave equation. Here T is a final time, and X a upper spatial bound.}
+		\caption{Algorithm for solving the 1+1 dimensional Rossby wave equation. Here T and X are the grid sizes in the temporal and spatial dimensions respectively.}
 		\SetAlgoLined
 		\BlankLine
 		\BlankLine
-		initialise wave\;
+		initialise $\psi^0,\, \zeta^0$\;
 		\For{$n=0, 1,\ldots,\,$ T}{
 			\For{$j=0, 1,\ldots,\,$X}{
 				solve for $\zeta^{n+1}_j$\;
