@@ -6,7 +6,7 @@
 Waves are solutions of the wave equation (see eq. \ref{eq:wave}), and have certain properties such as the phase velocity
 	\begin{equation}
 	\label{eq:phase}
-		c = \frac{\lambda}{T} = \frac{\omega}{k},
+		v_p = \frac{\lambda}{T} = \frac{\omega}{k},
 	\end{equation}
 where $\lambda$ is the wavelength, $T$ the period, $\omega$ the angular frequency and $k$ the wavenumber.
 We found the phase velocity of a variety of waves graphically by studying Hovmöller diagrams \citep{hovmoller}.
@@ -54,7 +54,7 @@ with $k = \frac{\pi n}{L}$ and $\omega = - \frac{\beta}{2k}$. Here, the phase sp
 	\label{eq:phasespeed}
 	v_p = \frac{\omega L}{2n\pi} = - \frac{\beta}{4}
 \end{equation}
-Again, the phase speed is negative. Equation (\ref{eq:bounded sol}) describes a cosine wave where the amplitude is dependent on the position, following a sine curve with zeros at the boundaries.
+Again, the phase speed is negative. Equation (\ref{eq:bounded sol}) describes a cosine wave where the equilibrium line is oscillating.  
 
 
 \subsection{Discretisation and algorithm}
@@ -132,7 +132,7 @@ Up until this point we had only considered the $1 + 1$ dimensional Rossby wave. 
 	\label{eq:poissondiscret}
 	\frac{\psi^{n+1}_{i,j+1} + \psi^{n+1}_{i+1,j} - 4\psi^{n+1}_{i,j} + \psi^{n+1}_{i,j-1}+ \psi^{n+1}_{i-1,j}}{\qty(\Delta x)^2} \\= \zeta^{n+1}_{i,j},
 	\end{multline}
-given that $\Delta x = \Delta y$. Algorithm REF outlines the algorithm for solving the two-dimensional case.
+given that $\Delta x = \Delta y$. Algorithm \ref{algo:2drossby} outlines the algorithm for solving the two-dimensional case.
 
 \begin{algorithm}[htbp]
 	%\label{algo:2drossby}
@@ -154,6 +154,10 @@ given that $\Delta x = \Delta y$. Algorithm REF outlines the algorithm for solvi
 	\label{algo:2drossby}
 \end{algorithm}
 
+Simulating the ocean, we chose a bounded domain in both directions, while for the atmosphere it made sense to keep the domain closed zonally, and periodic meridionally.
+
+It should be noted that due to time constraints, the code used to generate the data shown in Figure \ref{fig:periodicsine2d} does not handle the eastward boundary correctly.
+
 \subsection{Initial values}
 For the numerical solutions we used a sine wave on the form 
 \begin{equation}
@@ -168,6 +172,7 @@ The Gaussian initial condition is given as
 \begin{equation}
 	\psi = exp-\left(\frac{x-x_0}{\sigma} \right)^2
 \end{equation}
+
 
 \subsection{Implementation}
 \label{sec:implement}
