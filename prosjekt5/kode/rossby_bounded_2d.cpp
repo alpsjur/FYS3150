@@ -4,7 +4,7 @@
 // reading n power from command line
 int main(int argc, char *argv[]) {
   ofstream outpsi, outzeta;
-  string zetaname = "../data/zeta_periodic";
+  //string zetaname = "../data/zeta_periodic";
   string psiname = "../data/psi_periodic";
 
   double deltapos = atof(argv[1]);
@@ -15,32 +15,32 @@ int main(int argc, char *argv[]) {
   bool initialSine;
   if(atof(argv[4])==0){
     initialSine = true;
-    zetaname += "_sine";
+    //zetaname += "_sine";
     psiname += "_sine";
   }
   else{
     initialSine = false;
-    zetaname += "_gaussian";
+    //zetaname += "_gaussian";
     psiname += "_gaussian";
   }
 
   bool advanceForward;
   if(atof(argv[5])==0){
     advanceForward = true;
-    zetaname += "_forward";
+    //zetaname += "_forward";
     psiname += "_forward";
   }
   else{
     advanceForward = false;
-    zetaname += "_centered";
+    //zetaname += "_centered";
     psiname += "_centered";
   }
 
-  zetaname += "_2d.dat";
+  //zetaname += "_2d.dat";
   psiname += "_2d.dat";
 
-  outpsi.open(zetaname);
-  outzeta.open(psiname);
+  outpsi.open(psiname);
+  //outzeta.open(psiname);
 
   int posdim = (int) endpos/deltapos-1;   //-1 siden endepunktene er kjent
   int timedim = (int) endtime/deltatime;
@@ -68,26 +68,25 @@ int main(int argc, char *argv[]) {
       else{
         advance_vorticity_centered(zeta(0,j), zeta_2previous(0,j), psi(1,j), psiClosed, deltatime, deltapos);
       }
-      for(int i = 1; i < posdim; i++){
+      for(int i = 1; i < posdim-1; i++){
         if(advanceForward){
           advance_vorticity_forward(zeta(i,j), psi(i+1,j), psi(i-1,j), deltatime, deltapos);
         }
         else{
           advance_vorticity_centered(zeta(i,j), zeta_2previous(i,j), psi(i+1,j), psi(i-1,j), deltatime, deltapos);
         }
-        writeZeta(outzeta, zeta(i,j));
+        //writeZeta(outzeta, zeta(i,j));
         writePsi(outpsi, psi(i,j));
       }
+      zeta_2previous = zeta_previous;
+      zeta_previous = zeta;
+      //outzeta << endl;
+      outpsi << endl;
     }
-    zeta_2previous = zeta_previous;
-    zeta_previous = zeta;
-    outzeta << endl;
-    outpsi << endl;
-    jacobisMethod2D(posdim, deltapos, psi, zeta);
-
+    jacobisMethod2D(posdim, deltapos, psi, zeta, psiClosed);
   }
   outpsi.close();
-  outzeta.close();
+  //outzeta.close();
   return 0;
 }
 
@@ -112,19 +111,51 @@ void initWave(int posdim, double deltapos, mat &psi, mat &zeta, bool initialSine
   return;
 }
 
-void jacobisMethod2D(int posdim, double deltapos, mat &psi, mat zeta){
+void jacobisMethod2D(int posdim, double deltapos, mat &psi, mat zeta, double psiClosed){
   double hh = deltapos*deltapos;
   mat psi_temporary;
   int iterations = 0; int maxIterations = 10000;
   double difference = 1.; double maxDifference = 1e-7;
+
   while((iterations <= maxIterations) && (difference > maxDifference)){
     psi_temporary = psi; difference = 0.;
-    for(int l = 1; l > posdim; ++l){
-      for(int m = 1; m > posdim; ++m){
-        psi(l,m) = 0.25*(psi_temporary(l,m+1)+psi_temporary(l,m-1)
-                   +psi_temporary(l+1,m)+psi_temporary(l-1,m)
-                   -hh*zeta(l,m));
-        difference += fabs(psi_temporary(l,m)-psi(l,m));
+
+    //grensenbetingelser sider
+    for(int l = 1; l < posdim-1; ++l){
+      psi(l,0) = 0.25*(psi_temporary(l,1)+psiClosed
+                 +psi_temporary(l+1,0)+psi_temporary(l-1,0)
+                 -hh*zeta(l,0));
+      difference += fabs(psi_temporary(l,0)-psi(l,0));
+      psi(0,l) = 0.25*(psi_temporary(0,l+1)+psi_temporary(0,l-1)
+                 +psi_temporary(1,l)+psiClosed
+                 -hh*zeta(0,l));
+      difference += fabs(psi_temporary(0,l)-psi(0,l));
+    }
+    //grensebetingelser hjørner
+    psi(0,0) = 0.25*(psi_temporary(0,1)+psiClosed
+               +psi_temporary(1,0)+psiClosed
+               -hh*zeta(0,0));
+    difference += fabs(psi_temporary(0,0)-psi(0,0));
+    psi(posdim-1,posdim-1) = 0.25*(psiClosed+psi_temporary(posdim-1,posdim-2)
+               +psiClosed+psi_temporary(posdim-2,posdim-1)
+               -hh*zeta(posdim-1,posdim-1));
+    difference += fabs(psi_temporary(posdim-1,posdim-1)-psi(posdim-1,posdim-1));
+    psi(0,posdim-1) = 0.25*(psiClosed+psi_temporary(0,posdim-2)
+               +psi_temporary(1,posdim-1)+psiClosed
+               -hh*zeta(0,posdim-1));
+    difference += fabs(psi_temporary(0,posdim-1)-psi(0,posdim-1));
+    psi(posdim-1,0) = 0.25*(psi_temporary(posdim-1,1)+psiClosed
+               +psiClosed+psi_temporary(posdim-2,0)
+               -hh*zeta(posdim-1,0));
+    difference += fabs(psi_temporary(posdim-1,0)-psi(posdim-1,0));
+
+    //ittererer over de indre punktene
+    for(int i = 1; i < posdim-1; ++i){
+      for(int j = 1; j < posdim-1; ++j){
+        psi(i,j) = 0.25*(psi_temporary(i,j+1)+psi_temporary(i,j-1)
+                   +psi_temporary(i+1,j)+psi_temporary(i-1,j)
+                   -hh*zeta(i,j));
+        difference += fabs(psi_temporary(i,j)-psi(i,j));
       }
     }
     iterations++;

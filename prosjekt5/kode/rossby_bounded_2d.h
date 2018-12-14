@@ -19,7 +19,7 @@ void initWave(int, double, mat&, mat&, bool);
 void advance_vorticity_forward(double&, double, double, double, double);
 void advance_vorticity_centered(double&, double, double, double, double, double);
 
-void jacobisMethod2D(int, double, mat&, mat);
+void jacobisMethod2D(int, double, mat&, mat, double);
 
 void writePsi(ofstream&, double&);
 void writeZeta(ofstream&, double&);

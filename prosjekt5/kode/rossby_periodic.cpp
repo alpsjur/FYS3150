@@ -100,7 +100,7 @@ void jacobisMethod(int posdim, double deltapos, vector<double> &psi, vector<doub
   double hh = deltapos*deltapos;
   vector<double> psi_temporary;
   int iterations = 0; int maxIterations = 10000;
-  double difference = 1.; double maxDifference = 1e-7;
+  double difference = 1.; double maxDifference = 1e-6;
   while((iterations <= maxIterations) && (difference > maxDifference)){
     psi_temporary = psi; difference = 0.;
     for(int j = 0; j < posdim; ++j){
@@ -108,7 +108,7 @@ void jacobisMethod(int posdim, double deltapos, vector<double> &psi, vector<doub
       difference += fabs(psi_temporary[j]-psi[j]);
     }
     iterations++;
-    difference /= (posdim*posdim);
+    difference /= posdim;
   }
   return;
 }

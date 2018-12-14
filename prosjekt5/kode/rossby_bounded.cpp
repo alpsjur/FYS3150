@@ -164,39 +164,6 @@ void backward_sub(int posdim, vector<double> &psi, vector<double> &b,
   return;
 }
 
-/*
-void jacobis_method(int posdim, vector<double> &psi, vector<double> zeta, mat A){
-  for(int i = 0; i < posdim; ++i){
-    double sum;
-    for(int j = 0; j < posdim; ++j){
-      if(j != i){
-        sum += A(i,j)*psi(j);
-      }
-    }
-    psi(i) = zeta(j)-sum/A(i,i);
-  }
-}
-*/
-
-void jacobisMethod2D(int posdim, double deltapos, mat &psi, mat zeta){
-  double hh = deltapos*deltapos;
-  mat psi_temporary;
-  int iterations = 0; int maxIterations = 10000;
-  double difference = 1.; double maxDifference = 1e-5;
-  while((iterations <= maxIterations) && (difference > maxDifference)){
-    psi_temporary = psi; difference = 0.;
-    for(int l = 1; l > posdim; ++l){
-      for(int m = 1; m > posdim; ++m){
-        psi(l,m) = 0.25*(psi_temporary(l,m+1)+psi_temporary(l,m-1)
-                   +psi_temporary(l+1,m)+psi_temporary(l-1,m)
-                   -hh*zeta(l,m));
-      }
-    }
-    iterations++;
-    difference /= pow(posdim,2.0);
-  }
-  return;
-}
 
 
 void advance_vorticity_forward(double &zeta_forward, double psi_forward,
