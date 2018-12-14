@@ -12,8 +12,8 @@ datadir = "../data/"
 figdir = "../figurer/"
 
 
-data_forward = np.loadtxt(datadir + "psi_periodic_gaussian_forward.dat")
-data_centered = np.loadtxt(datadir + "psi_periodic_gaussian_centered.dat")
+data_forward = np.loadtxt(datadir + "psi_bounded_gaussian_forward.dat")
+data_centered = np.loadtxt(datadir + "psi_bounded_gaussian_centered.dat")
 
 x = np.linspace(0, 1, len(data_forward[0]))
 t = np.linspace(0, 150, len(data_forward[:, 0]))
@@ -46,5 +46,5 @@ c = ax.contourf(x, t, data_centered)
 ax.set_xlabel("Spatial extent", fontsize=14)
 ax.set_ylabel("Time", fontsize=14)
 fig.colorbar(c, label="Amplitude")
-#plt.savefig(figdir + "hovmuller_periodicgaussian.pdf")
+#plt.savefig(figdir + "hovmuller_boundedgaussian.pdf")
 plt.show()
