@@ -9,7 +9,7 @@ Shown in Figure \ref{fig:compare} is the breakdown of the forward difference sch
 	\label{fig:compare}
 \end{figure}
 
-Looking at Figure \ref{fig:hovmollerSinePeriodic}, we observe the time evolution of a sine wave in the periodic domain. We see that the wave is easterly (travelling towards the west). There are four distinct anti-nodes throughout the entire duration of the wave, and a wavelength is determined to be $0.5$. After a time $t=80$ we can see that the wave is in phase to its initial state.
+Looking at Figure \ref{fig:hovmollerSinePeriodic}, we observe the time evolution of a sine wave in the periodic domain. We see that the wave is easterly (travelling towards the west). There are four distinct anti-nodes throughout the entire duration of the wave, and a phase velocity is determined to be $v_p \approx 0.0063$. After a time $t=80$ we can see that the wave is in phase to its initial state.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{hovmuller_periodicsine.pdf}
@@ -17,7 +17,7 @@ Looking at Figure \ref{fig:hovmollerSinePeriodic}, we observe the time evolution
 	\label{fig:hovmollerSinePeriodic}
 \end{figure}
 
-Considering now the bounded sine wave (Figure \ref{fig:hovmollerSineBounded}), the direction of propagation is still west. The shape of the curve appears to be the same as for the periodic case, except that the equilibrium line of the sine curve is shifting up and down, so that the boundary conditions are satisfied.
+Considering now the bounded sine wave (Figure \ref{fig:hovmollerSineBounded}), the direction of propagation is still west. The shape of the curve appears to be the same as for the periodic case, except that the equilibrium line of the sine curve is shifting up and down, so that the boundary conditions are satisfied. Here we determine a phase velocity, $vp \approx 0.005$.
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{hovmuller_boundedsine.pdf}
@@ -55,9 +55,9 @@ In Figure \ref{fig:hovmollerGaussianBounded} we show the Hovmöller diagram of a
 	\label{fig:hovmollerGaussianBounded}
 \end{figure}
 
-Figure \ref{fig:boundedsine2d} and \ref{fig:periodicsine2d} shows the evolution of an initial product between two sine waves, one in the x-direction and one in the y-direction, resulting in an two dimensional wave, for four different time steps, both in a periodic and bounded domain. In the periodic domain, the wave seems to keep its structure, while shifting in the x-direction. The direction can not be derived solely from these four time steps. However, referring to the code for animating the time evolution found in the GitHub repository as mentioned earlier, it can be seen that the wave is travelling to the left. It should be noted that due to a lack of time, the code used to generate the data shown in Figure \ref{fig:periodicsine2d} does not handle the eastward boundary correctly. 
+Figure \ref{fig:boundedsine2d} and \ref{fig:periodicsine2d} shows the evolution of an initial product between two sine waves, one in the x-direction and one in the y-direction, resulting in an two dimensional wave, for four different time steps, both in a periodic and bounded domain. In the periodic domain, the wave seems to keep its structure, while shifting in the x-direction.
 
-For the bounded two dimensional domain, the amplitude of the wave have decreased closer to the x-boundaries for the time steps $t\neq 0$. Again it can be seen from the mentioned animation program that the wave is travelling westward. 
+For the bounded two dimensional domain, the amplitude of the wave have decreased closer to the x-boundaries for the time steps $t\neq 0$. 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.5\textwidth]{periodic_sine_centered_2d.pdf}
