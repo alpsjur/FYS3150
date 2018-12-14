@@ -9,7 +9,7 @@ sns.set_style("whitegrid")
 sns.set_palette("husl")
 
 datadir = "../data/"
-file = datadir + "psi_bounded_gaussian_centered_2d.bin"
+file = datadir + "psi_periodic_sine_centered_2d.bin"
 data = np.fromfile(file)
 data = np.reshape(data,((1500,41,41)))
 '''

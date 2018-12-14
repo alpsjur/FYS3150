@@ -11,7 +11,7 @@ PROGPERIODIC2D = rossby_periodic_2d.exe
 PROGBOUNDED2D = rossby_bounded_2d.exe
 TEST_PROG = test_jacobi.exe
 
-all : king kong baba
+all : king kong ali baba
 
 king : ${PROGPERIODIC}
 kong : ${PROGBOUNDED}
