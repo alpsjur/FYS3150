@@ -12,7 +12,7 @@ datadir = "../data/"
 figdir = "../figurer/"
 
 
-data_forward = np.fromfile(datadir + "psi_periodic_gaussian_centered_2d.bin")
+data_forward = np.fromfile(datadir + "psi_periodic_sine_centered_2d.bin")
 data_forward = np.reshape(data_forward,((1500,41,41)))
 #data_centered = np.fromfile(datadir + "psi_bounded_sine_centered_2d.bin")
 
