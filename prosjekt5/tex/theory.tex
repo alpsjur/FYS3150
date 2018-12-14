@@ -14,28 +14,28 @@ We found the phase velocity of a variety of waves graphically by studying Hovmö
 \subsection{Rossby wave equation}
 \label{sec:wave}
 Rossby waves are low frequency waves induced by the meridional
-variation of the Coriolis parameter $f$. This parameter depends on the rotation of the Earth $\Omega$ and the latitude $\varphi$, and is given by 
+variation of the Coriolis parameter $f$. This parameter depends on the rotation of the Earth $\Omega$ and the latitude $\varphi$, and is given by
 \begin{equation}
 	f = \Omega \sin{\varphi}.
-\end{equation} 
+\end{equation}
 An approximation where $f$ is set to vary linear in space is called the $\beta$-plane approximation, and can be written as
 \begin{equation}\label{beta-plane}
 	f = f_0 + \beta y,
-\end{equation} 
+\end{equation}
 where $\beta = \left.\frac{df}{dy}\right|_{\varphi_0} = \frac{2\Omega}{a} \cos{\varphi_0}$, $a$ being the radius of the Earth. Combining the $\beta$-plane approximation with the shallow water vorticity equation, you get the quasi-geostrophic vorticity equation. This can be linearised, and by assuming a constant mean flow without bottom topography, you get the barotropic Rossby wave equation:
 \begin{equation}\label{eq:rossby full}
 	\left(\partial_t + U\partial_x \right) \nabla_H \psi + \beta \partial_x \psi = 0.
 \end{equation}
-Here, $\psi$ is the stream function describing the velocity perturbation, $\partial_x$ denotes $\frac{\partial}{\partial x}$, $\nabla_H$ is the horizontal divergence $\partial x + \partial y$ and $U$ is the mean velocity. In this report, we will assume no mean velocity, i.e. $U=0$, in which case equation (\ref{eq:rossby full}) simplifies to 
+Here, $\psi$ is the stream function describing the velocity perturbation, $\partial_x$ denotes $\frac{\partial}{\partial x}$, $\nabla_H$ is the horizontal divergence $\partial x + \partial y$ and $U$ is the mean velocity. In this report, we will assume no mean velocity, i.e. $U=0$, in which case equation (\ref{eq:rossby full}) simplifies to
 \begin{equation}\label{eq:rossby}
 	\partial_t \nabla_H \psi + \beta \partial_x \psi = 0.
 \end{equation}
 
 Two forms of boundaries will be examined in this report, that is periodic and constant boundaries. The first case can be used to describe an atmosphere that wraps around the earth, where the stream function is equal at the end-points. The latter case, where the stream function has a constant value at the boundaries, can be used to describe an ocean basin.
 
-When extending the problem to two dimensions, we require that the stream function is constant at all boundaries for the bounded case. For the periodic case, the stream function should wrap around in the east-west direction, which corresponds to the x-direction, while being constant at the north and south boundaries, corresponding to the boundaries in the y-direction.   
+When extending the problem to two dimensions, we require that the stream function is constant at all boundaries for the bounded case. For the periodic case, the stream function should wrap around in the east-west direction, which corresponds to the x-direction, while being constant at the north and south boundaries, corresponding to the boundaries in the y-direction.
 
-A possible solution to (\ref{eq:rossby}) in one dimension with periodic boundaries, where $x \in \left[0,L \right] $, is given by 
+A possible solution to (\ref{eq:rossby}) in one dimension with periodic boundaries, where $x \in \left[0,L \right] $, is given by
 \begin{equation}\label{eq:periodic sol}
 	\psi = A\cos{\left(kx-\omega t\right)},
 \end{equation}
@@ -43,19 +43,19 @@ where $k=\frac{2n\pi}{L}$ and $\omega = - \frac{\beta L}{2n\pi}$. The phase spee
 \begin{equation}
 	c = \frac{\omega L}{2n\pi}=-\beta \left(\frac{L}{2n\pi}\right)^2.
 \end{equation}
-Since $\beta$ is positive for all latitudes, the phase speed will be negative, implying that Rossby waves travels from east to west in a bounded domain. 
+Since $\beta$ is positive for all latitudes, the phase speed will be negative, implying that Rossby waves travels from east to west in a bounded domain.
 
-The same problem, but with constant boundaries equal to zero, has the possible solution 
+The same problem, but with constant boundaries equal to zero, has the possible solution
 \begin{equation}\label{eq:bounded sol}
 	\psi = A\sin\left(\frac{\pi n}{L}x\right)\cos\left(kx-\omega t\right),
 \end{equation}
-with $k = \frac{L}{\pi n}$ and $\omega = - \frac{\beta}{2k}$. Here, the phase speed is given by 
+with $k = \frac{L}{\pi n}$ and $\omega = - \frac{\beta}{2k}$. Here, the phase speed is given by
 \begin{equation}
 	\label{eq:phasespeed}
 	c = \frac{\omega L}{2n\pi} = - \frac{\beta}{4}
 \end{equation}
 Again, the phase speed is negative. Equation (\ref{eq:bounded sol}) describes a cosine wave where the amplitude is dependent on the position, following a sine curve with zeros at the boundaries.
-  
+
 
 \subsection{Discretisation and algorithm}
 \label{sec:algo}
@@ -83,7 +83,7 @@ where the latter is Poisson's equation. In one dimension, equation (\ref{eq:pois
 	\label{eq:implicit}
 		\partial_q f \approx \frac{f_{q+1} - f_{q-1}}{2\Delta q},
 	\end{equation}
-	
+
 	\begin{equation}
 	\label{eq:doublederivative}
 		\partial_{qq} f \approx \frac{f_{q+1} - 2f_q + f_{q-1}}{\qty(\Delta q)^2},
@@ -125,7 +125,7 @@ Our general algorithm is then Algorithm \ref{algo:1drossby}.
 What remains now is to determine how to solve the equations for closed and periodic boundary conditions.
 In the case of closed boundaries we had the Dirichlet boundary conditions, and could use gaussian elimination as outlined in one of our earlier papers \citep{sjurkal}. As for the periodic domain, we found that the resulting matrix form of the Laplacian would be singular. This prompted us to implement Jacobi's method, as described by \citet{compphys}.
 
-Jacobi's method is an iterative method, involving making a guess for $\psi^{n+1}_j$ for all $j$, and then, by rearranging Poisson's equation, calculating $\psi_j^{n+1}$. The stream function is re-calculated until the difference in $\psi$ between two iterations is essentially zero.       
+Jacobi's method is an iterative method, involving making a guess for $\psi^{n+1}_j$ for all $j$, and then, by rearranging Poisson's equation, calculating $\psi_j^{n+1}$. The stream function is re-calculated until the difference in $\psi$ between two iterations is essentially zero.
 
 Up until this point we had only considered the $1 + 1$ dimensional Rossby wave. Expanding to $2 + 1$ involves solving equation (\ref{eq:poisson2d}) using Jacobis method. Discretisising, the Poisson equation in two dimensions becomes
 	\begin{multline}
@@ -152,9 +152,8 @@ given that $\Delta x = \Delta y$. Algorithm REF outlines the algorithm for solvi
 	\BlankLine
 	\BlankLine
 	\label{algo:2drossby}
-\end{algorithm} 
+\end{algorithm}
 
 \subsection{Implementation}
 \label{sec:implement}
-We implemented our algorithms in C++ using the armadillo and LAPACK libraries to handle matrix operations. To analyse data and produce figures, we used python 3.6 with a standard set of modules: matplotlib, numpy and seaborn.
-
+We implemented our algorithms in C++ using the armadillo and LAPACK libraries to handle matrix operations. To analyse data and produce figures, we used python 3.6 with a standard set of modules: matplotlib, numpy and seaborn. All our code and figures can be found in a github repository \footnote{https://github.com/janadr/FYS3150/ \\tree/master/prosjekt5}
