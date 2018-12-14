@@ -39,9 +39,9 @@ A possible solution to (\ref{eq:rossby}) in one dimension with periodic boundari
 \begin{equation}\label{eq:periodic sol}
 	\psi = A\cos{\left(kx-\omega t\right)},
 \end{equation}
-where $k=\frac{2n\pi}{L}$ and $\omega = - \frac{\beta L}{2n\pi}$. The phase speed $c$ can be calculated through the dispersion relation, given by
+where $k=\frac{2n\pi}{L}$ and $\omega = - \frac{\beta L}{2n\pi}$. The phase speed $v_p$ can be calculated through the dispersion relation, given by
 \begin{equation}
-	c = \frac{\omega L}{2n\pi}=-\beta \left(\frac{L}{2n\pi}\right)^2.
+	v_p = \frac{\omega L}{2n\pi}=-\beta \left(\frac{L}{2n\pi}\right)^2.
 \end{equation}
 Since $\beta$ is positive for all latitudes, the phase speed will be negative, implying that Rossby waves travels from east to west in a bounded domain.
 
@@ -49,10 +49,10 @@ The same problem, but with constant boundaries equal to zero, has the possible s
 \begin{equation}\label{eq:bounded sol}
 	\psi = A\sin\left(\frac{\pi n}{L}x\right)\cos\left(kx-\omega t\right),
 \end{equation}
-with $k = \frac{L}{\pi n}$ and $\omega = - \frac{\beta}{2k}$. Here, the phase speed is given by
+with $k = \frac{\pi n}{L}$ and $\omega = - \frac{\beta}{2k}$. Here, the phase speed is given by
 \begin{equation}
 	\label{eq:phasespeed}
-	c = \frac{\omega L}{2n\pi} = - \frac{\beta}{4}
+	v_p = \frac{\omega L}{2n\pi} = - \frac{\beta}{4}
 \end{equation}
 Again, the phase speed is negative. Equation (\ref{eq:bounded sol}) describes a cosine wave where the amplitude is dependent on the position, following a sine curve with zeros at the boundaries.
 
@@ -153,6 +153,21 @@ given that $\Delta x = \Delta y$. Algorithm REF outlines the algorithm for solvi
 	\BlankLine
 	\label{algo:2drossby}
 \end{algorithm}
+
+\subsection{Initial values}
+For the numerical solutions we used a sine wave on the form 
+\begin{equation}
+	\psi = \sin{(4\pi x)}
+\end{equation}
+for the one dimensional case, and 
+\begin{eqnarray}
+	\psi = \sin(4\pi x)\sin(4\pi y)
+\end{eqnarray} 
+for the two dimensional case. 
+The Gaussian initial condition is given as
+\begin{equation}
+	\psi = exp-\left(\frac{x-x_0}{\sigma} \right)^2
+\end{equation}
 
 \subsection{Implementation}
 \label{sec:implement}
