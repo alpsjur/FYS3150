@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+from matplotlib import cm
 import seaborn as sns
 
 
@@ -12,8 +13,8 @@ datadir = "../data/"
 figdir = "../figurer/"
 
 
-data_forward = np.loadtxt(datadir + "psi_bounded_gaussian_forward.dat")
-data_centered = np.loadtxt(datadir + "psi_bounded_gaussian_centered.dat")
+data_forward = np.loadtxt(datadir + "psi_periodic_gaussian_centered.dat")
+data_centered = np.loadtxt(datadir + "psi_periodic_gaussian_centered.dat")
 
 x = np.linspace(0, 1, len(data_forward[0]))
 t = np.linspace(0, 150, len(data_forward[:, 0]))
@@ -41,10 +42,11 @@ fig.legend(labels, frameon=False, ncol=4, bbox_to_anchor=(1.0, 0.96), fontsize=1
 #plt.savefig(figdir + "compare_forward_centered.pdf")
 
 # generating hov muller diagram
+levels = np.linspace(-1.1, 1.1, 12)
 fig, ax = plt.subplots()
-c = ax.contourf(x, t, data_centered)
+c = ax.contourf(x, t, data_centered, levels=levels, vmin=-1.1, vmax=1.1)
 ax.set_xlabel("Spatial extent", fontsize=14)
 ax.set_ylabel("Time", fontsize=14)
 fig.colorbar(c, label="Amplitude")
-#plt.savefig(figdir + "hovmuller_boundedgaussian.pdf")
+#plt.savefig(figdir + "hovmuller_periodicgaussian_sigma005.pdf")
 plt.show()
