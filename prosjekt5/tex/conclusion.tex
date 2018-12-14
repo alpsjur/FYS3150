@@ -1,2 +1,11 @@
 \section{Conclusion}
 \label{sec:conclusion}
+We solved the barotropic Rossby wave equation in the betaplane approximation (\ref{eq:rossby}) for periodic and bounded boundaries.
+
+Numerically, we found a implicit centered difference scheme to be most accurate and stable, compared with a explicit forward difference scheme. We therefore used the implicit method throughout the paper.
+
+In the one-dimensional case we find agreement between the analytical and numerical solutions of a sine wave in both domains. For both boundaries, the waves propagate towards the west, which is in agreement with our analytical dispersion relation and the established literature. We also calculated a value of the phase velocity in both cases, which are in agreement with our analytical phase velocity.
+
+For the gaussian waves, we had no analytical solution, but observed our numerical solutions to be waves moving west in both domains. No phase velocity could be discerned from the Hovmöller diagrams.
+
+In the two-dimensional case, we considering two boundary-value problems. Simulating the ocean, we chose all four boundaries to be closed, representing the continents. Simulating the atmosphere, we chose closed boundaries in the meridional and periodic boundaries in the zonal.

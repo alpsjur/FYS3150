@@ -125,9 +125,9 @@ Our general algorithm is then Algorithm \ref{algo:1drossby}.
 What remains now is to determine how to solve the equations for closed and periodic boundary conditions.
 In the case of closed boundaries we had the Dirichlet boundary conditions, and could use gaussian elimination as outlined in one of our earlier papers \citep{sjurkal}. As for the periodic domain, we found that the resulting matrix form of the Laplacian would be singular. This prompted us to implement Jacobi's method, as described by \citet{compphys}.
 
-Jacobi's method is an iterative method, involving making a guess for $\psi^{n+1}_j$ for all $j$, and then, by rearranging Possion's equation, calculating $\psi_j^{n+1}$. The stream function is re-calculated until the difference in $\psi$ between two iterations is essentially zero.       
+Jacobi's method is an iterative method, involving making a guess for $\psi^{n+1}_j$ for all $j$, and then, by rearranging Poisson's equation, calculating $\psi_j^{n+1}$. The stream function is re-calculated until the difference in $\psi$ between two iterations is essentially zero.       
 
-Up until this point we had only considered the $1 + 1$ dimensional Rossby wave. Expanding to $2 + 1$ involves solving equation (\ref{eq:poisson2d}) using Jacobis method. Discretisising, the Possion equation in two dimensions becomes
+Up until this point we had only considered the $1 + 1$ dimensional Rossby wave. Expanding to $2 + 1$ involves solving equation (\ref{eq:poisson2d}) using Jacobis method. Discretisising, the Poisson equation in two dimensions becomes
 	\begin{multline}
 	\label{eq:poissondiscret}
 	\frac{\psi^{n+1}_{i,j+1} + \psi^{n+1}_{i+1,j} - 4\psi^{n+1}_{i,j} + \psi^{n+1}_{i,j-1}+ \psi^{n+1}_{i-1,j}}{\qty(\Delta x)^2} \\= \zeta^{n+1}_{i,j},
