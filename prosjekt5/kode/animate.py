@@ -9,7 +9,7 @@ sns.set_style("whitegrid")
 sns.set_palette("husl")
 
 datadir = "../data/"
-data = np.loadtxt(datadir + "psi_periodic_centered.dat")
+data = np.loadtxt(datadir + "psi_periodic_sine_centered.dat")
 x = np.linspace(0, 1, len(data[0]))
 
 ymax = np.max(data)

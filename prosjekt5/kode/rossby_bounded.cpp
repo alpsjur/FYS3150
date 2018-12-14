@@ -24,6 +24,7 @@ int main(int argc, char *argv[]){
     psiname += "_gaussian";
   }
 
+
   bool advanceForward;
   if(atof(argv[5])==0){
     advanceForward = true;
@@ -110,7 +111,7 @@ int main(int argc, char *argv[]){
 void initWave(int posdim, double deltapos, vector<double> &psi, vector<double> &zeta, bool initialSine){
   double x;
   //double h = 1.0/(posdim + 1.0;
-  double sigma = 0.1;
+  double sigma = 0.1; double x0 = 0.5;
   for(int j = 0; j < posdim; ++j){
     x = (j + 1)*deltapos;
     if(initialSine){
@@ -118,8 +119,8 @@ void initWave(int posdim, double deltapos, vector<double> &psi, vector<double> &
       psi[j] = sinewave(x);
     }
     else{
-      zeta[j] = gaussianDerivative(x, sigma);
-      psi[j] = gaussian(x, sigma);
+      zeta[j] = gaussianDerivative(x, x0, sigma);
+      psi[j] = gaussian(x, x0, sigma);
     }
 
   }

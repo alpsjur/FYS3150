@@ -12,8 +12,8 @@ datadir = "../data/"
 figdir = "../figurer/"
 
 
-data_forward = np.loadtxt(datadir + "psi_bounded_sine_forward.dat")
-data_centered = np.loadtxt(datadir + "psi_bounded_sine_centered.dat")
+data_forward = np.loadtxt(datadir + "psi_periodic_gaussian_forward.dat")
+data_centered = np.loadtxt(datadir + "psi_periodic_gaussian_centered.dat")
 
 x = np.linspace(0, 1, len(data_forward[0]))
 t = np.linspace(0, 150, len(data_forward[:, 0]))
@@ -31,6 +31,7 @@ times = [50, 100, 150]
 labels = ["t = 0"]
 ax[0].plot(x, data_forward[0])
 ax[1].plot(x, data_centered[0])
+
 for time in times:
     labels.append("t = {}".format(time))
     timeIndex = int(time/dt) - 1
