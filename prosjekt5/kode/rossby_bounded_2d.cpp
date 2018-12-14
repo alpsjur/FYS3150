@@ -1,11 +1,9 @@
 #include "rossby_bounded_2d.h"
 
-
 // reading n power from command line
 int main(int argc, char *argv[]) {
-  ofstream outpsi, outzeta;
-  //string zetaname = "../data/zeta_periodic";
-  string psiname = "../data/psi_periodic";
+  ofstream outpsi;
+  string psiname = "../data/psi_bounded";
 
   double deltapos = atof(argv[1]);
   double deltatime = atof(argv[2]);
@@ -15,32 +13,27 @@ int main(int argc, char *argv[]) {
   bool initialSine;
   if(atof(argv[4])==0){
     initialSine = true;
-    //zetaname += "_sine";
     psiname += "_sine";
   }
   else{
     initialSine = false;
-    //zetaname += "_gaussian";
     psiname += "_gaussian";
   }
 
   bool advanceForward;
   if(atof(argv[5])==0){
     advanceForward = true;
-    //zetaname += "_forward";
     psiname += "_forward";
   }
   else{
     advanceForward = false;
-    //zetaname += "_centered";
     psiname += "_centered";
   }
 
-  //zetaname += "_2d.dat";
-  psiname += "_2d.dat";
+  psiname += "_2d.bin";
 
-  outpsi.open(psiname);
-  //outzeta.open(psiname);
+  outpsi.open(psiname, ios::out | ios::binary);
+
 
   int posdim = (int) endpos/deltapos-1;   //-1 siden endepunktene er kjent
   int timedim = (int) endtime/deltatime;
@@ -56,11 +49,14 @@ int main(int argc, char *argv[]) {
   zeta_2previous = zeta;
   zeta_previous = zeta;
   for(int n = 0; n < timedim; ++n){
-    // HER MÅ VI SKRIVE UT EN RAD MED PSICLOSED
+    //boundary
+    for(int i = 0; i < posdim+2; ++i){
+      outpsi.write((char*) &psiClosed, sizeof(double));
+    }
     // går gjennom alle y-radene for å beregne zeta, som er den x-dobbeltderiverte
     for(int j = 0; j < posdim; ++j){
-      outpsi<< setw(15) << psiClosed;      // skrivet ut venstre BC
-      writePsi(outpsi, psi(0,j));            // skriver ut første verdi til fil
+      outpsi.write((char*) &psiClosed, sizeof(double));            // skrivet ut venstre BC
+      outpsi.write((char*) &psi(0,j), sizeof(double));             // skriver ut første verdi til fil
       // finner den første x-verdien til zeta
       if(advanceForward){
         advance_vorticity_forward(zeta(0,j), psi(1,j), psiClosed, deltatime, deltapos);
@@ -68,6 +64,7 @@ int main(int argc, char *argv[]) {
       else{
         advance_vorticity_centered(zeta(0,j), zeta_2previous(0,j), psi(1,j), psiClosed, deltatime, deltapos);
       }
+      //finner indre verdier til zeta
       for(int i = 1; i < posdim-1; i++){
         if(advanceForward){
           advance_vorticity_forward(zeta(i,j), psi(i+1,j), psi(i-1,j), deltatime, deltapos);
@@ -75,16 +72,27 @@ int main(int argc, char *argv[]) {
         else{
           advance_vorticity_centered(zeta(i,j), zeta_2previous(i,j), psi(i+1,j), psi(i-1,j), deltatime, deltapos);
         }
-        //writeZeta(outzeta, zeta(i,j));
-        writePsi(outpsi, psi(i,j));
+        outpsi.write((char*) &psi(i,j), sizeof(double));
+      }
+      //finner siste verdi til zeta
+      if(advanceForward){
+        advance_vorticity_forward(zeta(posdim-1,j), psiClosed, psi(posdim-2,j), deltatime, deltapos);
+      }
+      else{
+        advance_vorticity_centered(zeta(posdim-1,j), zeta_2previous(posdim-1,j), psiClosed, psi(posdim-2,j), deltatime, deltapos);
       }
       zeta_2previous = zeta_previous;
       zeta_previous = zeta;
-      //outzeta << endl;
-      outpsi << endl;
+      outpsi.write((char*) &psi(posdim-1,j), sizeof(double));      // skriver siste verdi til fil
+      outpsi.write((char*) &psiClosed, sizeof(double));            // skriver ut høyre BC
+    }
+    // boundary
+    for(int i = 0; i < posdim+2; ++i){
+      outpsi.write((char*) &psiClosed, sizeof(double));
     }
     jacobisMethod2D(posdim, deltapos, psi, zeta, psiClosed);
   }
+
   outpsi.close();
   //outzeta.close();
   return 0;
@@ -175,17 +183,5 @@ void advance_vorticity_centered(double &zeta_forward, double zeta_backward,
                                 double psi_forward, double psi_backward,
                                 double deltatime, double deltapos){
   zeta_forward = (deltatime/deltapos)*(psi_backward-psi_forward) + zeta_backward;
-  return;
-}
-
-void writePsi(ofstream &outpsi, double &psivalue){
-  outpsi << setiosflags(ios::showpoint | ios::uppercase);
-  outpsi << setw(15) << setprecision(8) << psivalue;
-  return;
-}
-
-void writeZeta(ofstream &outzeta, double &zetavalue){
-  outzeta << setiosflags(ios::showpoint | ios::uppercase);
-  outzeta << setw(15) << setprecision(8) << zetavalue;
   return;
 }

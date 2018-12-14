@@ -21,11 +21,7 @@ void advance_vorticity_centered(double&, double, double, double, double, double)
 
 void jacobisMethod2D(int, double, mat&, mat, double);
 
-void writePsi(ofstream&, double&);
-void writeZeta(ofstream&, double&);
-
-
-inline double sinewave(double x, double y) {return sin(4.0*pi*x+4.0*pi*x);}
+inline double sinewave(double x, double y) {return sin(4.0*pi*x)*sin(4.0*pi*y);}
 inline double sinewaveDerivative(double x, double y){return -16.0*pi*pi*2*sinewave(x,y);}
 inline double gaussian(double x, double x0, double y, double y0, double sigma) {return exp(-(1/sigma)*(1/sigma)/2*((x-x0)*(x-x0)+(y-y0)*(y-y0)));}
 inline double gaussianDerivative(double x, double x0, double y, double y0, double sigma) {double sigma2 = sigma*sigma*2;
