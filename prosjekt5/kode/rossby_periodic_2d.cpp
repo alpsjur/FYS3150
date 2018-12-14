@@ -49,46 +49,20 @@ int main(int argc, char *argv[]) {
   zeta_2previous = zeta;
   zeta_previous = zeta;
   for(int n = 0; n < timedim; ++n){
-    //boundary
-    for(int i = 0; i < posdim+2; ++i){
-      outpsi.write((char*) &psiClosed, sizeof(double));
-    }
     // går gjennom alle y-radene for å beregne zeta, som er den x-dobbeltderiverte
     for(int j = 0; j < posdim; ++j){
-      outpsi.write((char*) &psiClosed, sizeof(double));            // skrivet ut venstre BC
-      outpsi.write((char*) &psi(0,j), sizeof(double));             // skriver ut første verdi til fil
-      // finner den første x-verdien til zeta
-      if(advanceForward){
-        advance_vorticity_forward(zeta(0,j), psi(1,j), psiClosed, deltatime, deltapos);
-      }
-      else{
-        advance_vorticity_centered(zeta(0,j), zeta_2previous(0,j), psi(1,j), psiClosed, deltatime, deltapos);
-      }
-      //finner indre verdier til zeta
-      for(int i = 1; i < posdim-1; i++){
+      for(int i = 0; i < posdim; i++){
         if(advanceForward){
-          advance_vorticity_forward(zeta(i,j), psi(i+1,j), psi(i-1,j), deltatime, deltapos);
+          advance_vorticity_forward(zeta(i,j), psi(periodic(i+1,posdim),j), psi(periodic(i-1,posdim),j), deltatime, deltapos);
         }
         else{
-          advance_vorticity_centered(zeta(i,j), zeta_2previous(i,j), psi(i+1,j), psi(i-1,j), deltatime, deltapos);
+          advance_vorticity_centered(zeta(i,j), zeta_2previous(i,j), psi(periodic(i+1,posdim),j), psi(periodic(i-1,posdim),j), deltatime, deltapos);
         }
         outpsi.write((char*) &psi(i,j), sizeof(double));
       }
-      //finner siste verdi til zeta
-      if(advanceForward){
-        advance_vorticity_forward(zeta(posdim-1,j), psiClosed, psi(posdim-2,j), deltatime, deltapos);
-      }
-      else{
-        advance_vorticity_centered(zeta(posdim-1,j), zeta_2previous(posdim-1,j), psiClosed, psi(posdim-2,j), deltatime, deltapos);
-      }
       zeta_2previous = zeta_previous;
       zeta_previous = zeta;
-      outpsi.write((char*) &psi(posdim-1,j), sizeof(double));      // skriver siste verdi til fil
-      outpsi.write((char*) &psiClosed, sizeof(double));            // skriver ut høyre BC
-    }
-    // boundary
-    for(int i = 0; i < posdim+2; ++i){
-      outpsi.write((char*) &psiClosed, sizeof(double));
+      outpsi.write((char*) &psi[0,j], sizeof(double));            // skriver ut høyre BC
     }
     jacobisMethod2D(posdim, deltapos, psi, zeta, psiClosed);
   }
@@ -138,14 +112,6 @@ void jacobisMethod2D(int posdim, double deltapos, mat &psi, mat zeta, double psi
                  +psi_temporary(1,l)+psiClosed
                  -hh*zeta(0,l));
       difference += fabs(psi_temporary(0,l)-psi(0,l));
-      psi(l,posdim-1) = 0.25*(psiClosed + psi_temporary(l, posdim-2)
-                 +psi_temporary(l+1,posdim-1)+psi_temporary(l-1,posdim-1)
-                 -hh*zeta(l,posdim-1));
-      difference += fabs(psi_temporary(l,0)-psi(l,0));
-      psi(posdim-1,l) = 0.25*(psi_temporary(posdim-1,l+1)+psi_temporary(posdim-1,l-1)
-                 +psiClosed+psi_temporary(posdim-2,l)
-                 -hh*zeta(posdim-1,l));
-      difference += fabs(psi_temporary(posdim-1,l)-psi(posdim-1,l));
     }
     //grensebetingelser hjørner
     psi(0,0) = 0.25*(psi_temporary(0,1)+psiClosed

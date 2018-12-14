@@ -9,7 +9,7 @@ sns.set_style("whitegrid")
 sns.set_palette("husl")
 
 datadir = "../data/"
-file = datadir + "psi_bounded_sine_centered_2d.bin"
+file = datadir + "psi_bounded_gaussian_centered_2d.bin"
 data = np.fromfile(file)
 data = np.reshape(data,((1500,41,41)))
 '''
@@ -34,7 +34,7 @@ anim = animation.FuncAnimation(fig, animate, frames=1500, interval = 2, blit=Tru
 
 plt.show()
 '''
-data = data[:,:,20]
+data = data[:,20,:]
 x = np.linspace(0, 1, len(data[0]))
 
 ymax = np.max(data)
